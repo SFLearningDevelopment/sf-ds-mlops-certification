@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+<title>SF Certified DS & MLOps Practitioner — Exam</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#080c14;--surface:#0f1520;--surface2:#141c2e;--border:#1e2a40;--accent:#2563eb;--accent2:#3b82f6;--text:#e2e8f0;--text2:#7d8fa8;--green:#10b981;--yellow:#f59e0b;--red:#ef4444;--radius:14px;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:var(--accent);}
+
+/* Auth */
+.auth-overlay{position:fixed;inset:0;background:rgba(8,12,20,0.97);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;max-width:400px;width:90%;}
+.auth-card h2{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
+.auth-card p{color:var(--text2);font-size:0.875rem;margin-bottom:28px;line-height:1.6;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:none;border-radius:10px;padding:12px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;width:100%;font-family:var(--font);transition:all 0.2s;}
+.google-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,0.3);}
+.google-btn svg{width:18px;height:18px;flex-shrink:0;}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text2);font-size:0.8rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.email-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:0.875rem;font-family:var(--font);margin-bottom:10px;outline:none;transition:border 0.2s;}
+.email-input:focus{border-color:var(--accent);}
+.email-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:var(--font);}
+.auth-error{color:var(--red);font-size:0.8rem;margin-top:10px;}
+
+/* Header */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header-left{display:flex;align-items:center;gap:14px;}
+.header-brand{font-weight:800;font-size:0.9rem;}
+.exam-timer{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--accent);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 14px;}
+.exam-timer.warning{color:var(--yellow);}
+.exam-timer.danger{color:var(--red);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+.header-right{display:flex;align-items:center;gap:10px;}
+.user-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--text2);}
+
+/* Intro screen */
+.intro-screen{max-width:700px;margin:0 auto;padding:60px 28px;}
+.intro-screen h1{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:16px;}
+.intro-screen p{color:var(--text2);font-size:0.95rem;line-height:1.7;margin-bottom:24px;}
+.intro-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
+.intro-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--accent);}
+.intro-stat-label{font-size:0.78rem;color:var(--text2);margin-top:2px;}
+.attempt-info{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:14px 18px;margin-bottom:24px;font-size:0.85rem;color:var(--text2);}
+.attempt-info strong{color:var(--text);}
+.start-btn{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:14px 32px;font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.start-btn:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(37,99,235,0.4);}
+.start-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
+
+/* Exam screen */
+.exam-screen{max-width:760px;margin:0 auto;padding:32px 28px 80px;}
+.exam-progress{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:16px;}
+.exam-progress-bar{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.exam-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width 0.4s ease;}
+.exam-progress-text{font-size:0.82rem;color:var(--text2);font-family:var(--mono);white-space:nowrap;}
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px;}
+.question-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.question-num{font-family:var(--mono);font-size:0.75rem;color:var(--text2);}
+.question-module{font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(37,99,235,0.1);color:var(--accent2);}
+.question-text{font-size:0.97rem;font-weight:600;line-height:1.6;margin-bottom:20px;}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option{display:flex;align-items:flex-start;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;cursor:pointer;transition:all 0.15s;}
+.option:hover{border-color:var(--accent);background:rgba(37,99,235,0.06);}
+.option.selected{border-color:var(--accent);background:rgba(37,99,235,0.1);}
+.option.correct{border-color:var(--green);background:rgba(16,185,129,0.1);}
+.option.incorrect{border-color:var(--red);background:rgba(239,68,68,0.08);}
+.option-letter{font-family:var(--mono);font-size:0.8rem;font-weight:700;color:var(--text2);min-width:20px;margin-top:1px;}
+.option-text{font-size:0.88rem;line-height:1.55;color:var(--text);}
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:24px;}
+.q-nav-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:10px;padding:10px 20px;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.q-nav-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
+.q-nav-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.q-nav-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.q-nav-btn.primary:hover{background:var(--accent2);}
+.submit-btn{background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:0.88rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.submit-btn:hover{opacity:0.9;}
+
+/* Results screen */
+.results-screen{max-width:700px;margin:0 auto;padding:60px 28px 80px;text-align:center;}
+.result-icon{font-size:4rem;margin-bottom:20px;}
+.results-screen h1{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;}
+.results-screen p{color:var(--text2);font-size:0.95rem;line-height:1.7;margin-bottom:28px;}
+.score-display{font-size:4rem;font-weight:800;color:var(--accent);letter-spacing:-0.04em;margin:20px 0 8px;}
+.score-display.pass{color:var(--green);}
+.score-display.fail{color:var(--red);}
+.score-sub{font-size:0.9rem;color:var(--text2);margin-bottom:28px;}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px;}
+.result-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;}
+.result-stat-num{font-size:1.5rem;font-weight:800;}
+.result-stat-label{font-size:0.75rem;color:var(--text2);margin-top:3px;}
+.result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.result-btn{padding:12px 24px;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:var(--font);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;}
+.result-btn.primary{background:var(--accent);color:#fff;border:none;}
+.result-btn.primary:hover{background:var(--accent2);}
+.result-btn.secondary{background:var(--surface);color:var(--text2);border:1px solid var(--border);}
+.result-btn.secondary:hover{border-color:var(--accent);color:var(--accent);}
+
+@media(max-width:600px){
+  .intro-screen,.exam-screen,.results-screen{padding:32px 16px 60px;}
+  .intro-grid{grid-template-columns:1fr;}
+  .results-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- Auth -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div style="font-size:2rem;margin-bottom:16px">🎓</div>
+    <h2>SF DS & MLOps Exam</h2>
+    <p>Sign in with your SourceFuse account to access the certification exam.</p>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <div class="divider">or use email</div>
+    <input class="email-input" type="email" id="emailInput" placeholder="you@sourcefuse.com"/>
+    <button class="email-btn" onclick="signInWithEmail()">Send Sign-in Link</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="header" id="mainHeader" style="display:none">
+  <div class="header-left">
+    <span class="header-brand">🎓 DS & MLOps Exam</span>
+    <div class="exam-timer" id="timerDisplay" style="display:none">45:00</div>
+  </div>
+  <div class="header-right">
+    <span class="user-pill" id="userEmail">—</span>
+  </div>
+</div>
+
+<!-- Intro Screen -->
+<div class="intro-screen" id="introScreen" style="display:none">
+  <h1>SF Certified DS & MLOps Practitioner</h1>
+  <p>You've completed all 5 modules. This exam tests your understanding across the full course — foundations, feature engineering, model drift, MLOps architecture, and system articulation.</p>
+  <div class="intro-grid">
+    <div class="intro-stat"><div class="intro-stat-num">30</div><div class="intro-stat-label">Questions</div></div>
+    <div class="intro-stat"><div class="intro-stat-num">45 min</div><div class="intro-stat-label">Time Limit</div></div>
+    <div class="intro-stat"><div class="intro-stat-num">70%</div><div class="intro-stat-label">Pass Score (21/30)</div></div>
+    <div class="intro-stat"><div class="intro-stat-num">3</div><div class="intro-stat-label">Max Attempts</div></div>
+  </div>
+  <div class="attempt-info" id="attemptInfo">Loading attempt info…</div>
+  <button class="start-btn" id="startBtn" onclick="startExam()">Begin Exam →</button>
+</div>
+
+<!-- Exam Screen -->
+<div class="exam-screen" id="examScreen" style="display:none">
+  <div class="exam-progress">
+    <div class="exam-progress-bar"><div class="exam-progress-fill" id="examProgressFill" style="width:0%"></div></div>
+    <span class="exam-progress-text" id="examProgressText">0 / 30</span>
+  </div>
+  <div id="questionContainer"></div>
+</div>
+
+<!-- Results Screen -->
+<div class="results-screen" id="resultsScreen" style="display:none">
+  <div class="result-icon" id="resultIcon">🎓</div>
+  <h1 id="resultTitle">Results</h1>
+  <div class="score-display" id="resultScore">—</div>
+  <div class="score-sub" id="resultSub">—</div>
+  <div class="results-grid">
+    <div class="result-stat"><div class="result-stat-num" id="statCorrect">—</div><div class="result-stat-label">Correct</div></div>
+    <div class="result-stat"><div class="result-stat-num" id="statWrong">—</div><div class="result-stat-label">Incorrect</div></div>
+    <div class="result-stat"><div class="result-stat-num" id="statAttempts">—</div><div class="result-stat-label">Attempts Used</div></div>
+  </div>
+  <p id="resultMessage" style="margin-bottom:24px;"></p>
+  <div class="result-actions">
+    <a href="index.html" class="result-btn secondary">← Course Hub</a>
+    <button class="result-btn primary" id="retryBtn" onclick="retryExam()" style="display:none">Retry Exam</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail,
+  isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC4Q0mLGt1ZCgPMTM4TjKLTPHHCGhGqlXA",
+  authDomain: "sfcertification-grafana.firebaseapp.com",
+  projectId: "sfcertification-grafana",
+  storageBucket: "sfcertification-grafana.appspot.com",
+  messagingSenderId: "876749260498",
+  appId: "1:876749260498:web:7ef3e1b444b3c7a2d4e8f1"
+};
+
+const COURSE_ID = "dsMlops2026SFCert";
+const EXAM_DURATION = 45 * 60;
+const MAX_ATTEMPTS = 3;
+const PASS_SCORE = 70;
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let timerInterval = null;
+let timeRemaining = EXAM_DURATION;
+let currentQuestion = 0;
+let answers = {};
+let examStartTime = null;
+let attemptCount = 0;
+let examActive = false;
+
+/* ══ QUESTIONS ══ */
+const QUESTIONS = [
+  // Module 1 — Foundations (6 questions)
+  {
+    id: 1, module: "M1 · Foundations",
+    q: "Data Science is described as sitting at the intersection of three domains. Which of the following correctly identifies all three?",
+    opts: ["Statistics, programming, and domain expertise", "Mathematics, computer science, and business", "Data engineering, ML research, and software development", "Analytics, visualisation, and AI"],
+    ans: 0
+  },
+  {
+    id: 2, module: "M1 · Foundations",
+    q: "Which of the following correctly lists the 6 stages of the ML lifecycle in order?",
+    opts: [
+      "Define problem → Collect data → Feature engineering → Train & evaluate → Deploy → Monitor & retrain",
+      "Collect data → Clean data → Define problem → Train → Deploy → Monitor",
+      "Define problem → Train model → Collect data → Deploy → Evaluate → Monitor",
+      "Feature engineering → Collect data → Define problem → Train → Monitor → Deploy"
+    ],
+    ans: 0
+  },
+  {
+    id: 3, module: "M1 · Foundations",
+    q: "In supervised machine learning, what is a 'label'?",
+    opts: [
+      "A column in the dataset that describes a feature of the observation",
+      "The outcome variable that the model is trained to predict",
+      "A tag applied to data during the ingestion process",
+      "A category assigned by the model after prediction"
+    ],
+    ans: 1
+  },
+  {
+    id: 4, module: "M1 · Foundations",
+    q: "A team needs to keep a PostgreSQL database in sync with their data warehouse without running full table scans. Which ingestion pattern is most appropriate?",
+    opts: ["Batch ingestion via Airflow on a daily schedule", "Change Data Capture (CDC) using a tool like Debezium", "Streaming ingestion via Apache Kafka", "Manual export to CSV and upload"],
+    ans: 1
+  },
+  {
+    id: 5, module: "M1 · Foundations",
+    q: "Which of the following best defines MLOps?",
+    opts: [
+      "The practice of writing machine learning models in production-grade languages",
+      "A cloud service for deploying neural networks",
+      "The application of DevOps principles — automation, monitoring, and CI/CD — to the machine learning lifecycle",
+      "A methodology for conducting A/B tests on ML models"
+    ],
+    ans: 2
+  },
+  {
+    id: 6, module: "M1 · Foundations",
+    q: "What is the primary purpose of a Model Registry in an MLOps system?",
+    opts: [
+      "To store raw training data for reuse",
+      "To provide a versioned catalog of trained models with lifecycle stages (staging, production, archived)",
+      "To monitor model predictions in real time",
+      "To schedule automated retraining jobs"
+    ],
+    ans: 1
+  },
+
+  // Module 2 — Feature Engineering (6 questions)
+  {
+    id: 7, module: "M2 · Feature Engineering",
+    q: "A numerical feature representing user income has a highly skewed distribution with a long right tail. Which transformation is most appropriate before training a linear model?",
+    opts: ["Min-Max Scaling", "One-Hot Encoding", "Log transformation", "Binning into 5 equal-width buckets"],
+    ans: 2
+  },
+  {
+    id: 8, module: "M2 · Feature Engineering",
+    q: "A dataset has a categorical feature 'city' with 8,000 unique values. Which encoding strategy is most appropriate?",
+    opts: [
+      "One-Hot Encoding — creates a binary column per city",
+      "Label Encoding — assigns an integer to each city",
+      "Target Encoding — replaces each city with the mean of the target variable for that city",
+      "Drop the feature — too many categories to encode"
+    ],
+    ans: 2
+  },
+  {
+    id: 9, module: "M2 · Feature Engineering",
+    q: "What does the 'Indicator + Imputation' strategy for missing values do?",
+    opts: [
+      "It drops all rows with missing values and imputes the mean for the rest",
+      "It adds a binary column recording that the value was missing, then fills the original column with a statistic",
+      "It replaces missing values with a constant -999",
+      "It uses a KNN model to predict missing values from neighbouring rows"
+    ],
+    ans: 1
+  },
+  {
+    id: 10, module: "M2 · Feature Engineering",
+    q: "Which feature selection method has feature importance built directly into the model training process?",
+    opts: ["Filter method using Pearson correlation", "Wrapper method using Recursive Feature Elimination", "Embedded method using Lasso regression or tree-based importance", "Variance threshold filtering"],
+    ans: 2
+  },
+  {
+    id: 11, module: "M2 · Feature Engineering",
+    q: "When constructing a training dataset with time-based features, you compute a '30-day login count' for a user using data from the future relative to the label event. This is an example of:",
+    opts: ["Feature selection bias", "Temporal data leakage", "Target encoding leakage", "Concept drift"],
+    ans: 1
+  },
+  {
+    id: 12, module: "M2 · Feature Engineering",
+    q: "A data scientist builds a model, then adds 200 new features, and sees training accuracy improve but test accuracy worsen. What is the most likely cause?",
+    opts: ["Underfitting due to insufficient data", "Overfitting — many of the added features introduce noise rather than signal", "Data drift in the test set", "Incorrect label encoding"],
+    ans: 1
+  },
+
+  // Module 3 — Model Drift (6 questions)
+  {
+    id: 13, module: "M3 · Model Drift",
+    q: "A fraud detection model was trained in 2022. In 2024, the types of fraud transactions have changed significantly, but the input feature distributions remain similar. Which type of drift is this?",
+    opts: ["Data drift", "Concept drift", "Label drift", "Upstream data drift"],
+    ans: 1
+  },
+  {
+    id: 14, module: "M3 · Model Drift",
+    q: "A PSI score of 0.25 is computed on a key input feature. What does this indicate?",
+    opts: [
+      "No significant distribution shift — no action needed",
+      "Moderate shift — worth monitoring but no immediate action",
+      "Significant drift — investigate and consider retraining",
+      "The feature should be dropped from the model"
+    ],
+    ans: 2
+  },
+  {
+    id: 15, module: "M3 · Model Drift",
+    q: "What does the Kolmogorov-Smirnov (KS) test measure in the context of drift detection?",
+    opts: [
+      "The proportion of correctly predicted labels since deployment",
+      "Whether the cumulative distribution of a feature at serving time differs significantly from training time",
+      "The number of null values introduced by upstream pipeline changes",
+      "The distance between two model versions' prediction distributions"
+    ],
+    ans: 1
+  },
+  {
+    id: 16, module: "M3 · Model Drift",
+    q: "In the Champion/Challenger retraining strategy, what is the 'challenger' model?",
+    opts: [
+      "The model currently serving all production traffic",
+      "A retrained model running in parallel in shadow mode to evaluate if it outperforms the current model",
+      "A simpler baseline model used as a performance floor",
+      "A model trained on a different algorithm to test diversity"
+    ],
+    ans: 1
+  },
+  {
+    id: 17, module: "M3 · Model Drift",
+    q: "A churn prediction model has precision of 0.90 and recall of 0.40. What does this mean in practical terms?",
+    opts: [
+      "The model catches 90% of churners but raises many false alarms",
+      "When the model predicts churn, it is correct 90% of the time, but it misses 60% of actual churners",
+      "The model is highly accurate on the test set but underperforms in production",
+      "The AUC-ROC score is 0.65"
+    ],
+    ans: 1
+  },
+  {
+    id: 18, module: "M3 · Model Drift",
+    q: "According to the drift response playbook, what should be the FIRST step when you suspect model degradation?",
+    opts: [
+      "Immediately trigger a full model retrain",
+      "Check upstream data quality first — pipeline issues, schema changes, or NULL floods are common and easier to fix",
+      "Run PSI tests across all input features",
+      "Alert the business team about potential performance issues"
+    ],
+    ans: 1
+  },
+
+  // Module 4 — Feature Stores & MLOps Architecture (6 questions)
+  {
+    id: 19, module: "M4 · MLOps Architecture",
+    q: "What is 'training/serving skew' in the context of feature stores?",
+    opts: [
+      "When the model performs better on training data than on test data",
+      "When features are computed differently at training time versus serving time, causing inconsistent predictions",
+      "When multiple teams train models on the same dataset with different algorithms",
+      "When the model is deployed to a different cloud region than where it was trained"
+    ],
+    ans: 1
+  },
+  {
+    id: 20, module: "M4 · MLOps Architecture",
+    q: "In a feature store, which storage layer is optimised for low-latency feature retrieval at real-time serving?",
+    opts: [
+      "Offline store — backed by S3 or BigQuery",
+      "Online store — backed by Redis or DynamoDB",
+      "Data warehouse — backed by Snowflake or Redshift",
+      "Feature pipeline cache — backed by Apache Kafka"
+    ],
+    ans: 1
+  },
+  {
+    id: 21, module: "M4 · MLOps Architecture",
+    q: "In Feast (the open-source feature store), what is a 'Feature View'?",
+    opts: [
+      "A dashboard showing feature distributions over time",
+      "A group of features derived from a single data source, defined with a schema and time-to-live",
+      "A named set of features used by a specific model for serving",
+      "A versioned snapshot of training features for reproducibility"
+    ],
+    ans: 1
+  },
+  {
+    id: 22, module: "M4 · MLOps Architecture",
+    q: "An ML team manually trains models in notebooks and deploys them by handing artifacts to an engineer. Which MLOps maturity level describes this?",
+    opts: ["Level 0 — Manual Process", "Level 1 — ML Pipeline Automation", "Level 2 — CI/CD for ML", "Level 3 — Fully Autonomous ML"],
+    ans: 0
+  },
+  {
+    id: 23, module: "M4 · MLOps Architecture",
+    q: "A sales team checks churn scores once per day in the morning. The ML team is deciding between real-time REST serving and batch prediction. Which is more appropriate and why?",
+    opts: [
+      "REST serving — always more accurate because it uses the latest data",
+      "Batch prediction — pre-computing scores nightly meets the latency requirement at lower infrastructure cost",
+      "REST serving — batch prediction is deprecated in modern MLOps",
+      "Both are equivalent for this use case"
+    ],
+    ans: 1
+  },
+  {
+    id: 24, module: "M4 · MLOps Architecture",
+    q: "What are the three lifecycle stages a model progresses through in an MLflow Model Registry?",
+    opts: [
+      "Development → Testing → Production",
+      "Staging → Production → Archived",
+      "Draft → Review → Published",
+      "Training → Serving → Retired"
+    ],
+    ans: 1
+  },
+
+  // Module 5 — System Articulation (6 questions)
+  {
+    id: 25, module: "M5 · System Articulation",
+    q: "According to the 5-part architecture description framework, which element comes THIRD?",
+    opts: [
+      "Purpose — what the system predicts",
+      "Model & Serving — algorithm and serving method",
+      "Processing & Features — how raw data is transformed into features",
+      "Monitoring & Health — what signals are tracked"
+    ],
+    ans: 2
+  },
+  {
+    id: 26, module: "M5 · System Articulation",
+    q: "An engineer says: 'Our data comes from our database.' Using the 4-component ingestion description framework, which components are missing?",
+    opts: [
+      "Only the tool is missing",
+      "Pattern, tool, and destination are all missing — only the source was stated",
+      "Only the destination is missing",
+      "The description is complete — source is sufficient"
+    ],
+    ans: 1
+  },
+  {
+    id: 27, module: "M5 · System Articulation",
+    q: "When explaining a system design decision using the trade-off framework, which of the following is the MOST important element to include?",
+    opts: [
+      "The name of the engineer who made the decision",
+      "The specific library version used",
+      "The constraint that drove the decision (latency, cost, team expertise, scale, etc.)",
+      "The exact date the decision was made"
+    ],
+    ans: 2
+  },
+  {
+    id: 28, module: "M5 · System Articulation",
+    q: "You are presenting a churn model to a VP of Sales with no technical background. Which of the following is the best opening statement?",
+    opts: [
+      "We trained an XGBoost classifier with 47 features, achieving AUC-ROC of 0.87 on holdout data",
+      "This system uses a gradient boosting model retrained weekly on rolling 90-day windows",
+      "This system identifies customers likely to cancel their subscription 30 days in advance, so your team can intervene before they disengage",
+      "The PSI on key features remains below 0.1, indicating stable model performance"
+    ],
+    ans: 2
+  },
+  {
+    id: 29, module: "M5 · System Articulation",
+    q: "Which of the following best demonstrates true 'ownership' of a system, as defined in Module 5?",
+    opts: [
+      "Being able to list all the tools used in the stack",
+      "Having written most of the code for the system",
+      "Being able to answer: what it does, how data flows, why it is designed this way, and what breaks and how you know",
+      "Having the system documented in a wiki"
+    ],
+    ans: 2
+  },
+  {
+    id: 30, module: "M5 · System Articulation",
+    q: "A customer asks you 'How does your AI system know who will churn?' without wanting technical details. The most appropriate response is to:",
+    opts: [
+      "Explain the feature engineering process and model algorithm in detail",
+      "Describe it in terms of value delivered and behavioural signals, avoiding all jargon and proprietary detail",
+      "Decline to answer since it is proprietary",
+      "Share the full architecture diagram so they understand the complexity"
+    ],
+    ans: 1
+  }
+];
+
+window.signInWithGoogle = async () => {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  catch(e){ document.getElementById('authError').textContent = e.message; }
+};
+window.signInWithEmail = async () => {
+  const email = document.getElementById('emailInput').value.trim();
+  if(!email.endsWith('@sourcefuse.com')){ document.getElementById('authError').textContent='Use your @sourcefuse.com email.'; return; }
+  try {
+    await sendSignInLinkToEmail(auth, email, { url: window.location.href, handleCodeInApp: true });
+    localStorage.setItem('emailForSignIn', email);
+    document.getElementById('authError').style.color='var(--green)';
+    document.getElementById('authError').textContent='✓ Check your inbox.';
+  } catch(e){ document.getElementById('authError').textContent = e.message; }
+};
+
+if(isSignInWithEmailLink(auth, window.location.href)){
+  let em = localStorage.getItem('emailForSignIn') || prompt('Confirm your email:');
+  try{ await signInWithEmailLink(auth, em, window.location.href); window.history.replaceState(null,'',window.location.pathname); }catch(e){}
+}
+
+async function loadAttemptInfo(uid){
+  const rRef = doc(db,'results',uid);
+  const rSnap = await getDoc(rRef);
+  const data = rSnap.exists() ? (rSnap.data()[COURSE_ID] || {}) : {};
+  attemptCount = data.attempts || 0;
+  const lastScore = data.lastScore;
+  const passed = data.passed;
+  const infoEl = document.getElementById('attemptInfo');
+  const startBtn = document.getElementById('startBtn');
+
+  if(passed){
+    infoEl.innerHTML = `<strong>✓ Certified!</strong> You have already passed this exam with a score of ${lastScore}%. You may retake for practice.`;
+    startBtn.textContent = 'Retake Exam (Practice)';
+  } else if(attemptCount >= MAX_ATTEMPTS){
+    infoEl.innerHTML = `<strong>No attempts remaining.</strong> You have used all ${MAX_ATTEMPTS} attempts. Please contact your administrator.`;
+    startBtn.disabled = true;
+    startBtn.textContent = 'No Attempts Remaining';
+  } else {
+    infoEl.innerHTML = `Attempt <strong>${attemptCount + 1} of ${MAX_ATTEMPTS}</strong>.${lastScore ? ` Your last score was <strong>${lastScore}%</strong>.` : ' This will be your first attempt.'} You need <strong>21/30 (70%)</strong> to pass.`;
+  }
+}
+
+window.startExam = async () => {
+  const rRef = doc(db,'results',currentUser.uid);
+  const rSnap = await getDoc(rRef);
+  const data = rSnap.exists() ? (rSnap.data()[COURSE_ID] || {}) : {};
+  if((data.attempts || 0) >= MAX_ATTEMPTS && !data.passed){ alert('No attempts remaining.'); return; }
+
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('examScreen').style.display = 'block';
+  document.getElementById('timerDisplay').style.display = 'flex';
+  examActive = true;
+  examStartTime = Date.now();
+  answers = {};
+  currentQuestion = 0;
+  timeRemaining = EXAM_DURATION;
+  renderQuestion(0);
+  startTimer();
+};
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeRemaining--;
+    updateTimerDisplay();
+    if(timeRemaining <= 0){ clearInterval(timerInterval); submitExam(true); }
+  }, 1000);
+}
+
+function updateTimerDisplay(){
+  const m = Math.floor(timeRemaining / 60);
+  const s = timeRemaining % 60;
+  const display = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const el = document.getElementById('timerDisplay');
+  el.textContent = display;
+  el.className = 'exam-timer' + (timeRemaining <= 120 ? ' danger' : timeRemaining <= 300 ? ' warning' : '');
+}
+
+function renderQuestion(idx){
+  const q = QUESTIONS[idx];
+  const answered = Object.keys(answers).length;
+  document.getElementById('examProgressFill').style.width = (answered/QUESTIONS.length*100) + '%';
+  document.getElementById('examProgressText').textContent = `${answered} / ${QUESTIONS.length} answered`;
+
+  const letters = ['A','B','C','D'];
+  const container = document.getElementById('questionContainer');
+  container.innerHTML = `
+    <div class="question-card">
+      <div class="question-meta">
+        <span class="question-num">Question ${idx+1} of ${QUESTIONS.length}</span>
+        <span class="question-module">${q.module}</span>
+      </div>
+      <div class="question-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((opt, i) => `
+          <div class="option ${answers[q.id] === i ? 'selected' : ''}" onclick="selectOption(${q.id}, ${i})">
+            <span class="option-letter">${letters[i]}</span>
+            <span class="option-text">${opt}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="nav-row">
+        <button class="q-nav-btn" onclick="goQuestion(${idx-1})" ${idx===0?'disabled':''}>← Previous</button>
+        <span style="font-size:0.8rem;color:var(--text2)">${idx+1} / ${QUESTIONS.length}</span>
+        ${idx < QUESTIONS.length - 1
+          ? `<button class="q-nav-btn primary" onclick="goQuestion(${idx+1})">Next →</button>`
+          : `<button class="submit-btn" onclick="confirmSubmit()">Submit Exam</button>`
+        }
+      </div>
+    </div>`;
+}
+
+window.selectOption = (qId, optIdx) => {
+  answers[qId] = optIdx;
+  renderQuestion(currentQuestion);
+};
+
+window.goQuestion = (idx) => {
+  if(idx < 0 || idx >= QUESTIONS.length) return;
+  currentQuestion = idx;
+  renderQuestion(idx);
+};
+
+window.confirmSubmit = () => {
+  const unanswered = QUESTIONS.length - Object.keys(answers).length;
+  if(unanswered > 0){
+    if(!confirm(`You have ${unanswered} unanswered question${unanswered>1?'s':''}. Submit anyway?`)) return;
+  }
+  submitExam(false);
+};
+
+async function submitExam(timedOut){
+  clearInterval(timerInterval);
+  examActive = false;
+  document.getElementById('timerDisplay').style.display = 'none';
+
+  let correct = 0;
+  QUESTIONS.forEach(q => { if(answers[q.id] === q.ans) correct++; });
+  const score = Math.round((correct / QUESTIONS.length) * 100);
+  const passed = score >= PASS_SCORE;
+  const timeTaken = Math.round((Date.now() - examStartTime) / 1000);
+
+  // Save to Firestore
+  const rRef = doc(db,'results',currentUser.uid);
+  const rSnap = await getDoc(rRef);
+  const existing = rSnap.exists() ? (rSnap.data()[COURSE_ID] || {}) : {};
+  const newAttemptCount = (existing.attempts || 0) + 1;
+
+  await setDoc(rRef, {
+    [COURSE_ID]: {
+      attempts: newAttemptCount,
+      lastScore: score,
+      passed: passed || existing.passed || false,
+      lastAttemptAt: serverTimestamp(),
+      timedOut: timedOut
+    }
+  }, { merge: true });
+
+  // Also write to examResults
+  const erRef = doc(db,'examResults',currentUser.uid);
+  await setDoc(erRef, {
+    [COURSE_ID]: {
+      score, passed, attempts: newAttemptCount,
+      correct, total: QUESTIONS.length,
+      timeTaken, timedOut, submittedAt: serverTimestamp()
+    }
+  }, { merge: true });
+
+  // Signal hub lock
+  localStorage.setItem('sf_exam_done', JSON.stringify({
+    courseId: COURSE_ID, score, passed, timestamp: Date.now()
+  }));
+
+  showResults(score, passed, correct, newAttemptCount);
+}
+
+function showResults(score, passed, correct, attempts){
+  document.getElementById('examScreen').style.display = 'none';
+  const rs = document.getElementById('resultsScreen');
+  rs.style.display = 'block';
+
+  document.getElementById('resultIcon').textContent = passed ? '🎉' : '📚';
+  document.getElementById('resultTitle').textContent = passed ? 'Congratulations!' : 'Keep Studying';
+  document.getElementById('resultScore').textContent = score + '%';
+  document.getElementById('resultScore').className = 'score-display ' + (passed ? 'pass' : 'fail');
+  document.getElementById('resultSub').textContent = `${correct} / ${QUESTIONS.length} correct`;
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = QUESTIONS.length - correct;
+  document.getElementById('statAttempts').textContent = `${attempts} / ${MAX_ATTEMPTS}`;
+
+  if(passed){
+    document.getElementById('resultMessage').textContent = 'You have earned the SF Certified Data Science & MLOps Practitioner credential. Your result has been recorded.';
+  } else if(attempts < MAX_ATTEMPTS){
+    document.getElementById('resultMessage').textContent = `You need 70% to pass. You scored ${score}%. You have ${MAX_ATTEMPTS - attempts} attempt${MAX_ATTEMPTS - attempts !== 1 ? 's' : ''} remaining.`;
+    document.getElementById('retryBtn').style.display = 'inline-flex';
+  } else {
+    document.getElementById('resultMessage').textContent = 'You have used all 3 attempts. Please contact your L&D administrator to discuss next steps.';
+  }
+}
+
+window.retryExam = () => {
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('introScreen').style.display = 'block';
+  loadAttemptInfo(currentUser.uid);
+};
+
+onAuthStateChanged(auth, async user => {
+  if(!user){ document.getElementById('authOverlay').style.display='flex'; return; }
+  const email = user.email || '';
+  if(!email.endsWith('@sourcefuse.com')){ await signOut(auth); document.getElementById('authOverlay').style.display='flex'; return; }
+  currentUser = user;
+  document.getElementById('authOverlay').style.display='none';
+  document.getElementById('mainHeader').style.display='flex';
+  document.getElementById('introScreen').style.display='block';
+  document.getElementById('userEmail').textContent = email;
+  await loadAttemptInfo(user.uid);
+});
+</script>
+</body>
+</html>
