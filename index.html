@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+<title>SF Certified Data Science & MLOps Practitioner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#080c14;--surface:#0f1520;--surface2:#141c2e;--border:#1e2a40;
+  --accent:#2563eb;--accent2:#3b82f6;--accent-glow:rgba(37,99,235,0.25);
+  --text:#e2e8f0;--text2:#7d8fa8;--green:#10b981;--yellow:#f59e0b;--red:#ef4444;
+  --radius:14px;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* Auth */
+.auth-overlay{position:fixed;inset:0;background:rgba(8,12,20,0.97);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;max-width:400px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,0.5);}
+.auth-logo{font-size:2rem;margin-bottom:16px;}
+.auth-card h2{font-size:1.25rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em;}
+.auth-card p{color:var(--text2);font-size:0.875rem;margin-bottom:28px;line-height:1.6;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:none;border-radius:10px;padding:12px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;width:100%;transition:all 0.2s;font-family:var(--font);}
+.google-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,0.3);}
+.google-btn svg{width:18px;height:18px;flex-shrink:0;}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text2);font-size:0.8rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.email-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:0.875rem;font-family:var(--font);margin-bottom:10px;outline:none;transition:border 0.2s;}
+.email-input:focus{border-color:var(--accent);}
+.email-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.email-btn:hover{background:var(--accent2);}
+.auth-error{color:var(--red);font-size:0.8rem;margin-top:10px;}
+
+/* Loading */
+.loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:500;display:none;align-items:center;justify-content:center;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Header */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header-brand{display:flex;align-items:center;gap:10px;}
+.header-brand .logo{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.header-brand span{font-weight:800;font-size:0.95rem;letter-spacing:-0.02em;}
+.header-user{display:flex;align-items:center;gap:12px;}
+.user-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--text2);}
+.signout-btn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.signout-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* Hero */
+.hero{padding:64px 28px 48px;max-width:1100px;margin:0 auto;text-align:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(37,99,235,0.12);border:1px solid rgba(37,99,235,0.3);border-radius:20px;padding:6px 16px;font-size:0.78rem;font-weight:600;color:var(--accent2);margin-bottom:24px;letter-spacing:0.05em;text-transform:uppercase;}
+.hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-0.03em;line-height:1.15;margin-bottom:16px;}
+.hero h1 span{color:var(--accent);}
+.hero p{color:var(--text2);font-size:1rem;line-height:1.7;max-width:620px;margin:0 auto 36px;}
+.hero-stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat-num{font-size:1.6rem;font-weight:800;color:var(--accent);letter-spacing:-0.03em;}
+.stat-label{font-size:0.75rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;}
+
+/* Progress bar */
+.progress-section{max-width:1100px;margin:0 auto 40px;padding:0 28px;}
+.progress-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.progress-title{font-weight:700;font-size:0.9rem;}
+.progress-pct{font-size:0.85rem;color:var(--accent);font-weight:700;font-family:var(--mono);}
+.progress-bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1);}
+
+/* Modules grid */
+.modules-section{max-width:1100px;margin:0 auto;padding:0 28px 40px;}
+.section-title{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text2);margin-bottom:20px;}
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:40px;}
+.module-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;cursor:pointer;transition:all 0.25s;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;}
+.module-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-glow),transparent);opacity:0;transition:opacity 0.3s;}
+.module-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 30px rgba(37,99,235,0.2);}
+.module-card:hover::before{opacity:1;}
+.module-card.locked{opacity:0.55;cursor:not-allowed;pointer-events:none;}
+.module-card.completed{border-color:rgba(16,185,129,0.4);}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.card-num{font-family:var(--mono);font-size:0.72rem;color:var(--text2);font-weight:500;}
+.card-badge{font-size:0.7rem;font-weight:700;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.05em;}
+.badge-foundation{background:rgba(37,99,235,0.15);color:var(--accent2);}
+.badge-core{background:rgba(245,158,11,0.15);color:var(--yellow);}
+.badge-advanced{background:rgba(16,185,129,0.15);color:var(--green);}
+.badge-exam{background:rgba(239,68,68,0.12);color:var(--red);}
+.card-icon{font-size:2rem;line-height:1;}
+.card-title{font-size:1rem;font-weight:700;letter-spacing:-0.01em;line-height:1.3;}
+.card-desc{font-size:0.82rem;color:var(--text2);line-height:1.55;}
+.card-meta{display:flex;align-items:center;gap:12px;margin-top:auto;}
+.card-sections{font-size:0.75rem;color:var(--text2);}
+.card-status{margin-left:auto;font-size:0.75rem;font-weight:600;}
+.status-completed{color:var(--green);}
+.status-inprogress{color:var(--yellow);}
+.status-locked{color:var(--text2);}
+.status-available{color:var(--accent2);}
+
+/* Exam card */
+.exam-card{background:linear-gradient(135deg,rgba(37,99,235,0.08),rgba(59,130,246,0.04));border:1px solid rgba(37,99,235,0.3);border-radius:var(--radius);padding:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.exam-info h3{font-size:1.1rem;font-weight:800;margin-bottom:6px;}
+.exam-info p{color:var(--text2);font-size:0.85rem;line-height:1.5;}
+.exam-meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap;}
+.exam-meta span{font-size:0.78rem;color:var(--text2);}
+.exam-meta strong{color:var(--text);}
+.exam-btn{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:13px 28px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;white-space:nowrap;text-decoration:none;display:inline-block;}
+.exam-btn:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(37,99,235,0.4);}
+.exam-btn.locked-btn{background:var(--surface2);color:var(--text2);cursor:not-allowed;transform:none;box-shadow:none;}
+
+@media(max-width:600px){
+  .hero{padding:40px 20px 32px;}
+  .modules-section,.progress-section{padding:0 16px 32px;}
+  .exam-card{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<!-- Auth Overlay -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div class="auth-logo">🧠</div>
+    <h2>SF Certified DS & MLOps Practitioner</h2>
+    <p>Sign in with your SourceFuse account to access this certification course.</p>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <div class="divider">or use email</div>
+    <input class="email-input" type="email" id="emailInput" placeholder="you@sourcefuse.com"/>
+    <button class="email-btn" onclick="signInWithEmail()">Send Sign-in Link</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- Header -->
+<div class="header" id="mainHeader" style="display:none">
+  <div class="header-brand">
+    <div class="logo">🧠</div>
+    <span>DS & MLOps Certification</span>
+  </div>
+  <div class="header-user">
+    <span class="user-pill" id="userEmail">—</span>
+    <button class="signout-btn" onclick="doSignOut()">Sign out</button>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main id="mainContent" style="display:none">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">⚡ SourceFuse Internal Certification</div>
+    <h1>Data Science & <span>MLOps</span><br/>Practitioner</h1>
+    <p>Master the core concepts of machine learning systems — from raw data to production pipelines. Build the vocabulary and mental models to own, explain, and operate real-world ML architectures.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Modules</div></div>
+      <div class="stat"><div class="stat-num">30</div><div class="stat-label">Exam Questions</div></div>
+      <div class="stat"><div class="stat-num">45<span style="font-size:1rem">min</span></div><div class="stat-label">Exam Duration</div></div>
+      <div class="stat"><div class="stat-num">70%</div><div class="stat-label">Pass Threshold</div></div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-section">
+    <div class="progress-card">
+      <div class="progress-header">
+        <span class="progress-title">Your Progress</span>
+        <span class="progress-pct" id="progressPct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- Modules -->
+  <div class="modules-section">
+    <div class="section-title">Course Modules</div>
+    <div class="modules-grid" id="modulesGrid">
+
+      <a href="ds-mlops-module-1.html" class="module-card" id="card-1">
+        <div class="card-top">
+          <span class="card-num">MODULE 01</span>
+          <span class="card-badge badge-foundation">Foundation</span>
+        </div>
+        <div class="card-icon">🗺️</div>
+        <div class="card-title">Data Science & MLOps Foundations</div>
+        <div class="card-desc">The complete mental model — what Data Science is, the ML lifecycle, core vocabulary, ingestion basics, and how features, models, and pipelines connect.</div>
+        <div class="card-meta">
+          <span class="card-sections">8 sections</span>
+          <span class="card-status status-available" id="status-1">Available</span>
+        </div>
+      </a>
+
+      <a href="ds-mlops-module-2.html" class="module-card locked" id="card-2">
+        <div class="card-top">
+          <span class="card-num">MODULE 02</span>
+          <span class="card-badge badge-core">Core</span>
+        </div>
+        <div class="card-icon">⚙️</div>
+        <div class="card-title">Feature Engineering in Depth</div>
+        <div class="card-desc">Transforming raw data into predictive signals. Encoding, scaling, imputation, feature selection strategies, and hands-on reasoning about what makes a good feature.</div>
+        <div class="card-meta">
+          <span class="card-sections">7 sections</span>
+          <span class="card-status status-locked" id="status-2">🔒 Complete M1</span>
+        </div>
+      </a>
+
+      <a href="ds-mlops-module-3.html" class="module-card locked" id="card-3">
+        <div class="card-top">
+          <span class="card-num">MODULE 03</span>
+          <span class="card-badge badge-core">Core</span>
+        </div>
+        <div class="card-icon">📉</div>
+        <div class="card-title">Model Lifecycle & Drift</div>
+        <div class="card-desc">How models degrade over time, the difference between data drift and concept drift, detection strategies, retraining triggers, and monitoring in production.</div>
+        <div class="card-meta">
+          <span class="card-sections">7 sections</span>
+          <span class="card-status status-locked" id="status-3">🔒 Complete M2</span>
+        </div>
+      </a>
+
+      <a href="ds-mlops-module-4.html" class="module-card locked" id="card-4">
+        <div class="card-top">
+          <span class="card-num">MODULE 04</span>
+          <span class="card-badge badge-advanced">Advanced</span>
+        </div>
+        <div class="card-icon">🏗️</div>
+        <div class="card-title">Feature Stores & MLOps Architecture</div>
+        <div class="card-desc">Centralized feature management, online vs offline stores, feature pipelines, CI/CD for ML, and how modern MLOps platforms connect data, training, and serving.</div>
+        <div class="card-meta">
+          <span class="card-sections">7 sections</span>
+          <span class="card-status status-locked" id="status-4">🔒 Complete M3</span>
+        </div>
+      </a>
+
+      <a href="ds-mlops-module-5.html" class="module-card locked" id="card-5">
+        <div class="card-top">
+          <span class="card-num">MODULE 05</span>
+          <span class="card-badge badge-advanced">Advanced</span>
+        </div>
+        <div class="card-icon">🗣️</div>
+        <div class="card-title">System Articulation & Pipeline Ownership</div>
+        <div class="card-desc">The professional skill layer — how to coherently describe your architecture, own the end-to-end data lifecycle, and communicate pipeline design to any audience.</div>
+        <div class="card-meta">
+          <span class="card-sections">6 sections</span>
+          <span class="card-status status-locked" id="status-5">🔒 Complete M4</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Exam -->
+    <div class="section-title">Certification Exam</div>
+    <div class="exam-card">
+      <div class="exam-info">
+        <h3>🎓 SF Certified DS & MLOps Practitioner Exam</h3>
+        <p>30 multiple-choice questions across all 5 modules. Complete all modules to unlock.</p>
+        <div class="exam-meta">
+          <span>⏱ <strong>45 minutes</strong></span>
+          <span>✅ <strong>70% to pass</strong></span>
+          <span>🔁 <strong>3 attempts max</strong></span>
+          <span>📋 <strong>30 questions</strong></span>
+        </div>
+      </div>
+      <a href="ds-mlops-evaluation.html" class="exam-btn locked-btn" id="examBtn">🔒 Complete All Modules</a>
+    </div>
+  </div>
+
+</main>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail,
+  isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC4Q0mLGt1ZCgPMTM4TjKLTPHHCGhGqlXA",
+  authDomain: "sfcertification-grafana.firebaseapp.com",
+  projectId: "sfcertification-grafana",
+  storageBucket: "sfcertification-grafana.appspot.com",
+  messagingSenderId: "876749260498",
+  appId: "1:876749260498:web:7ef3e1b444b3c7a2d4e8f1"
+};
+
+const COURSE_ID = "dsMlops2026SFCert";
+const MODULE_COUNT = 5;
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.signInWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch(e){ document.getElementById('authError').textContent = e.message; }
+};
+
+window.signInWithEmail = async () => {
+  const email = document.getElementById('emailInput').value.trim();
+  if(!email.endsWith('@sourcefuse.com')){ document.getElementById('authError').textContent='Use your @sourcefuse.com email.'; return; }
+  const settings = { url: window.location.href, handleCodeInApp: true };
+  try {
+    await sendSignInLinkToEmail(auth, email, settings);
+    localStorage.setItem('emailForSignIn', email);
+    document.getElementById('authError').style.color='var(--green)';
+    document.getElementById('authError').textContent='✓ Check your inbox for the sign-in link.';
+  } catch(e){ document.getElementById('authError').textContent = e.message; }
+};
+
+window.doSignOut = async () => { await signOut(auth); location.reload(); };
+
+if(isSignInWithEmailLink(auth, window.location.href)){
+  let email = localStorage.getItem('emailForSignIn') || prompt('Confirm your email:');
+  try{ await signInWithEmailLink(auth, email, window.location.href); window.history.replaceState(null,'',window.location.pathname); } catch(e){}
+}
+
+onAuthStateChanged(auth, async user => {
+  if(!user){ document.getElementById('authOverlay').style.display='flex'; return; }
+  const email = user.email || '';
+  if(!email.endsWith('@sourcefuse.com')){ await signOut(auth); document.getElementById('authError').textContent='Access restricted to @sourcefuse.com accounts.'; document.getElementById('authOverlay').style.display='flex'; return; }
+
+  document.getElementById('authOverlay').style.display='none';
+  document.getElementById('mainHeader').style.display='flex';
+  document.getElementById('mainContent').style.display='block';
+  document.getElementById('userEmail').textContent = email;
+
+  // Ensure user doc
+  const uRef = doc(db,'users',user.uid);
+  const uSnap = await getDoc(uRef);
+  if(!uSnap.exists()) await setDoc(uRef,{ email, displayName: user.displayName||'', createdAt: serverTimestamp(), domain:'sourcefuse.com' });
+
+  // Load progress
+  const pRef = doc(db,'progress',user.uid);
+  const pSnap = await getDoc(pRef);
+  const progress = pSnap.exists() ? (pSnap.data()[COURSE_ID]||{}) : {};
+
+  let completedModules = 0;
+  for(let i=1;i<=MODULE_COUNT;i++){
+    const mod = progress[`module-${i}`];
+    const completed = mod?.status === 'completed';
+    if(completed) completedModules++;
+    const card = document.getElementById(`card-${i}`);
+    const status = document.getElementById(`status-${i}`);
+    if(completed){
+      card.classList.remove('locked');
+      card.style.pointerEvents='auto';
+      status.textContent='✓ Completed';
+      status.className='card-status status-completed';
+    } else if(i===1 || progress[`module-${i-1}`]?.status==='completed'){
+      card.classList.remove('locked');
+      card.style.pointerEvents='auto';
+      status.textContent='Start';
+      status.className='card-status status-available';
+    }
+  }
+
+  const pct = Math.round((completedModules/MODULE_COUNT)*100);
+  document.getElementById('progressPct').textContent=pct+'%';
+  document.getElementById('progressFill').style.width=pct+'%';
+
+  if(completedModules === MODULE_COUNT){
+    const examBtn = document.getElementById('examBtn');
+    examBtn.classList.remove('locked-btn');
+    examBtn.textContent='Start Exam →';
+  }
+});
+</script>
+</body>
+</html>
