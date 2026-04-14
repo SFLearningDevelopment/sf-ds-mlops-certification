@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+<title>Module 3: Model Lifecycle & Drift — SF DS & MLOps Certification</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#080c14;--surface:#0f1520;--surface2:#141c2e;--border:#1e2a40;--accent:#2563eb;--accent2:#3b82f6;--text:#e2e8f0;--text2:#7d8fa8;--green:#10b981;--yellow:#f59e0b;--red:#ef4444;--purple:#8b5cf6;--radius:14px;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:var(--accent);}
+.auth-overlay{position:fixed;inset:0;background:rgba(8,12,20,0.97);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;max-width:400px;width:90%;}
+.auth-card h2{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
+.auth-card p{color:var(--text2);font-size:0.875rem;margin-bottom:28px;line-height:1.6;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:none;border-radius:10px;padding:12px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;width:100%;font-family:var(--font);transition:all 0.2s;}
+.google-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,0.3);}
+.google-btn svg{width:18px;height:18px;flex-shrink:0;}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text2);font-size:0.8rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.email-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:0.875rem;font-family:var(--font);margin-bottom:10px;outline:none;}
+.email-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:var(--font);}
+.auth-error{color:var(--red);font-size:0.8rem;margin-top:10px;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header-left{display:flex;align-items:center;gap:16px;}
+.back-link{color:var(--text2);text-decoration:none;font-size:0.85rem;display:flex;align-items:center;gap:6px;}
+.back-link:hover{color:var(--accent);}
+.module-label{font-size:0.85rem;font-weight:700;color:var(--accent);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.user-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--text2);}
+.signout-btn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;font-family:var(--font);}
+.module-hero{padding:52px 28px 40px;max-width:900px;margin:0 auto;}
+.hero-module-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:20px;padding:5px 14px;font-size:0.75rem;font-weight:700;color:var(--red);margin-bottom:20px;text-transform:uppercase;letter-spacing:0.06em;}
+.module-hero h1{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-0.03em;line-height:1.2;margin-bottom:14px;}
+.module-hero p{color:var(--text2);font-size:0.95rem;line-height:1.7;max-width:680px;}
+.module-progress-bar{height:4px;background:var(--surface2);border-radius:2px;margin-top:28px;overflow:hidden;}
+.module-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;width:0%;transition:width 0.6s ease;}
+.content-wrap{max-width:900px;margin:0 auto;padding:0 28px 80px;}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;overflow:hidden;}
+.section-card.active{border-color:rgba(37,99,235,0.5);}
+.section-card.completed-section{border-color:rgba(16,185,129,0.35);}
+.section-header{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;}
+.section-header:hover{background:rgba(255,255,255,0.02);}
+.section-num{font-family:var(--mono);font-size:0.72rem;color:var(--text2);min-width:28px;font-weight:500;}
+.section-title-text{flex:1;font-weight:700;font-size:0.95rem;}
+.section-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.7rem;transition:all 0.2s;flex-shrink:0;}
+.section-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.section-chevron{color:var(--text2);font-size:0.8rem;flex-shrink:0;}
+.section-card.active .section-chevron{transform:rotate(180deg);}
+.section-body{padding:0 22px 22px;display:none;}
+.section-card.active .section-body{display:block;}
+.section-body h3{font-size:1.05rem;font-weight:800;margin:20px 0 10px;}
+.section-body h4{font-size:0.9rem;font-weight:700;margin:16px 0 8px;color:var(--accent2);}
+.section-body p{color:var(--text2);font-size:0.9rem;line-height:1.75;margin-bottom:12px;}
+.section-body ul,.section-body ol{padding-left:22px;margin-bottom:12px;}
+.section-body li{color:var(--text2);font-size:0.88rem;line-height:1.7;margin-bottom:4px;}
+.section-body li strong{color:var(--text);}
+.section-body code{font-family:var(--mono);background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:5px;font-size:0.82rem;color:var(--accent2);}
+.callout{border-radius:10px;padding:16px 18px;margin:16px 0;border-left:3px solid;}
+.callout-blue{background:rgba(37,99,235,0.08);border-color:var(--accent);}
+.callout-green{background:rgba(16,185,129,0.08);border-color:var(--green);}
+.callout-yellow{background:rgba(245,158,11,0.08);border-color:var(--yellow);}
+.callout-red{background:rgba(239,68,68,0.08);border-color:var(--red);}
+.callout h4{font-size:0.85rem;font-weight:700;margin-bottom:6px;}
+.callout p{font-size:0.85rem;margin-bottom:0;}
+.callout-blue h4{color:var(--accent2);}
+.callout-green h4{color:var(--green);}
+.callout-yellow h4{color:var(--yellow);}
+.callout-red h4{color:var(--red);}
+.diagram{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.diagram-title{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:16px;}
+.diagram-row{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0;}
+.diagram-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:0.82rem;font-weight:600;}
+.diagram-box.blue{border-color:rgba(37,99,235,0.4);color:var(--accent2);}
+.diagram-box.green{border-color:rgba(16,185,129,0.4);color:var(--green);}
+.diagram-box.yellow{border-color:rgba(245,158,11,0.4);color:var(--yellow);}
+.diagram-box.red{border-color:rgba(239,68,68,0.4);color:var(--red);}
+.diagram-arrow{color:var(--text2);font-size:1.2rem;}
+.table-wrap{overflow-x:auto;margin:16px 0;}
+table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+th{background:var(--surface2);color:var(--text);font-weight:700;padding:10px 14px;text-align:left;border:1px solid var(--border);}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text2);}
+td strong{color:var(--text);}
+.test-questions{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:16px 18px;margin-top:18px;}
+.test-questions h4{font-size:0.82rem;font-weight:700;color:var(--accent2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;}
+.test-questions ul{padding-left:18px;}
+.test-questions li{font-size:0.83rem;color:var(--text2);line-height:1.65;margin-bottom:3px;}
+.mark-complete-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:9px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:var(--font);margin-top:18px;transition:all 0.2s;}
+.mark-complete-btn:hover{border-color:var(--green);color:var(--green);}
+.mark-complete-btn.marked{background:rgba(16,185,129,0.1);border-color:var(--green);color:var(--green);}
+.bottom-nav{max-width:900px;margin:0 auto;padding:0 28px 48px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;font-size:0.88rem;font-weight:700;cursor:pointer;text-decoration:none;border:1px solid var(--border);color:var(--text2);background:var(--surface);transition:all 0.2s;font-family:var(--font);}
+.nav-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,0.3);}
+.nav-btn.primary:hover{box-shadow:0 6px 16px rgba(37,99,235,0.4);}
+.nav-btn.disabled{opacity:0.4;pointer-events:none;}
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div style="font-size:2rem;margin-bottom:16px">📉</div>
+    <h2>SF DS & MLOps Certification</h2>
+    <p>Sign in with your SourceFuse account to continue.</p>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <div class="divider">or use email</div>
+    <input class="email-input" type="email" id="emailInput" placeholder="you@sourcefuse.com"/>
+    <button class="email-btn" onclick="signInWithEmail()">Send Sign-in Link</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+<div class="header" id="mainHeader" style="display:none">
+  <div class="header-left">
+    <a class="back-link" href="index.html">← Course Hub</a>
+    <span class="module-label">Module 3 of 5</span>
+  </div>
+  <div class="header-right">
+    <span class="user-pill" id="userEmail">—</span>
+    <button class="signout-btn" onclick="doSignOut()">Sign out</button>
+  </div>
+</div>
+<div id="mainContent" style="display:none">
+  <div class="module-hero">
+    <div class="hero-module-badge">📉 Module 3 · Core</div>
+    <h1>Model Lifecycle & Drift</h1>
+    <p>A model that performs well on launch will silently degrade over time unless you monitor it. This module teaches you exactly why models fail in production, how to detect it early, and what to do about it.</p>
+    <div class="module-progress-bar"><div class="module-progress-fill" id="modProgressFill"></div></div>
+  </div>
+  <div class="content-wrap" id="sectionsContainer"></div>
+  <div class="bottom-nav">
+    <a href="ds-mlops-module-2.html" class="nav-btn">← Module 2</a>
+    <a href="ds-mlops-module-4.html" class="nav-btn primary disabled" id="nextBtn">Module 4 →</a>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyC4Q0mLGt1ZCgPMTM4TjKLTPHHCGhGqlXA",authDomain:"sfcertification-grafana.firebaseapp.com",projectId:"sfcertification-grafana",storageBucket:"sfcertification-grafana.appspot.com",messagingSenderId:"876749260498",appId:"1:876749260498:web:7ef3e1b444b3c7a2d4e8f1"};
+const COURSE_ID="dsMlops2026SFCert",MODULE_ID="module-3";
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+let currentUser=null,sectionStates={};
+
+const SECTIONS=[
+  {id:1,title:"Why Models Degrade Over Time",content:`
+    <h3>📉 The Silent Failure</h3>
+    <p>When a model is deployed, it was trained on historical data. The world, however, does not stay the same as it was when that training data was collected. User behaviour changes, products evolve, market conditions shift, and new customer segments emerge.</p>
+    <p>As the gap widens between the world the model learned from and the world it is now predicting in, <strong>model performance silently degrades</strong>. This is model drift — and it is the most common cause of ML system failure in production.</p>
+    <div class="callout callout-red">
+      <h4>🚨 Why "Silent" is the Dangerous Part</h4>
+      <p>Unlike a server crash that triggers an alert immediately, model drift is gradual. The API continues returning predictions, the system appears healthy, but accuracy is declining week by week. Without active monitoring, teams often discover drift only when a business metric breaks — sometimes months later.</p>
+    </div>
+    <h4>Real-World Examples of Drift</h4>
+    <ul>
+      <li>A fraud detection model trained pre-2020 encounters new fraud patterns that emerged during the pandemic</li>
+      <li>A recommendation model trained on desktop users struggles after 60% of traffic shifts to mobile</li>
+      <li>A demand forecasting model trained before a new product launch fails to account for the new product cannibalizing existing sales</li>
+    </ul>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>Why is model drift described as a "silent" failure?</li><li>Give two real-world examples of events that could cause model drift.</li></ul></div>
+  `},
+  {id:2,title:"Types of Drift: Data, Concept, and Model",content:`
+    <h3>🔍 Three Distinct Types of Drift</h3>
+    <p>Drift is not a single phenomenon. Understanding which type you are dealing with determines the correct response.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Type</th><th>Definition</th><th>Example</th><th>Fix</th></tr>
+      <tr><td><strong>Data Drift</strong><br/>(Feature Drift)</td><td>The statistical distribution of input features changes</td><td>Average user age shifts from 28 to 42 as product matures</td><td>Retrain on recent data; update feature engineering</td></tr>
+      <tr><td><strong>Concept Drift</strong></td><td>The relationship between features and the label changes</td><td>Features that predicted churn in 2022 no longer predict churn in 2024 due to changed user behaviour</td><td>Retrain with label data from the new period</td></tr>
+      <tr><td><strong>Label Drift</strong></td><td>The distribution of the label itself changes</td><td>Churn rate drops from 15% to 3% after product improvement — model now over-predicts churn</td><td>Recalibrate model; update classification thresholds</td></tr>
+      <tr><td><strong>Upstream Data Drift</strong></td><td>A change in data pipelines or sources changes what arrives at the model</td><td>A schema change in the event tracking system causes a feature to be NULL for all new users</td><td>Fix the pipeline; add data quality checks</td></tr>
+    </table></div>
+    <div class="callout callout-blue">
+      <h4>💡 Data Drift vs Concept Drift — The Key Difference</h4>
+      <p><strong>Data drift:</strong> the inputs look different but the relationship between inputs and outputs is the same. <strong>Concept drift:</strong> even if inputs look the same, they mean something different for the prediction task. Concept drift is harder to detect and more damaging.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the difference between data drift and concept drift?</li><li>What causes label drift and how is it detected?</li><li>What is upstream data drift?</li></ul></div>
+  `},
+  {id:3,title:"Detecting Drift: Statistical Methods",content:`
+    <h3>📊 Measuring What Changed</h3>
+    <p>Detecting drift requires comparing the distribution of data at training time against the distribution seen in production. Several statistical tests are used for this.</p>
+    <h4>For Numerical Features</h4>
+    <ul>
+      <li><strong>Population Stability Index (PSI):</strong> Measures how much a distribution has shifted between two periods. PSI < 0.1: no significant change. PSI 0.1–0.2: moderate shift. PSI > 0.2: significant drift — investigate.</li>
+      <li><strong>Kolmogorov-Smirnov (KS) Test:</strong> Statistical test comparing two cumulative distributions. Returns a p-value — low p-value means distributions are significantly different.</li>
+      <li><strong>Wasserstein Distance:</strong> Measures the "work" needed to transform one distribution into another. Intuitive for comparing feature distributions.</li>
+    </ul>
+    <h4>For Categorical Features</h4>
+    <ul>
+      <li><strong>Chi-Squared Test:</strong> Tests whether the frequency distribution of categories has changed significantly.</li>
+      <li><strong>Jensen-Shannon Divergence:</strong> Measures the similarity between two probability distributions. Symmetric version of KL divergence.</li>
+    </ul>
+    <h4>For Model Output</h4>
+    <ul>
+      <li><strong>Prediction Distribution Shift:</strong> Monitor the distribution of model output scores over time. A sudden shift often indicates upstream data issues even before performance metrics degrade.</li>
+      <li><strong>Calibration Monitoring:</strong> Track whether predicted probabilities match observed frequencies.</li>
+    </ul>
+    <div class="callout callout-green">
+      <h4>✅ PSI in Practice</h4>
+      <p>PSI is the most widely used drift metric in industry because it produces an intuitive single number per feature, making it easy to alert on and report. Most ML monitoring tools implement PSI out of the box.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What does PSI measure and what thresholds indicate concern?</li><li>What is the KS test used for in drift detection?</li><li>Why monitor prediction distribution even without ground truth labels?</li></ul></div>
+  `},
+  {id:4,title:"Retraining Strategies",content:`
+    <h3>🔁 When and How to Retrain</h3>
+    <p>Detecting drift tells you something is wrong. Retraining is the response. But retraining has costs — compute, engineering time, risk of regression — so the strategy matters.</p>
+    <h4>Retraining Triggers</h4>
+    <ul>
+      <li><strong>Schedule-Based:</strong> Retrain on a fixed cadence regardless of drift (weekly, monthly). Simple to implement, but may retrain unnecessarily or too late.</li>
+      <li><strong>Metric-Based:</strong> Retrain when a monitored metric crosses a threshold (e.g. PSI > 0.2 on a key feature, or accuracy drops below 75%). Reactive but targeted.</li>
+      <li><strong>Continuous / Online Learning:</strong> Model updates incrementally with every new batch of data. Low latency but complex to implement and validate.</li>
+    </ul>
+    <h4>Retraining Approaches</h4>
+    <ul>
+      <li><strong>Full Retraining:</strong> Train a new model from scratch on the full updated dataset. Simplest approach, but expensive.</li>
+      <li><strong>Windowed Retraining:</strong> Train on only the most recent N months of data. Helps the model adapt to recent behaviour while discarding stale patterns.</li>
+      <li><strong>Fine-Tuning:</strong> Take the existing model and continue training on new data. Faster than full retraining; works well for neural networks.</li>
+      <li><strong>Champion/Challenger:</strong> Keep the existing model in production (champion) while training a challenger in parallel. Switch when the challenger demonstrates better performance in shadow mode.</li>
+    </ul>
+    <div class="callout callout-yellow">
+      <h4>⚠️ Retraining ≠ Redeploying</h4>
+      <p>A retrained model must go through the same validation, testing, and deployment pipeline as the original. Shortcuts here create new failure modes. MLOps CI/CD pipelines automate this safely.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the difference between schedule-based and metric-based retraining triggers?</li><li>What is the champion/challenger approach?</li><li>What is windowed retraining and why use it?</li></ul></div>
+  `},
+  {id:5,title:"Model Performance Metrics",content:`
+    <h3>📏 Measuring Whether Your Model Works</h3>
+    <p>Before you can detect drift, you need to know what good performance looks like. These are the core metrics for evaluating ML model quality.</p>
+    <h4>Classification Metrics</h4>
+    <ul>
+      <li><strong>Accuracy:</strong> % of correct predictions. Misleading on imbalanced datasets (a model that always predicts "no churn" is 95% accurate if only 5% of users churn).</li>
+      <li><strong>Precision:</strong> Of all positive predictions, what fraction were correct? High precision = few false positives.</li>
+      <li><strong>Recall:</strong> Of all actual positives, what fraction did we catch? High recall = few false negatives.</li>
+      <li><strong>F1 Score:</strong> Harmonic mean of precision and recall. Useful when you need to balance both.</li>
+      <li><strong>AUC-ROC:</strong> Area under the ROC curve. Measures the model's ability to discriminate between classes. 0.5 = random; 1.0 = perfect.</li>
+    </ul>
+    <h4>Regression Metrics</h4>
+    <ul>
+      <li><strong>MAE (Mean Absolute Error):</strong> Average absolute difference between predicted and actual values. Intuitive, robust to outliers.</li>
+      <li><strong>RMSE (Root Mean Squared Error):</strong> Penalises large errors more than MAE. Use when large errors are disproportionately costly.</li>
+      <li><strong>R² (R-squared):</strong> Proportion of variance explained by the model. 1.0 = perfect fit; 0 = no better than predicting the mean.</li>
+    </ul>
+    <div class="callout callout-blue">
+      <h4>💡 Choosing the Right Metric</h4>
+      <p>Match the metric to the business problem. For fraud detection (where false negatives are expensive), optimise for Recall. For a spam filter (where false positives irritate users), optimise for Precision. For general model health monitoring, track AUC-ROC over time.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>Why is accuracy a poor metric for imbalanced datasets?</li><li>What is the difference between precision and recall?</li><li>What does AUC-ROC measure?</li></ul></div>
+  `},
+  {id:6,title:"Monitoring Infrastructure & Tools",content:`
+    <h3>🔭 Building a Monitoring System</h3>
+    <p>Monitoring a model in production requires infrastructure — not just dashboards, but automated checks, alerting, and data pipelines that continuously compare training-time distributions against serving-time distributions.</p>
+    <h4>What to Monitor</h4>
+    <ul>
+      <li><strong>Input features:</strong> Statistical distributions of every input feature. Alert on PSI/KS test violations.</li>
+      <li><strong>Prediction distribution:</strong> The distribution of model output scores over time.</li>
+      <li><strong>Model latency:</strong> p50, p95, p99 prediction latency. A suddenly slow model often indicates resource or infrastructure issues.</li>
+      <li><strong>Data quality:</strong> Null rates, schema violations, out-of-range values in incoming features.</li>
+      <li><strong>Business metrics:</strong> Click-through rates, conversion rates, customer satisfaction — the downstream metrics that the model is supposed to improve.</li>
+    </ul>
+    <h4>MLOps Monitoring Tools</h4>
+    <ul>
+      <li><strong>Evidently AI:</strong> Open-source library for ML monitoring reports and test suites. Generates HTML reports on data drift and model quality.</li>
+      <li><strong>Arize AI:</strong> Production monitoring platform with drift detection and root-cause analysis.</li>
+      <li><strong>WhyLogs / WhyLabs:</strong> Lightweight statistical logging for ML pipelines.</li>
+      <li><strong>MLflow:</strong> Primarily for experiment tracking but includes model serving and can integrate with monitoring tools.</li>
+      <li><strong>Grafana + Prometheus:</strong> General-purpose monitoring that can be adapted for ML metric dashboards.</li>
+    </ul>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What five categories of signals should you monitor for a deployed model?</li><li>Name two dedicated ML monitoring tools.</li><li>What is the role of Evidently AI?</li></ul></div>
+  `},
+  {id:7,title:"Module Summary: The Drift Response Playbook",content:`
+    <h3>📋 Putting It Into Practice</h3>
+    <p>When you suspect or detect model degradation, follow this structured response:</p>
+    <ol>
+      <li><strong>Check upstream data first:</strong> Is there a pipeline issue? Missing values, schema changes, or NULL floods are common culprits and easier to fix than retraining.</li>
+      <li><strong>Identify which features drifted:</strong> Run PSI/KS tests across all input features. Pinpoint the most drifted features — these are your investigation priority.</li>
+      <li><strong>Determine drift type:</strong> Is the input distribution changing (data drift) or is the feature-to-label relationship changing (concept drift)? Check label distributions too.</li>
+      <li><strong>Assess business impact:</strong> Has performance degradation translated to a business metric drop? Quantify the impact before investing in retraining.</li>
+      <li><strong>Choose retraining strategy:</strong> Full retrain, windowed retrain, or fine-tuning? Run champion/challenger if risk is high.</li>
+      <li><strong>Validate and deploy:</strong> New model must pass all existing tests before promotion. Track performance post-deployment for at least one business cycle.</li>
+    </ol>
+    <div class="callout callout-green">
+      <h4>✅ Module 3 Summary</h4>
+      <p>You can now explain: why models degrade, the four types of drift (data, concept, label, upstream), six statistical detection methods, four retraining strategies, core performance metrics, and a structured response playbook. This is the complete framework the candidate was missing.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the first step when you suspect model degradation?</li><li>In what order would you diagnose a drift incident?</li></ul></div>
+  `}
+];
+
+window.signInWithGoogle=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){document.getElementById('authError').textContent=e.message;}};
+window.signInWithEmail=async()=>{const email=document.getElementById('emailInput').value.trim();if(!email.endsWith('@sourcefuse.com')){document.getElementById('authError').textContent='Use your @sourcefuse.com email.';return;}try{await sendSignInLinkToEmail(auth,email,{url:window.location.href,handleCodeInApp:true});localStorage.setItem('emailForSignIn',email);document.getElementById('authError').style.color='var(--green)';document.getElementById('authError').textContent='✓ Check your inbox.';}catch(e){document.getElementById('authError').textContent=e.message;}};
+window.doSignOut=async()=>{await signOut(auth);location.reload();};
+if(isSignInWithEmailLink(auth,window.location.href)){let em=localStorage.getItem('emailForSignIn')||prompt('Confirm your email:');try{await signInWithEmailLink(auth,em,window.location.href);window.history.replaceState(null,'',window.location.pathname);}catch(e){}}
+
+function buildSections(states){
+  const container=document.getElementById('sectionsContainer');container.innerHTML='';
+  SECTIONS.forEach((sec,idx)=>{
+    const done=states[`section-${sec.id}`]==='done';
+    const card=document.createElement('div');
+    card.className='section-card'+(idx===0?' active':'')+(done?' completed-section':'');
+    card.innerHTML=`<div class="section-header" onclick="toggleSection(this)"><span class="section-num">${String(sec.id).padStart(2,'0')}</span><span class="section-title-text">${sec.title}</span><span class="section-check ${done?'done':''}">${done?'✓':''}</span><span class="section-chevron">${idx===0?'▲':'▼'}</span></div><div class="section-body">${sec.content}<button class="mark-complete-btn ${done?'marked':''}" onclick="markSection(${sec.id},this)">${done?'✓ Completed':'Mark as complete'}</button></div>`;
+    container.appendChild(card);
+  });
+  updateProgress(states);
+}
+window.toggleSection=(header)=>{const card=header.closest('.section-card');const wasActive=card.classList.contains('active');document.querySelectorAll('.section-card').forEach(c=>{c.classList.remove('active');c.querySelector('.section-chevron').textContent='▼';});if(!wasActive){card.classList.add('active');header.querySelector('.section-chevron').textContent='▲';}};
+window.markSection=async(sectionId,btn)=>{
+  if(!currentUser)return;const key=`section-${sectionId}`;sectionStates[key]='done';
+  btn.textContent='✓ Completed';btn.classList.add('marked');
+  const card=btn.closest('.section-card');card.classList.add('completed-section');card.querySelector('.section-check').classList.add('done');card.querySelector('.section-check').textContent='✓';
+  updateProgress(sectionStates);
+  const pRef=doc(db,'progress',currentUser.uid);const pSnap=await getDoc(pRef);const existing=pSnap.exists()?pSnap.data():{};
+  const sections=(existing[COURSE_ID]?.[MODULE_ID]?.sections)||{};sections[key]='done';
+  const allDone=SECTIONS.every(s=>sections[`section-${s.id}`]==='done');
+  await setDoc(pRef,{[`${COURSE_ID}.${MODULE_ID}.sections`]:sections,[`${COURSE_ID}.${MODULE_ID}.status`]:allDone?'completed':'in_progress',[`${COURSE_ID}.${MODULE_ID}.lastUpdated`]:serverTimestamp()},{merge:true});
+  if(allDone)document.getElementById('nextBtn').classList.remove('disabled');
+};
+function updateProgress(states){const done=SECTIONS.filter(s=>states[`section-${s.id}`]==='done').length;document.getElementById('modProgressFill').style.width=Math.round((done/SECTIONS.length)*100)+'%';if(done===SECTIONS.length)document.getElementById('nextBtn').classList.remove('disabled');}
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){document.getElementById('authOverlay').style.display='flex';return;}
+  const email=user.email||'';if(!email.endsWith('@sourcefuse.com')){await signOut(auth);document.getElementById('authOverlay').style.display='flex';return;}
+  currentUser=user;document.getElementById('authOverlay').style.display='none';document.getElementById('mainHeader').style.display='flex';document.getElementById('mainContent').style.display='block';document.getElementById('userEmail').textContent=email;
+  const pRef=doc(db,'progress',user.uid);const pSnap=await getDoc(pRef);const progress=pSnap.exists()?(pSnap.data()[COURSE_ID]||{}):{};const modData=progress[MODULE_ID]||{};sectionStates=modData.sections||{};buildSections(sectionStates);
+  if(modData.status==='completed')document.getElementById('nextBtn').classList.remove('disabled');
+});
+</script>
+</body>
+</html>
