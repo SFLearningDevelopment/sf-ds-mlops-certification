@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+<title>Module 1: DS & MLOps Foundations — SF Certification</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#080c14;--surface:#0f1520;--surface2:#141c2e;--border:#1e2a40;
+  --accent:#2563eb;--accent2:#3b82f6;--text:#e2e8f0;--text2:#7d8fa8;
+  --green:#10b981;--yellow:#f59e0b;--red:#ef4444;--purple:#8b5cf6;
+  --radius:14px;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:var(--accent);}
+
+/* Auth */
+.auth-overlay{position:fixed;inset:0;background:rgba(8,12,20,0.97);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;max-width:400px;width:90%;}
+.auth-card h2{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
+.auth-card p{color:var(--text2);font-size:0.875rem;margin-bottom:28px;line-height:1.6;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:none;border-radius:10px;padding:12px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;width:100%;font-family:var(--font);transition:all 0.2s;}
+.google-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,0.3);}
+.google-btn svg{width:18px;height:18px;flex-shrink:0;}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text2);font-size:0.8rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.email-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:0.875rem;font-family:var(--font);margin-bottom:10px;outline:none;transition:border 0.2s;}
+.email-input:focus{border-color:var(--accent);}
+.email-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:var(--font);}
+.auth-error{color:var(--red);font-size:0.8rem;margin-top:10px;}
+
+/* Header */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header-left{display:flex;align-items:center;gap:16px;}
+.back-link{color:var(--text2);text-decoration:none;font-size:0.85rem;display:flex;align-items:center;gap:6px;transition:color 0.2s;}
+.back-link:hover{color:var(--accent);}
+.module-label{font-size:0.85rem;font-weight:700;color:var(--accent);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.user-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--text2);}
+.signout-btn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;font-family:var(--font);}
+
+/* Module Hero */
+.module-hero{padding:52px 28px 40px;max-width:900px;margin:0 auto;}
+.hero-module-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(37,99,235,0.12);border:1px solid rgba(37,99,235,0.3);border-radius:20px;padding:5px 14px;font-size:0.75rem;font-weight:700;color:var(--accent2);margin-bottom:20px;text-transform:uppercase;letter-spacing:0.06em;}
+.module-hero h1{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-0.03em;line-height:1.2;margin-bottom:14px;}
+.module-hero p{color:var(--text2);font-size:0.95rem;line-height:1.7;max-width:680px;}
+.module-progress-bar{height:4px;background:var(--surface2);border-radius:2px;margin-top:28px;overflow:hidden;}
+.module-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;width:0%;transition:width 0.6s ease;}
+
+/* Content layout */
+.content-wrap{max-width:900px;margin:0 auto;padding:0 28px 80px;}
+
+/* Section card */
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;overflow:hidden;transition:border-color 0.2s;}
+.section-card.active{border-color:rgba(37,99,235,0.5);}
+.section-card.completed-section{border-color:rgba(16,185,129,0.35);}
+.section-header{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;}
+.section-header:hover{background:rgba(255,255,255,0.02);}
+.section-num{font-family:var(--mono);font-size:0.72rem;color:var(--text2);min-width:28px;font-weight:500;}
+.section-title-text{flex:1;font-weight:700;font-size:0.95rem;}
+.section-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.7rem;transition:all 0.2s;flex-shrink:0;}
+.section-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.section-chevron{color:var(--text2);font-size:0.8rem;transition:transform 0.2s;flex-shrink:0;}
+.section-card.active .section-chevron{transform:rotate(180deg);}
+.section-body{padding:0 22px 22px;display:none;}
+.section-card.active .section-body{display:block;}
+.section-body h3{font-size:1.05rem;font-weight:800;margin:20px 0 10px;letter-spacing:-0.01em;}
+.section-body h4{font-size:0.9rem;font-weight:700;margin:16px 0 8px;color:var(--accent2);}
+.section-body p{color:var(--text2);font-size:0.9rem;line-height:1.75;margin-bottom:12px;}
+.section-body ul,.section-body ol{padding-left:22px;margin-bottom:12px;}
+.section-body li{color:var(--text2);font-size:0.88rem;line-height:1.7;margin-bottom:4px;}
+.section-body li strong{color:var(--text);}
+.section-body code{font-family:var(--mono);background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:5px;font-size:0.82rem;color:var(--accent2);}
+
+/* Callouts */
+.callout{border-radius:10px;padding:16px 18px;margin:16px 0;border-left:3px solid;}
+.callout-blue{background:rgba(37,99,235,0.08);border-color:var(--accent);}
+.callout-green{background:rgba(16,185,129,0.08);border-color:var(--green);}
+.callout-yellow{background:rgba(245,158,11,0.08);border-color:var(--yellow);}
+.callout h4{font-size:0.85rem;font-weight:700;margin-bottom:6px;}
+.callout p{font-size:0.85rem;margin-bottom:0;}
+.callout-blue h4{color:var(--accent2);}
+.callout-green h4{color:var(--green);}
+.callout-yellow h4{color:var(--yellow);}
+
+/* Diagram */
+.diagram{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.diagram-title{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:16px;}
+.diagram-row{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0;}
+.diagram-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:0.82rem;font-weight:600;}
+.diagram-box.blue{border-color:rgba(37,99,235,0.4);color:var(--accent2);}
+.diagram-box.green{border-color:rgba(16,185,129,0.4);color:var(--green);}
+.diagram-box.yellow{border-color:rgba(245,158,11,0.4);color:var(--yellow);}
+.diagram-box.purple{border-color:rgba(139,92,246,0.4);color:var(--purple);}
+.diagram-arrow{color:var(--text2);font-size:1.2rem;}
+
+/* Test questions */
+.test-questions{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:16px 18px;margin-top:18px;}
+.test-questions h4{font-size:0.82rem;font-weight:700;color:var(--accent2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;}
+.test-questions ul{padding-left:18px;}
+.test-questions li{font-size:0.83rem;color:var(--text2);line-height:1.65;margin-bottom:3px;}
+
+/* Mark complete btn */
+.mark-complete-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:9px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:var(--font);margin-top:18px;transition:all 0.2s;}
+.mark-complete-btn:hover{border-color:var(--green);color:var(--green);}
+.mark-complete-btn.marked{background:rgba(16,185,129,0.1);border-color:var(--green);color:var(--green);}
+
+/* Bottom nav */
+.bottom-nav{max-width:900px;margin:0 auto;padding:0 28px 48px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;font-size:0.88rem;font-weight:700;cursor:pointer;text-decoration:none;border:1px solid var(--border);color:var(--text2);background:var(--surface);transition:all 0.2s;font-family:var(--font);}
+.nav-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,0.3);}
+.nav-btn.primary:hover{box-shadow:0 6px 16px rgba(37,99,235,0.4);}
+.nav-btn.disabled{opacity:0.4;pointer-events:none;}
+
+@media(max-width:600px){
+  .module-hero,.content-wrap{padding-left:16px;padding-right:16px;}
+  .bottom-nav{padding:0 16px 40px;}
+}
+</style>
+</head>
+<body>
+
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div style="font-size:2rem;margin-bottom:16px">🧠</div>
+    <h2>SF DS & MLOps Certification</h2>
+    <p>Sign in with your SourceFuse account to continue.</p>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.47 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <div class="divider">or use email</div>
+    <input class="email-input" type="email" id="emailInput" placeholder="you@sourcefuse.com"/>
+    <button class="email-btn" onclick="signInWithEmail()">Send Sign-in Link</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<div class="header" id="mainHeader" style="display:none">
+  <div class="header-left">
+    <a class="back-link" href="index.html">← Course Hub</a>
+    <span class="module-label">Module 1 of 5</span>
+  </div>
+  <div class="header-right">
+    <span class="user-pill" id="userEmail">—</span>
+    <button class="signout-btn" onclick="doSignOut()">Sign out</button>
+  </div>
+</div>
+
+<div id="mainContent" style="display:none">
+  <div class="module-hero">
+    <div class="hero-module-badge">🗺️ Module 1 · Foundation</div>
+    <h1>Data Science & MLOps Foundations</h1>
+    <p>Before diving into specific techniques, you need a solid mental model. This module builds your complete vocabulary and conceptual map — what Data Science is, where ML fits, how data flows from raw input to a live model, and the role each component plays in that journey.</p>
+    <div class="module-progress-bar"><div class="module-progress-fill" id="modProgressFill"></div></div>
+  </div>
+
+  <div class="content-wrap" id="sectionsContainer"></div>
+
+  <div class="bottom-nav">
+    <a href="index.html" class="nav-btn">← Course Hub</a>
+    <a href="ds-mlops-module-2.html" class="nav-btn primary disabled" id="nextBtn">Module 2 →</a>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail,
+  isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC4Q0mLGt1ZCgPMTM4TjKLTPHHCGhGqlXA",
+  authDomain: "sfcertification-grafana.firebaseapp.com",
+  projectId: "sfcertification-grafana",
+  storageBucket: "sfcertification-grafana.appspot.com",
+  messagingSenderId: "876749260498",
+  appId: "1:876749260498:web:7ef3e1b444b3c7a2d4e8f1"
+};
+
+const COURSE_ID = "dsMlops2026SFCert";
+const MODULE_ID = "module-1";
+const MODULE_NUM = 1;
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const SECTIONS = [
+  {id:1, title:"What is Data Science?", badge:"essential", content:`
+    <h3>📊 Defining Data Science</h3>
+    <p>Data Science is the discipline of extracting <strong>meaningful insight and actionable knowledge from data</strong>. It sits at the intersection of three domains: statistics (to understand patterns and uncertainty), programming (to process large datasets), and domain expertise (to ask the right questions).</p>
+    <p>In practice, a Data Scientist's job is to take messy, real-world data and convert it into decisions — either by producing dashboards and reports, or by building models that make predictions automatically.</p>
+    <div class="callout callout-blue">
+      <h4>💡 Key Distinction</h4>
+      <p>Data Science produces <strong>insight</strong>. Machine Learning (a subset of Data Science) produces <strong>automated predictions</strong>. Not every Data Science task involves ML — sometimes a clear chart tells the whole story.</p>
+    </div>
+    <h4>What Data Scientists Actually Do</h4>
+    <ul>
+      <li><strong>Explore data</strong> — understand distributions, spot anomalies, form hypotheses</li>
+      <li><strong>Clean and prepare data</strong> — handle missing values, remove noise, restructure formats</li>
+      <li><strong>Build and validate models</strong> — train algorithms on historical data to predict future outcomes</li>
+      <li><strong>Communicate findings</strong> — translate technical results into decisions a business can act on</li>
+      <li><strong>Monitor in production</strong> — ensure models continue to work correctly over time</li>
+    </ul>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What three disciplines does Data Science sit at the intersection of?</li><li>What is the core difference between Data Science and Machine Learning?</li></ul></div>
+  `},
+  {id:2, title:"The Machine Learning Lifecycle", badge:"essential", content:`
+    <h3>🔄 How a Model Goes from Idea to Production</h3>
+    <p>Understanding the ML lifecycle is the single most important mental model in this course. Every concept we cover — features, drift, pipelines, feature stores — is just one step in this lifecycle.</p>
+    <div class="diagram">
+      <div class="diagram-title">ML Lifecycle — End to End</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">1. Define Problem<br/><small>What are we predicting?</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box blue">2. Collect Data<br/><small>Raw signals</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box yellow">3. Feature Engineering<br/><small>Transform → signals</small></div>
+      </div>
+      <div class="diagram-row" style="margin:4px 0"><div class="diagram-arrow" style="transform:rotate(90deg)">↓</div></div>
+      <div class="diagram-row">
+        <div class="diagram-box green">6. Monitor & Retrain<br/><small>Detect drift</small></div>
+        <div class="diagram-arrow">←</div>
+        <div class="diagram-box green">5. Deploy to Prod<br/><small>Serve predictions</small></div>
+        <div class="diagram-arrow">←</div>
+        <div class="diagram-box yellow">4. Train & Evaluate<br/><small>Model + metrics</small></div>
+      </div>
+    </div>
+    <h4>Each Stage Explained</h4>
+    <ul>
+      <li><strong>Define Problem:</strong> What outcome are we predicting? What is success? (e.g. "predict customer churn with 80% accuracy")</li>
+      <li><strong>Collect Data:</strong> Identify data sources — databases, APIs, logs, user events</li>
+      <li><strong>Feature Engineering:</strong> Transform raw data into the numeric signals a model can learn from</li>
+      <li><strong>Train & Evaluate:</strong> Run a learning algorithm on historical data; measure performance on held-out test data</li>
+      <li><strong>Deploy to Production:</strong> Wrap the model in an API or service so it can serve real predictions</li>
+      <li><strong>Monitor & Retrain:</strong> Watch for degradation; trigger retraining when performance drops</li>
+    </ul>
+    <div class="callout callout-yellow">
+      <h4>⚠️ Common Interview Trap</h4>
+      <p>Many engineers can explain steps 3 and 4 in detail but stumble at steps 5 and 6. In a production system, <strong>deployment and monitoring are where most ML failures happen</strong>. This is the heart of MLOps.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>List the 6 stages of the ML lifecycle in order.</li><li>Which stage is the focus of MLOps?</li></ul></div>
+  `},
+  {id:3, title:"Core Vocabulary: Dataset, Label, Feature, Model", badge:"essential", content:`
+    <h3>🧩 The Four Foundational Terms</h3>
+    <p>These four terms form the vocabulary layer for everything else in the course. You need to be able to define and use them precisely.</p>
+    <h4>Dataset</h4>
+    <p>A dataset is a structured collection of observations used for training or evaluating a model. Think of it as a table: <strong>each row is one observation</strong> (a customer, a transaction, a sensor reading), and each column is one attribute.</p>
+    <h4>Label (Target Variable)</h4>
+    <p>The label is <strong>what you are trying to predict</strong>. In a churn prediction model, the label is "did this customer churn? (yes/no)". In a house price model, the label is the sale price. In supervised learning, labels come from historical data where the outcome is already known.</p>
+    <h4>Feature</h4>
+    <p>Features are the <strong>input signals the model uses to make a prediction</strong>. They are the columns of your dataset that are not the label. For a churn model, features might be: number of logins in the last 30 days, account age in months, last support ticket date, plan tier.</p>
+    <div class="callout callout-blue">
+      <h4>💡 Features vs Raw Data</h4>
+      <p>Raw data is rarely in the right form to be a feature. A timestamp like <code>2024-03-15T09:32:00Z</code> is raw data. Derived features might be: <code>days_since_last_login = 45</code>, <code>is_weekend = false</code>, <code>hour_of_day = 9</code>. The process of creating features from raw data is called <strong>Feature Engineering</strong> (Module 2).</p>
+    </div>
+    <h4>Model</h4>
+    <p>A model is a <strong>mathematical function that maps features to predictions</strong>. During training, the algorithm learns the best parameters of this function from historical data. After training, you "freeze" the model and use it to make predictions on new, unseen data.</p>
+    <div class="diagram">
+      <div class="diagram-title">How a Model Works</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">Features<br/><small>login_count=3, age=24mo</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box purple">Model<br/><small>learned function</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box green">Prediction<br/><small>churn_prob=0.82</small></div>
+      </div>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the difference between a feature and a label?</li><li>What does a model do with features?</li><li>Give an example of transforming raw data into a feature.</li></ul></div>
+  `},
+  {id:4, title:"Data Ingestion: Getting Data In", badge:"essential", content:`
+    <h3>🚰 What is Data Ingestion?</h3>
+    <p>Data ingestion is the process of <strong>collecting raw data from its source and loading it into a system where it can be processed</strong>. Before you can engineer features or train a model, your data needs to be somewhere accessible, reliable, and consistently structured.</p>
+    <h4>The Three Ingestion Patterns</h4>
+    <ul>
+      <li><strong>Batch Ingestion:</strong> Data is collected and loaded in scheduled intervals — hourly, daily, weekly. Example: every night at 2am, pull yesterday's sales records from the transactional database into the data warehouse. Simple, predictable, but introduces latency.</li>
+      <li><strong>Streaming Ingestion:</strong> Data is captured and processed as it arrives in real time. Example: every user click event is published to a Kafka topic and consumed immediately. Low latency, but more infrastructure complexity.</li>
+      <li><strong>Change Data Capture (CDC):</strong> A mechanism that tracks changes (inserts, updates, deletes) in a source database and propagates them downstream. Example: Debezium listening to a PostgreSQL write-ahead log. Useful for keeping data warehouses in sync without full table scans.</li>
+    </ul>
+    <div class="callout callout-green">
+      <h4>✅ Interview Signal</h4>
+      <p>When asked "how does your data get ingested?", a strong answer names the pattern (batch/streaming/CDC), the tool (Airflow, Kafka, Fivetran, Debezium), the source system, and the destination. "Data comes from our PostgreSQL database via daily Airflow DAGs into BigQuery" is a complete answer.</p>
+    </div>
+    <h4>Common Ingestion Tools</h4>
+    <ul>
+      <li><strong>Apache Kafka</strong> — streaming event bus</li>
+      <li><strong>Apache Airflow</strong> — batch pipeline orchestration</li>
+      <li><strong>Fivetran / Airbyte</strong> — managed connectors for SaaS sources</li>
+      <li><strong>Spark Structured Streaming</strong> — large-scale stream processing</li>
+      <li><strong>Debezium</strong> — CDC from relational databases</li>
+    </ul>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the difference between batch and streaming ingestion?</li><li>What is CDC and when would you use it?</li><li>Name two ingestion tools and their use cases.</li></ul></div>
+  `},
+  {id:5, title:"Data Processing & Transformation", badge:"essential", content:`
+    <h3>🔧 Turning Raw Data into Usable Data</h3>
+    <p>Ingested data is almost never ready to use. Data processing covers the series of steps that clean, structure, and transform raw data into a consistent, reliable form for downstream use.</p>
+    <h4>The Core Processing Steps</h4>
+    <ul>
+      <li><strong>Parsing & Schema Enforcement:</strong> Ensuring data types are correct (date strings become timestamps, IDs are integers, etc.) and required fields are present.</li>
+      <li><strong>Deduplication:</strong> Removing duplicate records that arose from retries, multiple ingestion runs, or source system issues.</li>
+      <li><strong>Null Handling:</strong> Deciding what to do with missing values — drop the row, fill with a default, or flag for imputation in the feature engineering step.</li>
+      <li><strong>Normalization:</strong> Standardising units, formats, and encodings. A phone number might arrive as <code>+91-9876543210</code>, <code>9876543210</code>, or <code>91-9876543210</code>. Processing unifies these.</li>
+      <li><strong>Joining:</strong> Combining data from multiple sources — user records joined with their transaction history, for example.</li>
+      <li><strong>Aggregation:</strong> Summarising data — counting events per user per day, computing rolling averages, etc.</li>
+    </ul>
+    <div class="callout callout-yellow">
+      <h4>⚠️ Garbage In, Garbage Out</h4>
+      <p>Poor data quality is the most common reason ML models fail in production — not algorithm choice, not infrastructure. A model trained on poorly processed data will learn the wrong patterns and make unreliable predictions.</p>
+    </div>
+    <h4>Where Processing Happens</h4>
+    <p>Processing typically happens in a <strong>data pipeline</strong> — an ordered sequence of transformations that data passes through. Common tools: Apache Spark, dbt (data build tool), Pandas (for smaller scale), and cloud-native services like Google Dataflow or AWS Glue.</p>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is deduplication and why is it needed?</li><li>What does "schema enforcement" mean?</li><li>Name the 6 core processing steps.</li></ul></div>
+  `},
+  {id:6, title:"Introduction to MLOps", badge:"essential", content:`
+    <h3>🔩 What MLOps Actually Means</h3>
+    <p>MLOps stands for <strong>Machine Learning Operations</strong>. It is the practice of applying DevOps principles — automation, reproducibility, monitoring, CI/CD — to the machine learning lifecycle.</p>
+    <p>The core problem MLOps solves: a model that works great in a Jupyter notebook is not automatically reliable, scalable, or maintainable in production. MLOps is the discipline that bridges that gap.</p>
+    <div class="diagram">
+      <div class="diagram-title">MLOps: What It Connects</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">Data Engineering<br/><small>ingest, process, store</small></div>
+        <div class="diagram-box purple">Model Development<br/><small>experiment, train, evaluate</small></div>
+        <div class="diagram-box green">Software Engineering<br/><small>deploy, serve, monitor</small></div>
+      </div>
+      <div class="diagram-row"><span style="color:var(--text2);font-size:0.85rem">↑ MLOps connects and automates all three ↑</span></div>
+    </div>
+    <h4>The Key MLOps Capabilities</h4>
+    <ul>
+      <li><strong>Experiment Tracking:</strong> Logging model parameters, metrics, and artifacts so experiments are reproducible. Tools: MLflow, Weights & Biases.</li>
+      <li><strong>Model Registry:</strong> A versioned store of trained models, with metadata about performance and deployment status.</li>
+      <li><strong>CI/CD for ML:</strong> Automated pipelines that retrain, validate, and deploy models when new data or code changes arrive.</li>
+      <li><strong>Model Serving:</strong> Exposing the model as an API endpoint so applications can call it for predictions. Tools: FastAPI, TorchServe, BentoML, SageMaker Endpoints.</li>
+      <li><strong>Monitoring:</strong> Detecting when a deployed model's performance degrades (covered in Module 3).</li>
+    </ul>
+    <div class="callout callout-blue">
+      <h4>💡 MLOps Maturity</h4>
+      <p>Teams often start with manual MLOps (everything done by hand) and graduate to automated pipelines. A team that can describe <em>where they are</em> on this spectrum — and <em>why</em> — demonstrates real operational maturity.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What problem does MLOps solve?</li><li>What is a Model Registry?</li><li>Name three MLOps capabilities and associated tools.</li></ul></div>
+  `},
+  {id:7, title:"The Full Picture: Putting It Together", badge:"essential", content:`
+    <h3>🗺️ Your Complete Mental Map</h3>
+    <p>You now have all the building blocks. Here is how everything connects into a single coherent system.</p>
+    <div class="diagram">
+      <div class="diagram-title">The Complete ML System</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">Data Sources<br/><small>DB, API, logs, events</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box blue">Ingestion Layer<br/><small>Kafka / Airflow / CDC</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box blue">Processing<br/><small>clean, join, aggregate</small></div>
+      </div>
+      <div class="diagram-row"><div class="diagram-arrow" style="transform:rotate(90deg)">↓</div></div>
+      <div class="diagram-row">
+        <div class="diagram-box yellow">Feature Store<br/><small>reusable feature vectors</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box purple">Training Pipeline<br/><small>model + evaluation</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box green">Model Registry<br/><small>versioned artifacts</small></div>
+      </div>
+      <div class="diagram-row"><div class="diagram-arrow" style="transform:rotate(90deg)">↓</div></div>
+      <div class="diagram-row">
+        <div class="diagram-box green">Serving Layer<br/><small>API / batch predictions</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box green">Monitoring<br/><small>drift, performance</small></div>
+        <div class="diagram-arrow">→</div>
+        <div class="diagram-box yellow">Retrain Trigger<br/><small>back to pipeline</small></div>
+      </div>
+    </div>
+    <h4>How to Use This Map</h4>
+    <p>When asked to describe your current system in an interview or architecture review, walk through this map from left to right. For each component, say: what it is, what tool implements it, and what goes wrong if it breaks. That structure alone will demonstrate systems thinking.</p>
+    <div class="callout callout-green">
+      <h4>✅ Module 1 Summary</h4>
+      <p>You now know: what Data Science is, the 6-stage ML lifecycle, the 4 foundational terms (dataset, label, feature, model), the 3 ingestion patterns, the core processing steps, what MLOps is and why it exists, and how all of these form a complete system. Modules 2–5 will go deep on the components that are most commonly misunderstood.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>In a complete ML system, what comes after processing and before training?</li><li>What triggers a model retraining in a well-designed MLOps system?</li><li>Where does a Feature Store fit in the ML pipeline?</li></ul></div>
+  `},
+  {id:8, title:"How to Describe Your Architecture", badge:"practical", content:`
+    <h3>🗣️ The Communication Skill</h3>
+    <p>Technical knowledge alone is not enough. A significant part of this course is about being able to <strong>coherently describe the systems you work on</strong> to any audience — manager, customer, interviewer, or peer.</p>
+    <h4>The 5-Part Architecture Description</h4>
+    <p>Use this template whenever you need to explain a system:</p>
+    <ol>
+      <li><strong>What it does (purpose):</strong> "This system predicts which customers are likely to churn in the next 30 days."</li>
+      <li><strong>Where the data comes from (sources):</strong> "We ingest user activity events from Kafka and pull account metadata from our PostgreSQL database nightly via Airflow."</li>
+      <li><strong>How the data is transformed (processing):</strong> "Events are aggregated into per-user daily summaries. Features like login frequency, time since last activity, and support ticket count are computed."</li>
+      <li><strong>How predictions are made (model + serving):</strong> "A gradient boosting model is trained weekly. Predictions are served via a REST API that our CRM queries in real time."</li>
+      <li><strong>How it stays healthy (monitoring):</strong> "We monitor prediction distribution and retrain if the mean churn score shifts by more than 5% week-over-week."</li>
+    </ol>
+    <div class="callout callout-yellow">
+      <h4>⚠️ What Interviewers Are Testing</h4>
+      <p>When an interviewer asks "describe the system you currently work on," they are not just testing technical knowledge. They are testing whether you <strong>understand ownership</strong>. Can you explain not just what the system does, but why each part is designed the way it is?</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the 5 parts of a complete architecture description?</li><li>What does "ownership" mean in the context of describing a data system?</li></ul></div>
+  `}
+];
+
+let currentUser = null;
+let sectionStates = {};
+
+window.signInWithGoogle = async () => {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  catch(e){ document.getElementById('authError').textContent = e.message; }
+};
+window.signInWithEmail = async () => {
+  const email = document.getElementById('emailInput').value.trim();
+  if(!email.endsWith('@sourcefuse.com')){ document.getElementById('authError').textContent='Use your @sourcefuse.com email.'; return; }
+  try {
+    await sendSignInLinkToEmail(auth, email, { url: window.location.href, handleCodeInApp: true });
+    localStorage.setItem('emailForSignIn', email);
+    document.getElementById('authError').style.color='var(--green)';
+    document.getElementById('authError').textContent='✓ Check your inbox.';
+  } catch(e){ document.getElementById('authError').textContent = e.message; }
+};
+window.doSignOut = async () => { await signOut(auth); location.reload(); };
+
+if(isSignInWithEmailLink(auth, window.location.href)){
+  let em = localStorage.getItem('emailForSignIn') || prompt('Confirm your email:');
+  try{ await signInWithEmailLink(auth, em, window.location.href); window.history.replaceState(null,'',window.location.pathname); }catch(e){}
+}
+
+function buildSections(states){
+  const container = document.getElementById('sectionsContainer');
+  container.innerHTML = '';
+  SECTIONS.forEach((sec, idx) => {
+    const done = states[`section-${sec.id}`] === 'done';
+    const card = document.createElement('div');
+    card.className = 'section-card' + (idx===0?' active':'') + (done?' completed-section':'');
+    card.innerHTML = `
+      <div class="section-header" onclick="toggleSection(this)">
+        <span class="section-num">${String(sec.id).padStart(2,'0')}</span>
+        <span class="section-title-text">${sec.title}</span>
+        <span class="section-check ${done?'done':''}">${done?'✓':''}</span>
+        <span class="section-chevron">${idx===0?'▲':'▼'}</span>
+      </div>
+      <div class="section-body">
+        ${sec.content}
+        <button class="mark-complete-btn ${done?'marked':''}" onclick="markSection(${sec.id}, this)" id="mcb-${sec.id}">
+          ${done?'✓ Completed':'Mark as complete'}
+        </button>
+      </div>`;
+    container.appendChild(card);
+  });
+  updateProgress(states);
+}
+
+window.toggleSection = (header) => {
+  const card = header.closest('.section-card');
+  const wasActive = card.classList.contains('active');
+  document.querySelectorAll('.section-card').forEach(c => {
+    c.classList.remove('active');
+    c.querySelector('.section-chevron').textContent='▼';
+  });
+  if(!wasActive){
+    card.classList.add('active');
+    header.querySelector('.section-chevron').textContent='▲';
+  }
+};
+
+window.markSection = async (sectionId, btn) => {
+  if(!currentUser) return;
+  const key = `section-${sectionId}`;
+  sectionStates[key] = 'done';
+  btn.textContent = '✓ Completed';
+  btn.classList.add('marked');
+  const card = btn.closest('.section-card');
+  card.classList.add('completed-section');
+  card.querySelector('.section-check').classList.add('done');
+  card.querySelector('.section-check').textContent = '✓';
+  updateProgress(sectionStates);
+  // Save to Firestore
+  const pRef = doc(db,'progress',currentUser.uid);
+  const pSnap = await getDoc(pRef);
+  const existing = pSnap.exists() ? pSnap.data() : {};
+  const courseData = existing[COURSE_ID] || {};
+  const modData = courseData[MODULE_ID] || {};
+  const sections = modData.sections || {};
+  sections[key] = 'done';
+  const allDone = SECTIONS.every(s => sections[`section-${s.id}`]==='done');
+  const update = {
+    [`${COURSE_ID}.${MODULE_ID}.sections`]: sections,
+    [`${COURSE_ID}.${MODULE_ID}.status`]: allDone ? 'completed' : 'in_progress',
+    [`${COURSE_ID}.${MODULE_ID}.lastUpdated`]: serverTimestamp()
+  };
+  await setDoc(pRef, update, {merge:true});
+  if(allDone){
+    document.getElementById('nextBtn').classList.remove('disabled');
+  }
+};
+
+function updateProgress(states){
+  const done = SECTIONS.filter(s => states[`section-${s.id}`]==='done').length;
+  const pct = Math.round((done/SECTIONS.length)*100);
+  document.getElementById('modProgressFill').style.width = pct+'%';
+  if(pct===100) document.getElementById('nextBtn').classList.remove('disabled');
+}
+
+onAuthStateChanged(auth, async user => {
+  if(!user){ document.getElementById('authOverlay').style.display='flex'; return; }
+  const email = user.email||'';
+  if(!email.endsWith('@sourcefuse.com')){ await signOut(auth); document.getElementById('authOverlay').style.display='flex'; return; }
+  currentUser = user;
+  document.getElementById('authOverlay').style.display='none';
+  document.getElementById('mainHeader').style.display='flex';
+  document.getElementById('mainContent').style.display='block';
+  document.getElementById('userEmail').textContent=email;
+  // Load progress
+  const pRef = doc(db,'progress',user.uid);
+  const pSnap = await getDoc(pRef);
+  const progress = pSnap.exists()?(pSnap.data()[COURSE_ID]||{}):{};
+  const modData = progress[MODULE_ID]||{};
+  sectionStates = modData.sections||{};
+  buildSections(sectionStates);
+  if(modData.status==='completed') document.getElementById('nextBtn').classList.remove('disabled');
+});
+</script>
+</body>
+</html>
