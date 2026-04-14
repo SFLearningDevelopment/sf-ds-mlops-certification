@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+<title>Module 5: System Articulation & Pipeline Ownership — SF DS & MLOps Certification</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#080c14;--surface:#0f1520;--surface2:#141c2e;--border:#1e2a40;--accent:#2563eb;--accent2:#3b82f6;--text:#e2e8f0;--text2:#7d8fa8;--green:#10b981;--yellow:#f59e0b;--red:#ef4444;--purple:#8b5cf6;--radius:14px;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:var(--accent);}
+.auth-overlay{position:fixed;inset:0;background:rgba(8,12,20,0.97);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;max-width:400px;width:90%;}
+.auth-card h2{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
+.auth-card p{color:var(--text2);font-size:0.875rem;margin-bottom:28px;line-height:1.6;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:none;border-radius:10px;padding:12px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;width:100%;font-family:var(--font);transition:all 0.2s;}
+.google-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,0.3);}
+.google-btn svg{width:18px;height:18px;flex-shrink:0;}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text2);font-size:0.8rem;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.email-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:0.875rem;font-family:var(--font);margin-bottom:10px;outline:none;}
+.email-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:var(--font);}
+.auth-error{color:var(--red);font-size:0.8rem;margin-top:10px;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header-left{display:flex;align-items:center;gap:16px;}
+.back-link{color:var(--text2);text-decoration:none;font-size:0.85rem;}
+.back-link:hover{color:var(--accent);}
+.module-label{font-size:0.85rem;font-weight:700;color:var(--accent);}
+.header-right{display:flex;align-items:center;gap:10px;}
+.user-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--text2);}
+.signout-btn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;font-family:var(--font);}
+.module-hero{padding:52px 28px 40px;max-width:900px;margin:0 auto;}
+.hero-module-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:5px 14px;font-size:0.75rem;font-weight:700;color:var(--green);margin-bottom:20px;text-transform:uppercase;letter-spacing:0.06em;}
+.module-hero h1{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-0.03em;line-height:1.2;margin-bottom:14px;}
+.module-hero p{color:var(--text2);font-size:0.95rem;line-height:1.7;max-width:680px;}
+.module-progress-bar{height:4px;background:var(--surface2);border-radius:2px;margin-top:28px;overflow:hidden;}
+.module-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;width:0%;transition:width 0.6s ease;}
+.content-wrap{max-width:900px;margin:0 auto;padding:0 28px 80px;}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;overflow:hidden;}
+.section-card.active{border-color:rgba(37,99,235,0.5);}
+.section-card.completed-section{border-color:rgba(16,185,129,0.35);}
+.section-header{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;}
+.section-header:hover{background:rgba(255,255,255,0.02);}
+.section-num{font-family:var(--mono);font-size:0.72rem;color:var(--text2);min-width:28px;}
+.section-title-text{flex:1;font-weight:700;font-size:0.95rem;}
+.section-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.7rem;transition:all 0.2s;flex-shrink:0;}
+.section-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.section-chevron{color:var(--text2);font-size:0.8rem;flex-shrink:0;}
+.section-card.active .section-chevron{transform:rotate(180deg);}
+.section-body{padding:0 22px 22px;display:none;}
+.section-card.active .section-body{display:block;}
+.section-body h3{font-size:1.05rem;font-weight:800;margin:20px 0 10px;}
+.section-body h4{font-size:0.9rem;font-weight:700;margin:16px 0 8px;color:var(--accent2);}
+.section-body p{color:var(--text2);font-size:0.9rem;line-height:1.75;margin-bottom:12px;}
+.section-body ul,.section-body ol{padding-left:22px;margin-bottom:12px;}
+.section-body li{color:var(--text2);font-size:0.88rem;line-height:1.7;margin-bottom:6px;}
+.section-body li strong{color:var(--text);}
+.section-body code{font-family:var(--mono);background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:5px;font-size:0.82rem;color:var(--accent2);}
+.callout{border-radius:10px;padding:16px 18px;margin:16px 0;border-left:3px solid;}
+.callout-blue{background:rgba(37,99,235,0.08);border-color:var(--accent);}
+.callout-green{background:rgba(16,185,129,0.08);border-color:var(--green);}
+.callout-yellow{background:rgba(245,158,11,0.08);border-color:var(--yellow);}
+.callout h4{font-size:0.85rem;font-weight:700;margin-bottom:6px;}
+.callout p,.callout li{font-size:0.85rem;margin-bottom:4px;color:var(--text2);}
+.callout ul{padding-left:16px;margin-top:6px;}
+.callout-blue h4{color:var(--accent2);}
+.callout-green h4{color:var(--green);}
+.callout-yellow h4{color:var(--yellow);}
+.scenario-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin:16px 0;}
+.scenario-q{font-size:0.85rem;font-weight:700;color:var(--yellow);margin-bottom:10px;}
+.scenario-a{font-size:0.85rem;color:var(--text2);line-height:1.7;}
+.scenario-a strong{color:var(--text);}
+.test-questions{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:16px 18px;margin-top:18px;}
+.test-questions h4{font-size:0.82rem;font-weight:700;color:var(--accent2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;}
+.test-questions ul{padding-left:18px;}
+.test-questions li{font-size:0.83rem;color:var(--text2);line-height:1.65;margin-bottom:3px;}
+.mark-complete-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:9px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:var(--font);margin-top:18px;transition:all 0.2s;}
+.mark-complete-btn:hover{border-color:var(--green);color:var(--green);}
+.mark-complete-btn.marked{background:rgba(16,185,129,0.1);border-color:var(--green);color:var(--green);}
+.bottom-nav{max-width:900px;margin:0 auto;padding:0 28px 48px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;font-size:0.88rem;font-weight:700;cursor:pointer;text-decoration:none;border:1px solid var(--border);color:var(--text2);background:var(--surface);transition:all 0.2s;font-family:var(--font);}
+.nav-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,0.3);}
+.nav-btn.primary:hover{box-shadow:0 6px 16px rgba(37,99,235,0.4);}
+.nav-btn.disabled{opacity:0.4;pointer-events:none;}
+</style>
+</head>
+<body>
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div style="font-size:2rem;margin-bottom:16px">🗣️</div>
+    <h2>SF DS & MLOps Certification</h2>
+    <p>Sign in with your SourceFuse account to continue.</p>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continue with Google
+    </button>
+    <div class="divider">or use email</div>
+    <input class="email-input" type="email" id="emailInput" placeholder="you@sourcefuse.com"/>
+    <button class="email-btn" onclick="signInWithEmail()">Send Sign-in Link</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+<div class="header" id="mainHeader" style="display:none">
+  <div class="header-left">
+    <a class="back-link" href="index.html">← Course Hub</a>
+    <span class="module-label">Module 5 of 5</span>
+  </div>
+  <div class="header-right">
+    <span class="user-pill" id="userEmail">—</span>
+    <button class="signout-btn" onclick="doSignOut()">Sign out</button>
+  </div>
+</div>
+<div id="mainContent" style="display:none">
+  <div class="module-hero">
+    <div class="hero-module-badge">🗣️ Module 5 · Advanced</div>
+    <h1>System Articulation & Pipeline Ownership</h1>
+    <p>Technical knowledge only creates value when you can communicate it. This final module is about the professional skill of owning a system — describing it precisely, defending design decisions, and speaking fluently to technical and non-technical audiences alike.</p>
+    <div class="module-progress-bar"><div class="module-progress-fill" id="modProgressFill"></div></div>
+  </div>
+  <div class="content-wrap" id="sectionsContainer"></div>
+  <div class="bottom-nav">
+    <a href="ds-mlops-module-4.html" class="nav-btn">← Module 4</a>
+    <a href="index.html" class="nav-btn primary disabled" id="nextBtn">→ Take the Exam</a>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyC4Q0mLGt1ZCgPMTM4TjKLTPHHCGhGqlXA",authDomain:"sfcertification-grafana.firebaseapp.com",projectId:"sfcertification-grafana",storageBucket:"sfcertification-grafana.appspot.com",messagingSenderId:"876749260498",appId:"1:876749260498:web:7ef3e1b444b3c7a2d4e8f1"};
+const COURSE_ID="dsMlops2026SFCert",MODULE_ID="module-5";
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+let currentUser=null,sectionStates={};
+
+const SECTIONS=[
+  {id:1,title:"What 'Owning a System' Actually Means",content:`
+    <h3>🗣️ Ownership Is a Communication Standard</h3>
+    <p>In engineering, "owning" a system means more than having written the code. It means you can answer four questions for any system you work on:</p>
+    <ol>
+      <li><strong>What does this system do?</strong> — The purpose, the prediction task, the business value it creates.</li>
+      <li><strong>How does the data flow?</strong> — From source, through ingestion, through processing, to the model, to the output.</li>
+      <li><strong>Why is it designed this way?</strong> — The trade-offs behind each architectural decision.</li>
+      <li><strong>What breaks and how do you know?</strong> — Failure modes, monitoring signals, and the response playbook.</li>
+    </ol>
+    <p>If you cannot answer all four questions about a system you work on, you are a contributor to it — not an owner of it.</p>
+    <div class="callout callout-yellow">
+      <h4>⚠️ The Interview Failure Mode</h4>
+      <p>The most common way engineers fail technical interviews about their own systems is not lack of knowledge — it is lack of structure. They describe the system in fragments, skip the data flow, and cannot explain why decisions were made. This module gives you the structure to prevent that.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the four questions that define system ownership?</li><li>What is the difference between a contributor and an owner of a system?</li></ul></div>
+  `},
+  {id:2,title:"The 5-Part Architecture Description Framework",content:`
+    <h3>📐 A Repeatable Structure</h3>
+    <p>Use this framework every time you need to describe a data or ML system — in interviews, in documentation, in architecture reviews, or in customer meetings.</p>
+    <ol>
+      <li>
+        <strong>Purpose (What)</strong><br/>
+        One sentence. What does the system predict or produce? What business outcome does it drive?<br/>
+        <em>Example: "This system predicts which customers are likely to cancel their subscription within the next 30 days, with an output of a probability score per customer."</em>
+      </li>
+      <li>
+        <strong>Data Sources (Where does data come from)</strong><br/>
+        Name the source systems and the ingestion method.<br/>
+        <em>Example: "User activity events are ingested from Kafka in real time. Account metadata is pulled nightly from our PostgreSQL CRM database via Airflow."</em>
+      </li>
+      <li>
+        <strong>Processing & Features (How data is transformed)</strong><br/>
+        Describe the transformations and the features produced.<br/>
+        <em>Example: "Events are aggregated into per-user daily summaries. Key features include login frequency (7-day rolling), days since last purchase, support ticket count, and plan tier encoded as ordinal."</em>
+      </li>
+      <li>
+        <strong>Model & Serving (How predictions are made)</strong><br/>
+        Name the algorithm, training cadence, and serving method.<br/>
+        <em>Example: "We use a gradient boosting model (XGBoost) retrained weekly on the last 90 days of data. Predictions are served via a REST API that our CRM queries on page load."</em>
+      </li>
+      <li>
+        <strong>Monitoring & Health (How you know it's working)</strong><br/>
+        Describe what you monitor and what the alert threshold is.<br/>
+        <em>Example: "We monitor PSI on all 12 input features weekly. If PSI exceeds 0.2 on any key feature, we trigger an investigation. Model performance is benchmarked against a monthly holdout set."</em>
+      </li>
+    </ol>
+    <div class="callout callout-green">
+      <h4>✅ Practise This Out Loud</h4>
+      <p>Write a version of this for the system you currently work on. Speak it aloud in under 3 minutes. If you cannot, that gap is your preparation task before any technical interview.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the 5 parts of the architecture description framework?</li><li>What should a "Purpose" statement include?</li></ul></div>
+  `},
+  {id:3,title:"Describing Data Ingestion Coherently",content:`
+    <h3>🚰 Making the Data Flow Clear</h3>
+    <p>The part of system description that most engineers stumble on is the data ingestion section. They say "the data comes from our database" and stop there. A complete ingestion description has four components:</p>
+    <ol>
+      <li><strong>Source:</strong> What system holds the raw data? (PostgreSQL, S3, Kafka, Salesforce, event logs)</li>
+      <li><strong>Pattern:</strong> How is it collected? (Batch/streaming/CDC — and at what frequency for batch)</li>
+      <li><strong>Tool:</strong> What orchestrates or transmits the data? (Airflow, Kafka, Fivetran, Debezium)</li>
+      <li><strong>Destination:</strong> Where does ingested data land? (Data warehouse, data lake, feature store)</li>
+    </ol>
+    <div class="scenario-block">
+      <div class="scenario-q">❌ Weak Answer: "The data comes from our database."</div>
+      <div class="scenario-a">This tells the listener nothing about the ingestion pattern, tool, or timing. It does not demonstrate ownership.</div>
+    </div>
+    <div class="scenario-block">
+      <div class="scenario-q">✅ Strong Answer:</div>
+      <div class="scenario-a">"We have two ingestion flows. User behavioural events are published to a Kafka topic in real time by our web application and consumed by a Spark Structured Streaming job that writes to our BigQuery data warehouse. Account-level metadata is pulled nightly from our PostgreSQL database using an Airflow DAG and loaded into the same warehouse. Both flows land in dedicated tables that serve as the input to our feature engineering pipeline."</div>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the four components of a complete ingestion description?</li><li>What makes a "weak" ingestion description weak?</li></ul></div>
+  `},
+  {id:4,title:"Explaining Design Decisions",content:`
+    <h3>🔍 Why, Not Just What</h3>
+    <p>The deepest signal of system ownership is the ability to explain <em>why</em> the system is designed the way it is. Anyone can describe what a system does by reading its documentation. Ownership requires understanding the trade-offs behind each decision.</p>
+    <h4>The Trade-off Framework</h4>
+    <p>For any architectural decision, you should be able to articulate:</p>
+    <ul>
+      <li><strong>What we chose</strong> — the decision made</li>
+      <li><strong>What we considered</strong> — the alternatives evaluated</li>
+      <li><strong>Why we chose it</strong> — the deciding constraint (latency, cost, team expertise, scale)</li>
+      <li><strong>What we gave up</strong> — the trade-off accepted</li>
+    </ul>
+    <div class="scenario-block">
+      <div class="scenario-q">Q: "Why did you use batch prediction instead of real-time serving?"</div>
+      <div class="scenario-a">
+        <strong>Strong Answer:</strong> "We evaluated both. Real-time serving would require us to maintain an online feature store with sub-10ms lookup, which we didn't have the infrastructure for. Since our sales team checks churn scores once a day in the morning, a daily batch job that pre-computes and stores scores in our CRM meets the latency requirement at a fraction of the infrastructure cost. The trade-off is that our scores are at most 24 hours stale — which is acceptable for this use case."
+      </div>
+    </div>
+    <div class="callout callout-blue">
+      <h4>💡 Constraint-Driven Design</h4>
+      <p>Real engineering decisions are always constrained by: <strong>latency requirements, budget, team size, existing infrastructure, data availability, and risk tolerance</strong>. Explaining the constraint that drove a decision demonstrates that you understand the full picture — not just the technology.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the four parts of the trade-off framework?</li><li>Name six types of constraints that drive architectural decisions.</li></ul></div>
+  `},
+  {id:5,title:"Communicating to Different Audiences",content:`
+    <h3>📡 Adapting Your Message</h3>
+    <p>System ownership also means being able to translate the same technical system into appropriate language for different audiences. This is not about dumbing down — it is about choosing the right level of abstraction.</p>
+    <div class="callout callout-blue">
+      <h4>Technical Audience (Data Scientist / ML Engineer)</h4>
+      <ul>
+        <li>Include algorithm names, hyperparameters, data split strategy</li>
+        <li>Discuss feature engineering choices and why</li>
+        <li>Reference specific tools and infrastructure</li>
+        <li>Share metrics with confidence intervals if available</li>
+      </ul>
+    </div>
+    <div class="callout callout-green">
+      <h4>Product / Business Audience</h4>
+      <ul>
+        <li>Lead with the business outcome: "This system identifies customers at risk of leaving 30 days in advance"</li>
+        <li>Express performance in business terms: "We catch 8 out of 10 customers who would have churned"</li>
+        <li>Skip algorithm details; focus on input signals and output actions</li>
+        <li>Frame limitations as business constraints, not technical ones</li>
+      </ul>
+    </div>
+    <div class="callout callout-yellow">
+      <h4>Customer / External Audience</h4>
+      <ul>
+        <li>Lead with value delivered: "You receive early warning signals before customers disengage"</li>
+        <li>Avoid all jargon (no "PSI", no "XGBoost", no "Kafka")</li>
+        <li>Focus on reliability, fairness, and privacy commitments</li>
+        <li>Be prepared to answer "how does it know?" without revealing proprietary signals</li>
+      </ul>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>How does a technical audience description differ from a business audience description?</li><li>What should you lead with when describing a system to a business audience?</li></ul></div>
+  `},
+  {id:6,title:"Course Completion: Your Integrated Framework",content:`
+    <h3>🎓 Everything You Now Know</h3>
+    <p>You have completed all five modules. Here is the integrated framework you now possess:</p>
+    <div class="callout callout-blue">
+      <h4>Module 1 — Foundation</h4>
+      <p>What Data Science is, the 6-stage ML lifecycle, core vocabulary (dataset, label, feature, model), ingestion patterns (batch, streaming, CDC), data processing steps, and what MLOps solves.</p>
+    </div>
+    <div class="callout callout-yellow">
+      <h4>Module 2 — Feature Engineering</h4>
+      <p>Why features matter more than models, numerical transformations (scaling, log, binning), categorical encoding (one-hot, target, label), missing value strategies (imputation, indicator), feature selection (filter, wrapper, embedded), time-based features, and the FE workflow.</p>
+    </div>
+    <div class="callout callout-blue" style="border-color:var(--red);background:rgba(239,68,68,0.06)">
+      <h4 style="color:var(--red)">Module 3 — Model Drift</h4>
+      <p>Why models degrade, data vs concept vs label vs upstream drift, statistical detection (PSI, KS test, JS divergence), retraining strategies (schedule, metric-based, champion/challenger, windowed), performance metrics (accuracy, F1, AUC-ROC, RMSE), and the drift response playbook.</p>
+    </div>
+    <div class="callout callout-purple">
+      <h4>Module 4 — MLOps Architecture</h4>
+      <p>Feature store architecture (offline/online stores, Feast, Tecton), MLOps maturity levels 0–2, CI/CD for ML, experiment tracking (MLflow), model registry lifecycle, and serving patterns (REST, batch, streaming).</p>
+    </div>
+    <div class="callout callout-green">
+      <h4>Module 5 — System Articulation</h4>
+      <p>The four ownership questions, the 5-part architecture description framework, complete ingestion descriptions (4 components), trade-off framework for design decisions, and audience-adaptive communication.</p>
+    </div>
+    <p style="margin-top:18px;font-size:0.95rem;color:var(--text2);line-height:1.7;">You are now ready for the certification exam. 30 questions, 45 minutes, 70% to pass. The exam tests application of these concepts, not just recall — read each question carefully and reason from first principles.</p>
+    <div class="test-questions"><h4>🎯 Final Preparation Checklist</h4><ul><li>Can you describe the ML lifecycle in 6 steps from memory?</li><li>Can you define all four drift types and their causes?</li><li>Can you explain what a feature store's offline and online components do?</li><li>Can you deliver the 5-part architecture description for a system you know?</li><li>Can you articulate what PSI measures and its thresholds?</li></ul></div>
+  `}
+];
+
+window.signInWithGoogle=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){document.getElementById('authError').textContent=e.message;}};
+window.signInWithEmail=async()=>{const email=document.getElementById('emailInput').value.trim();if(!email.endsWith('@sourcefuse.com')){document.getElementById('authError').textContent='Use your @sourcefuse.com email.';return;}try{await sendSignInLinkToEmail(auth,email,{url:window.location.href,handleCodeInApp:true});localStorage.setItem('emailForSignIn',email);document.getElementById('authError').style.color='var(--green)';document.getElementById('authError').textContent='✓ Check your inbox.';}catch(e){document.getElementById('authError').textContent=e.message;}};
+window.doSignOut=async()=>{await signOut(auth);location.reload();};
+if(isSignInWithEmailLink(auth,window.location.href)){let em=localStorage.getItem('emailForSignIn')||prompt('Confirm your email:');try{await signInWithEmailLink(auth,em,window.location.href);window.history.replaceState(null,'',window.location.pathname);}catch(e){}}
+
+function buildSections(states){
+  const container=document.getElementById('sectionsContainer');container.innerHTML='';
+  SECTIONS.forEach((sec,idx)=>{
+    const done=states[`section-${sec.id}`]==='done';
+    const card=document.createElement('div');
+    card.className='section-card'+(idx===0?' active':'')+(done?' completed-section':'');
+    card.innerHTML=`<div class="section-header" onclick="toggleSection(this)"><span class="section-num">${String(sec.id).padStart(2,'0')}</span><span class="section-title-text">${sec.title}</span><span class="section-check ${done?'done':''}">${done?'✓':''}</span><span class="section-chevron">${idx===0?'▲':'▼'}</span></div><div class="section-body">${sec.content}<button class="mark-complete-btn ${done?'marked':''}" onclick="markSection(${sec.id},this)">${done?'✓ Completed':'Mark as complete'}</button></div>`;
+    container.appendChild(card);
+  });
+  updateProgress(states);
+}
+window.toggleSection=(header)=>{const card=header.closest('.section-card');const wasActive=card.classList.contains('active');document.querySelectorAll('.section-card').forEach(c=>{c.classList.remove('active');c.querySelector('.section-chevron').textContent='▼';});if(!wasActive){card.classList.add('active');header.querySelector('.section-chevron').textContent='▲';}};
+window.markSection=async(sectionId,btn)=>{
+  if(!currentUser)return;const key=`section-${sectionId}`;sectionStates[key]='done';
+  btn.textContent='✓ Completed';btn.classList.add('marked');
+  const card=btn.closest('.section-card');card.classList.add('completed-section');card.querySelector('.section-check').classList.add('done');card.querySelector('.section-check').textContent='✓';
+  updateProgress(sectionStates);
+  const pRef=doc(db,'progress',currentUser.uid);const pSnap=await getDoc(pRef);const existing=pSnap.exists()?pSnap.data():{};
+  const sections=(existing[COURSE_ID]?.[MODULE_ID]?.sections)||{};sections[key]='done';
+  const allDone=SECTIONS.every(s=>sections[`section-${s.id}`]==='done');
+  await setDoc(pRef,{[`${COURSE_ID}.${MODULE_ID}.sections`]:sections,[`${COURSE_ID}.${MODULE_ID}.status`]:allDone?'completed':'in_progress',[`${COURSE_ID}.${MODULE_ID}.lastUpdated`]:serverTimestamp()},{merge:true});
+  if(allDone)document.getElementById('nextBtn').classList.remove('disabled');
+};
+function updateProgress(states){const done=SECTIONS.filter(s=>states[`section-${s.id}`]==='done').length;document.getElementById('modProgressFill').style.width=Math.round((done/SECTIONS.length)*100)+'%';if(done===SECTIONS.length)document.getElementById('nextBtn').classList.remove('disabled');}
+onAuthStateChanged(auth,async user=>{
+  if(!user){document.getElementById('authOverlay').style.display='flex';return;}
+  const email=user.email||'';if(!email.endsWith('@sourcefuse.com')){await signOut(auth);document.getElementById('authOverlay').style.display='flex';return;}
+  currentUser=user;document.getElementById('authOverlay').style.display='none';document.getElementById('mainHeader').style.display='flex';document.getElementById('mainContent').style.display='block';document.getElementById('userEmail').textContent=email;
+  const pRef=doc(db,'progress',user.uid);const pSnap=await getDoc(pRef);const progress=pSnap.exists()?(pSnap.data()[COURSE_ID]||{}):{};const modData=progress[MODULE_ID]||{};sectionStates=modData.sections||{};buildSections(sectionStates);
+  if(modData.status==='completed')document.getElementById('nextBtn').classList.remove('disabled');
+});
+</script>
+</body>
+</html>
