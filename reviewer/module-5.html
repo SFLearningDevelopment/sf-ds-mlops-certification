@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+<title>[Reviewer] Module 5: Module 5</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{--bg:#eef2f7;--bg2:#ffffff;--bg3:#f0f4f9;--border:#d0dae8;--text:#1a2332;--text-dim:#4a5568;--text-dimmer:#8fa3bc;--blue:#1a6eb5;--blue-light:#e8f1fb;--blue-mid:#b8d0ed;--green:#1a6b3a;--green-light:#e8f5ed;--coral:#c0392b;--coral-light:#fdf0ee;--radius:12px;}
+  html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Merriweather Sans',sans-serif;font-size:15px;line-height:1.6;}
+  a{color:var(--blue);text-decoration:none;}
+  .reviewer-topbanner{background:#f5f0ff;border-bottom:2px solid #c4bdf0;padding:9px 40px;font-size:12px;font-family:'Source Code Pro',monospace;color:#5b4fcf;display:flex;align-items:center;gap:8px;}
+  .sf-signin-overlay{position:fixed;inset:0;background:rgba(20,30,50,.82);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px);}
+  .sf-signin-overlay.hidden{display:none;}
+  .sf-signin-card{background:#fff;border-radius:16px;padding:36px 40px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;}
+  .sf-signin-logo{font-size:32px;margin-bottom:12px;}
+  .sf-signin-title{font-size:17px;font-weight:700;color:#1a2332;margin-bottom:8px;}
+  .sf-signin-sub{font-size:13px;color:#4a5568;line-height:1.6;margin-bottom:24px;}
+  .sf-google-btn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #d0dae8;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:600;cursor:pointer;color:#1a2332;width:100%;justify-content:center;transition:box-shadow .15s;}
+  .sf-google-btn:hover{box-shadow:0 2px 8px rgba(0,0,0,.12);}
+  .sf-google-btn img{width:20px;height:20px;}
+  .sf-signin-divider{font-size:11px;color:#8fa3bc;text-align:center;margin:14px 0 10px;display:flex;align-items:center;gap:8px;font-family:'Source Code Pro',monospace;}
+  .sf-signin-divider::before,.sf-signin-divider::after{content:'';flex:1;height:1px;background:#d0dae8;}
+  .sf-fallback-input{width:100%;padding:10px 12px;border:1.5px solid #d0dae8;border-radius:8px;font-size:14px;font-family:'Merriweather Sans',sans-serif;color:#1a2332;margin-bottom:10px;outline:none;}
+  .sf-fallback-input:focus{border-color:var(--blue);}
+  .sf-fallback-btn{width:100%;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+  .sf-signin-error{margin-top:14px;font-size:12.5px;color:#c0392b;font-family:'Source Code Pro',monospace;background:#fdf0ee;border:1px solid #f0b8b2;border-radius:6px;padding:10px 12px;display:none;text-align:left;}
+  .sf-signin-error.visible{display:block;}
+  .sf-signed-in-bar{background:#e8f5ed;border-bottom:1px solid #a3d4b8;padding:7px 40px;font-size:11px;font-family:'Source Code Pro',monospace;color:var(--green);display:flex;align-items:center;justify-content:space-between;}
+  .sf-signed-in-bar.hidden{display:none;}
+  .sf-signout-btn{font-size:10px;color:var(--blue);background:none;border:1px solid #b8d0ed;border-radius:4px;padding:2px 8px;cursor:pointer;}
+  .topnav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 40px;height:48px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-dimmer);font-family:'Source Code Pro',monospace;position:sticky;top:0;z-index:100;}
+  .topnav a{color:var(--blue);}
+  .sep{margin:0 4px;color:var(--text-dimmer);}
+  .main{max-width:860px;margin:0 auto;padding:36px 40px 80px;}
+  .module-hero{margin-bottom:28px;}
+  .hero-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:8px;font-family:'Source Code Pro',monospace;}
+  .module-hero h1{font-size:clamp(18px,2.5vw,26px);font-weight:700;color:var(--text);line-height:1.25;}
+  .section-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;}
+  .section-header{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+  .section-header:hover{background:var(--bg3);}
+  .section-num{font-size:10px;font-weight:700;color:var(--text-dimmer);min-width:24px;font-family:'Source Code Pro',monospace;}
+  .section-title{font-weight:600;font-size:14px;flex:1;color:var(--text);}
+  .section-toggle{font-size:11px;color:var(--text-dimmer);transition:transform .2s;}
+  .section-toggle.open{transform:rotate(180deg);}
+  .section-body{display:none;padding:20px 22px 14px;border-top:1px solid var(--border);font-size:14px;color:var(--text-dim);line-height:1.75;}
+  .section-body.open{display:block;}
+  .section-body h3{font-size:15px;font-weight:700;color:var(--text);margin:16px 0 8px;}
+  .section-body p{margin-bottom:10px;}
+  .section-body ul,.section-body ol{margin:8px 0 12px 20px;}
+  .section-body li{margin-bottom:4px;}
+  .section-body code{font-family:'Source Code Pro',monospace;font-size:12.5px;background:var(--bg3);border:1px solid var(--border);padding:1px 5px;border-radius:4px;color:#0f4a7a;}
+  .section-body pre{background:#1e2433;color:#cdd6f4;padding:16px;border-radius:8px;font-size:12.5px;font-family:'Source Code Pro',monospace;overflow-x:auto;margin:12px 0;position:relative;}
+  .copy-btn,.copy-btn-small{position:absolute;top:8px;right:8px;background:#252b3b;border:1px solid #3a4155;color:#7a8ab0;border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;font-family:'Source Code Pro',monospace;}
+  .copy-btn:hover,.copy-btn-small:hover{color:#cdd6f4;}
+  .reviewer-bar{background:#fff8e6;border:1px solid #f0d4a0;border-left:3px solid #92600a;border-radius:8px;padding:10px 16px;margin:18px 0 6px;display:flex;align-items:center;gap:10px;font-size:13px;color:#92600a;font-family:'Source Code Pro',monospace;}
+  .reviewer-bar input[type="checkbox"]{width:16px;height:16px;cursor:pointer;flex-shrink:0;accent-color:var(--green);}
+  .reviewer-bar label{cursor:pointer;font-weight:600;user-select:none;}
+  .reviewer-bar.checked{background:var(--green-light);border-color:#a3d4b8;border-left-color:var(--green);color:var(--green);}
+  .reviewer-panel{background:#f5f0ff;border:1px solid #c4bdf0;border-top:3px solid #5b4fcf;border-radius:12px;padding:24px 28px;margin:32px 0;}
+  .reviewer-panel-label{font-size:9px;font-family:'Source Code Pro',monospace;letter-spacing:.18em;text-transform:uppercase;color:#5b4fcf;font-weight:600;margin-bottom:16px;}
+  .reviewer-q-text{font-size:14px;font-weight:600;color:#1a2332;line-height:1.65;margin-bottom:14px;}
+  .reviewer-options{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+  .reviewer-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid #d0dae8;border-radius:8px;cursor:pointer;font-size:13.5px;color:#4a5568;line-height:1.5;background:#fff;transition:background .12s,border-color .12s;}
+  .reviewer-option:hover{background:#f0f4f9;border-color:#b8d0ed;}
+  .reviewer-option.selected{background:#e8f1fb;border-color:var(--blue);color:#1a2332;}
+  .reviewer-option.correct{background:var(--green-light);border-color:#a3d4b8;color:var(--green);}
+  .reviewer-option.wrong{background:var(--coral-light);border-color:#f0b8b2;color:var(--coral);}
+  .reviewer-option-key{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#8fa3bc;flex-shrink:0;margin-top:1px;}
+  .reviewer-reveal{font-size:12px;font-family:'Source Code Pro',monospace;color:#5b4fcf;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;margin-bottom:14px;display:block;}
+  .reviewer-explanation{font-size:13px;color:#4a5568;line-height:1.7;padding:12px 14px;background:#eef2f7;border-radius:8px;margin-bottom:16px;display:none;}
+  .reviewer-explanation.visible{display:block;}
+  .reviewer-exp-label{font-size:9px;font-family:'Source Code Pro',monospace;letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:4px;}
+  .reviewer-exp-label.correct{color:var(--green);}
+  .reviewer-exp-label.wrong{color:var(--coral);}
+  .reviewer-comment-label{font-size:11px;font-family:'Source Code Pro',monospace;letter-spacing:.12em;text-transform:uppercase;color:#8fa3bc;font-weight:600;margin-bottom:6px;}
+  .reviewer-comment{width:100%;min-height:80px;padding:10px 12px;border:1px solid #c4bdf0;border-radius:8px;font-family:'Merriweather Sans',sans-serif;font-size:13.5px;color:#1a2332;background:#fff;resize:vertical;line-height:1.6;}
+  .reviewer-comment:focus{outline:none;border-color:#5b4fcf;}
+  .reviewer-save-note{font-size:11px;font-family:'Source Code Pro',monospace;color:#8fa3bc;margin-top:6px;}
+  .rev-complete-wrap{margin:28px 0 0;}
+  .rev-complete-bar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:8px;font-size:13.5px;font-family:'Source Code Pro',monospace;font-weight:600;border:1.5px solid var(--border);background:var(--bg3);color:var(--text-dimmer);transition:all .2s;}
+  .rev-complete-bar.disabled{opacity:.6;cursor:not-allowed;}
+  .rev-complete-bar.ready{background:#fff8e6;border-color:#f0d4a0;border-left:3px solid #92600a;color:#92600a;cursor:pointer;}
+  .rev-complete-bar.done{background:var(--green-light);border-color:#a3d4b8;border-left:3px solid var(--green);color:var(--green);cursor:default;}
+  .rev-complete-bar input[type="checkbox"]{width:18px;height:18px;flex-shrink:0;accent-color:var(--green);}
+  .rev-complete-bar.disabled input{cursor:not-allowed;}
+  .rev-complete-hint{font-size:11px;font-family:'Source Code Pro',monospace;color:var(--text-dimmer);margin-top:6px;min-height:16px;}
+  .bottom-nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0 0;border-top:1px solid var(--border);margin-top:40px;}
+  .nav-btn{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-family:'Source Code Pro',monospace;color:var(--blue);text-decoration:none;padding:10px 18px;border:1px solid var(--blue-mid);border-radius:8px;background:var(--blue-light);font-weight:600;}
+  .nav-btn.secondary{background:var(--bg2);color:var(--text-dim);border-color:var(--border);}
+  .nav-btn:hover{background:var(--blue-mid);}
+</style>
+</head>
+<body>
+<div class="sf-signin-overlay" id="sfSigninOverlay">
+  <div class="sf-signin-card">
+    <div class="sf-signin-logo">🔐</div>
+    <div class="sf-signin-title">Sign in to save your progress</div>
+    <div class="sf-signin-sub">Sign in with your SourceFuse Gmail. Review progress, checkboxes and question attempts are saved and restored across devices.</div>
+    <button class="sf-google-btn" id="sfGoogleSignInBtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google</button>
+    <div class="sf-signin-divider">or</div>
+    <input type="text" class="sf-fallback-input" id="sfEmailInput" placeholder="your.name@sourcefuse.com" autocomplete="off" inputmode="email">
+    <button class="sf-fallback-btn" id="sfEmailSignInBtn">Continue with SF email</button>
+    <div class="sf-signin-error" id="sfSigninError"></div>
+  </div>
+</div>
+<div class="sf-signed-in-bar hidden" id="sfSignedInBar"><span id="sfSignedInEmail">Signed in as …</span><button class="sf-signout-btn" id="sfSignoutLink">Sign out</button></div>
+<div class="reviewer-topbanner"><span>👁</span><strong>Reviewer Mode</strong> — Module 5: Module 5</div>
+<nav class="topnav">
+  <a href="index.html">← Reviewer Hub</a>
+  <span class="sep">/</span>
+  <span>Module 5: Module 5</span>
+</nav>
+<div class="main">
+  <div class="module-hero">
+    <div class="hero-eyebrow">Module 5 of 5 · Reviewer Mode</div>
+    <h1>Module 5</h1>
+  </div>
+  <div id="sections-container"></div>
+  
+  <div class="rev-complete-wrap">
+    <div class="rev-complete-bar disabled" id="rev-complete-bar">
+      <input type="checkbox" id="rev-complete-cb" disabled>
+      <label for="rev-complete-cb" id="rev-complete-label">Complete all sections to unlock</label>
+    </div>
+    <div class="rev-complete-hint" id="rev-complete-hint"></div>
+  </div>
+  <div class="bottom-nav"><a href="module-4.html" class="nav-btn secondary">← Module 4</a><span></span></div>
+</div>
+<script>
+function sfShowError(msg){const el=document.getElementById('sfSigninError');if(el){el.textContent=msg;el.classList.add('visible');}}
+function sfHideOverlay(user){
+  window.sfReviewerEmail=user.email||user;window.sfReviewerUid=user.uid||'email_'+btoa(window.sfReviewerEmail).replace(/=/g,'');
+  const ov=document.getElementById('sfSigninOverlay');if(ov)ov.classList.add('hidden');
+  const bar=document.getElementById('sfSignedInBar');const lbl=document.getElementById('sfSignedInEmail');
+  if(bar)bar.classList.remove('hidden');if(lbl)lbl.textContent='Signed in as '+window.sfReviewerEmail;
+  if(typeof sfInitSession==='function')sfInitSession();
+  if(window._sfFirebaseReady&&typeof window.sfDb!=='undefined'&&typeof sfFetchAndMerge==='function')sfFetchAndMerge();
+}
+function sfSignInWithEmail(){const emailEl=document.getElementById('sfEmailInput');if(!emailEl)return;const email=emailEl.value.trim();if(!email||!email.includes('@')){sfShowError('Please enter a valid email address.');return;}if(!email.endsWith('@sourcefuse.com')){sfShowError('Please use your @sourcefuse.com email address.');return;}sfHideOverlay(email);}
+async function sfSignInWithGoogle(){if(typeof firebase==='undefined'||!window._sfFirebaseReady){sfShowError('Popup blocked. Please enter your SF email below.');return;}const provider=new firebase.auth.GoogleAuthProvider();provider.setCustomParameters({hd:'sourcefuse.com',prompt:'select_account'});const t=setTimeout(()=>sfShowError('Popup blocked. Please enter your SF email below.'),30000);try{const r=await firebase.auth().signInWithPopup(provider);clearTimeout(t);sfHideOverlay(r.user);}catch(e){clearTimeout(t);sfShowError('Popup blocked. Please enter your SF email below.');}}
+function sfSignOut(){window.sfReviewerEmail=null;window.sfReviewerUid=null;const bar=document.getElementById('sfSignedInBar');const ov=document.getElementById('sfSigninOverlay');if(bar)bar.classList.add('hidden');if(ov)ov.classList.remove('hidden');if(typeof firebase!=='undefined'&&window._sfFirebaseReady)firebase.auth().signOut();}
+document.addEventListener('DOMContentLoaded',function(){const gb=document.getElementById('sfGoogleSignInBtn');const eb=document.getElementById('sfEmailSignInBtn');const so=document.getElementById('sfSignoutLink');if(gb)gb.addEventListener('click',sfSignInWithGoogle);if(eb)eb.addEventListener('click',sfSignInWithEmail);if(so)so.addEventListener('click',sfSignOut);});
+</script>
+<script>
+const REV_KEY='reviewer_'+window.location.pathname.replace(/[^a-z0-9]/gi,'_');
+const BADGES={foundation:'Foundation',essential:'Essential',important:'Important'};
+const BADGE_CLASSES={foundation:'badge-foundation',essential:'badge-essential',important:'badge-important'};
+const SECTIONS=[
+  {id:1,title:"What 'Owning a System' Actually Means",content:`
+    <h3>ð£ï¸ Ownership Is a Communication Standard</h3>
+    <p>In engineering, "owning" a system means more than having written the code. It means you can answer four questions for any system you work on:</p>
+    <ol>
+      <li><strong>What does this system do?</strong> â The purpose, the prediction task, the business value it creates.</li>
+      <li><strong>How does the data flow?</strong> â From source, through ingestion, through processing, to the model, to the output.</li>
+      <li><strong>Why is it designed this way?</strong> â The trade-offs behind each architectural decision.</li>
+      <li><strong>What breaks and how do you know?</strong> â Failure modes, monitoring signals, and the response playbook.</li>
+    </ol>
+    <p>If you cannot answer all four questions about a system you work on, you are a contributor to it â not an owner of it.</p>
+    <div class="callout callout-yellow">
+      <h4>â ï¸ The Interview Failure Mode</h4>
+      <p>The most common way engineers fail technical interviews about their own systems is not lack of knowledge â it is lack of structure. They describe the system in fragments, skip the data flow, and cannot explain why decisions were made. This module gives you the structure to prevent that.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the four questions that define system ownership?</li><li>What is the difference between a contributor and an owner of a system?</li></ul></div>
+  `},
+  {id:2,title:"The 5-Part Architecture Description Framework",content:`
+    <h3>ð A Repeatable Structure</h3>
+    <p>Use this framework every time you need to describe a data or ML system â in interviews, in documentation, in architecture reviews, or in customer meetings.</p>
+    <ol>
+      <li>
+        <strong>Purpose (What)</strong><br/>
+        One sentence. What does the system predict or produce? What business outcome does it drive?<br/>
+        <em>Example: "This system predicts which customers are likely to cancel their subscription within the next 30 days, with an output of a probability score per customer."</em>
+      </li>
+      <li>
+        <strong>Data Sources (Where does data come from)</strong><br/>
+        Name the source systems and the ingestion method.<br/>
+        <em>Example: "User activity events are ingested from Kafka in real time. Account metadata is pulled nightly from our PostgreSQL CRM database via Airflow."</em>
+      </li>
+      <li>
+        <strong>Processing & Features (How data is transformed)</strong><br/>
+        Describe the transformations and the features produced.<br/>
+        <em>Example: "Events are aggregated into per-user daily summaries. Key features include login frequency (7-day rolling), days since last purchase, support ticket count, and plan tier encoded as ordinal."</em>
+      </li>
+      <li>
+        <strong>Model & Serving (How predictions are made)</strong><br/>
+        Name the algorithm, training cadence, and serving method.<br/>
+        <em>Example: "We use a gradient boosting model (XGBoost) retrained weekly on the last 90 days of data. Predictions are served via a REST API that our CRM queries on page load."</em>
+      </li>
+      <li>
+        <strong>Monitoring & Health (How you know it's working)</strong><br/>
+        Describe what you monitor and what the alert threshold is.<br/>
+        <em>Example: "We monitor PSI on all 12 input features weekly. If PSI exceeds 0.2 on any key feature, we trigger an investigation. Model performance is benchmarked against a monthly holdout set."</em>
+      </li>
+    </ol>
+    <div class="callout callout-green">
+      <h4>â Practise This Out Loud</h4>
+      <p>Write a version of this for the system you currently work on. Speak it aloud in under 3 minutes. If you cannot, that gap is your preparation task before any technical interview.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the 5 parts of the architecture description framework?</li><li>What should a "Purpose" statement include?</li></ul></div>
+  `},
+  {id:3,title:"Describing Data Ingestion Coherently",content:`
+    <h3>ð° Making the Data Flow Clear</h3>
+    <p>The part of system description that most engineers stumble on is the data ingestion section. They say "the data comes from our database" and stop there. A complete ingestion description has four components:</p>
+    <ol>
+      <li><strong>Source:</strong> What system holds the raw data? (PostgreSQL, S3, Kafka, Salesforce, event logs)</li>
+      <li><strong>Pattern:</strong> How is it collected? (Batch/streaming/CDC â and at what frequency for batch)</li>
+      <li><strong>Tool:</strong> What orchestrates or transmits the data? (Airflow, Kafka, Fivetran, Debezium)</li>
+      <li><strong>Destination:</strong> Where does ingested data land? (Data warehouse, data lake, feature store)</li>
+    </ol>
+    <div class="scenario-block">
+      <div class="scenario-q">â Weak Answer: "The data comes from our database."</div>
+      <div class="scenario-a">This tells the listener nothing about the ingestion pattern, tool, or timing. It does not demonstrate ownership.</div>
+    </div>
+    <div class="scenario-block">
+      <div class="scenario-q">â Strong Answer:</div>
+      <div class="scenario-a">"We have two ingestion flows. User behavioural events are published to a Kafka topic in real time by our web application and consumed by a Spark Structured Streaming job that writes to our BigQuery data warehouse. Account-level metadata is pulled nightly from our PostgreSQL database using an Airflow DAG and loaded into the same warehouse. Both flows land in dedicated tables that serve as the input to our feature engineering pipeline."</div>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the four components of a complete ingestion description?</li><li>What makes a "weak" ingestion description weak?</li></ul></div>
+  `},
+  {id:4,title:"Explaining Design Decisions",content:`
+    <h3>ð Why, Not Just What</h3>
+    <p>The deepest signal of system ownership is the ability to explain <em>why</em> the system is designed the way it is. Anyone can describe what a system does by reading its documentation. Ownership requires understanding the trade-offs behind each decision.</p>
+    <h4>The Trade-off Framework</h4>
+    <p>For any architectural decision, you should be able to articulate:</p>
+    <ul>
+      <li><strong>What we chose</strong> â the decision made</li>
+      <li><strong>What we considered</strong> â the alternatives evaluated</li>
+      <li><strong>Why we chose it</strong> â the deciding constraint (latency, cost, team expertise, scale)</li>
+      <li><strong>What we gave up</strong> â the trade-off accepted</li>
+    </ul>
+    <div class="scenario-block">
+      <div class="scenario-q">Q: "Why did you use batch prediction instead of real-time serving?"</div>
+      <div class="scenario-a">
+        <strong>Strong Answer:</strong> "We evaluated both. Real-time serving would require us to maintain an online feature store with sub-10ms lookup, which we didn't have the infrastructure for. Since our sales team checks churn scores once a day in the morning, a daily batch job that pre-computes and stores scores in our CRM meets the latency requirement at a fraction of the infrastructure cost. The trade-off is that our scores are at most 24 hours stale â which is acceptable for this use case."
+      </div>
+    </div>
+    <div class="callout callout-blue">
+      <h4>ð¡ Constraint-Driven Design</h4>
+      <p>Real engineering decisions are always constrained by: <strong>latency requirements, budget, team size, existing infrastructure, data availability, and risk tolerance</strong>. Explaining the constraint that drove a decision demonstrates that you understand the full picture â not just the technology.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the four parts of the trade-off framework?</li><li>Name six types of constraints that drive architectural decisions.</li></ul></div>
+  `},
+  {id:5,title:"Communicating to Different Audiences",content:`
+    <h3>ð¡ Adapting Your Message</h3>
+    <p>System ownership also means being able to translate the same technical system into appropriate language for different audiences. This is not about dumbing down â it is about choosing the right level of abstraction.</p>
+    <div class="callout callout-blue">
+      <h4>Technical Audience (Data Scientist / ML Engineer)</h4>
+      <ul>
+        <li>Include algorithm names, hyperparameters, data split strategy</li>
+        <li>Discuss feature engineering choices and why</li>
+        <li>Reference specific tools and infrastructure</li>
+        <li>Share metrics with confidence intervals if available</li>
+      </ul>
+    </div>
+    <div class="callout callout-green">
+      <h4>Product / Business Audience</h4>
+      <ul>
+        <li>Lead with the business outcome: "This system identifies customers at risk of leaving 30 days in advance"</li>
+        <li>Express performance in business terms: "We catch 8 out of 10 customers who would have churned"</li>
+        <li>Skip algorithm details; focus on input signals and output actions</li>
+        <li>Frame limitations as business constraints, not technical ones</li>
+      </ul>
+    </div>
+    <div class="callout callout-yellow">
+      <h4>Customer / External Audience</h4>
+      <ul>
+        <li>Lead with value delivered: "You receive early warning signals before customers disengage"</li>
+        <li>Avoid all jargon (no "PSI", no "XGBoost", no "Kafka")</li>
+        <li>Focus on reliability, fairness, and privacy commitments</li>
+        <li>Be prepared to answer "how does it know?" without revealing proprietary signals</li>
+      </ul>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>How does a technical audience description differ from a business audience description?</li><li>What should you lead with when describing a system to a business audience?</li></ul></div>
+  `},
+  {id:6,title:"Course Completion: Your Integrated Framework",content:`
+    <h3>ð Everything You Now Know</h3>
+    <p>You have completed all five modules. Here is the integrated framework you now possess:</p>
+    <div class="callout callout-blue">
+      <h4>Module 1 â Foundation</h4>
+      <p>What Data Science is, the 6-stage ML lifecycle, core vocabulary (dataset, label, feature, model), ingestion patterns (batch, streaming, CDC), data processing steps, and what MLOps solves.</p>
+    </div>
+    <div class="callout callout-yellow">
+      <h4>Module 2 â Feature Engineering</h4>
+      <p>Why features matter more than models, numerical transformations (scaling, log, binning), categorical encoding (one-hot, target, label), missing value strategies (imputation, indicator), feature selection (filter, wrapper, embedded), time-based features, and the FE workflow.</p>
+    </div>
+    <div class="callout callout-blue" style="border-color:var(--red);background:rgba(239,68,68,0.06)">
+      <h4 style="color:var(--red)">Module 3 â Model Drift</h4>
+      <p>Why models degrade, data vs concept vs label vs upstream drift, statistical detection (PSI, KS test, JS divergence), retraining strategies (schedule, metric-based, champion/challenger, windowed), performance metrics (accuracy, F1, AUC-ROC, RMSE), and the drift response playbook.</p>
+    </div>
+    <div class="callout callout-purple">
+      <h4>Module 4 â MLOps Architecture</h4>
+      <p>Feature store architecture (offline/online stores, Feast, Tecton), MLOps maturity levels 0â2, CI/CD for ML, experiment tracking (MLflow), model registry lifecycle, and serving patterns (REST, batch, streaming).</p>
+    </div>
+    <div class="callout callout-green">
+      <h4>Module 5 â System Articulation</h4>
+      <p>The four ownership questions, the 5-part architecture description framework, complete ingestion descriptions (4 components), trade-off framework for design decisions, and audience-adaptive communication.</p>
+    </div>
+    <p style="margin-top:18px;font-size:0.95rem;color:var(--text2);line-height:1.7;">You are now ready for the certification exam. 30 questions, 45 minutes, 70% to pass. The exam tests application of these concepts, not just recall â read each question carefully and reason from first principles.</p>
+    <div class="test-questions"><h4>ð¯ Final Preparation Checklist</h4><ul><li>Can you describe the ML lifecycle in 6 steps from memory?</li><li>Can you define all four drift types and their causes?</li><li>Can you explain what a feature store's offline and online components do?</li><li>Can you deliver the 5-part architecture description for a system you know?</li><li>Can you articulate what PSI measures and its thresholds?</li></ul></div>
+  `}
+];
+function revLoad(){try{return JSON.parse(localStorage.getItem(REV_KEY))||{};}catch(e){return {};}}
+function revSave(s){localStorage.setItem(REV_KEY,JSON.stringify(s));if(typeof sfWrite==='function')sfWrite(s);}
+function allSectionsChecked(){const items=document.querySelectorAll('.rev-checkbox');for(let i=0;i<items.length;i++){if(!items[i].checked)return false;}return true;}
+function questionAnsweredCorrectly(){return false?revLoad().questionCorrect===true:true;}
+function updateCompleteBar(){
+  const bar=document.getElementById('rev-complete-bar');const cb=document.getElementById('rev-complete-cb');const label=document.getElementById('rev-complete-label');const hint=document.getElementById('rev-complete-hint');
+  if(!bar)return;const s=revLoad();
+  if(s.reviewComplete){bar.className='rev-complete-bar done';cb.disabled=false;cb.checked=true;label.textContent='✓ Review complete';hint.textContent='';return;}
+  const stepsOk=allSectionsChecked();const qOk=questionAnsweredCorrectly();const missing=[];if(!stepsOk)missing.push('all sections checked');if(!qOk)missing.push('question answered correctly');
+  if(stepsOk&&qOk){bar.className='rev-complete-bar ready';cb.disabled=false;label.textContent='Mark review as complete';hint.textContent='';}
+  else{bar.className='rev-complete-bar disabled';cb.disabled=true;label.textContent='Complete all sections to unlock';hint.textContent=missing.length?'Still needed: '+missing.join(' · '):'';}
+}
+function renderProgress(total){let done=0;document.querySelectorAll('.rev-checkbox').forEach(c=>{if(c.checked)done++;});const pct=Math.round((done/total)*100);const p=document.getElementById('sidebar-pct');const b=document.getElementById('sidebar-bar');if(p)p.textContent=pct+'%';if(b)b.style.width=pct+'%';}
+window.toggleSection=(id)=>{const body=document.getElementById('body-'+id);const toggle=document.getElementById('toggle-'+id);const isOpen=body.classList.contains('open');document.querySelectorAll('.section-body').forEach(b=>b.classList.remove('open'));document.querySelectorAll('.section-toggle').forEach(t=>t.classList.remove('open'));if(!isOpen){body.classList.add('open');toggle.classList.add('open');}};
+window.copyCode=(btn)=>{const text=btn.parentElement.innerText.replace('Copy','').trim();navigator.clipboard.writeText(text).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);});};
+function renderAll(){
+  const sec=document.getElementById('sections-container');if(!sec)return;sec.innerHTML='';
+  const s0=revLoad();
+  SECTIONS.forEach(s=>{
+    const reviewed=s0['cb_'+s.id]||false;
+    const sd=document.createElement('div');sd.className='section-block';
+    const badgeCls=BADGE_CLASSES[s.badge]||'';const badgeTxt=BADGES[s.badge]||s.badge||'';
+    sd.innerHTML='<div class="section-header" onclick="toggleSection('+s.id+')">'+'<span class="section-num">'+s.id+'.</span>'+'<span class="section-title">'+s.title+'</span>'+(badgeTxt?'<span style="font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;background:#e8f1fb;color:#1a6eb5;font-family:Source Code Pro,monospace;">'+badgeTxt+'</span>':'')+(reviewed?'<span style="font-size:12px;margin-left:4px;">✅</span>':'')+'<span class="section-toggle" id="toggle-'+s.id+'">▼</span>'+'</div>'+'<div class="section-body" id="body-'+s.id+'">'+s.content+'<div class="reviewer-bar '+(reviewed?'checked':'')+'" id="rev-bar-'+s.id+'"><input type="checkbox" class="rev-checkbox" id="rev-cb-'+s.id+'" data-step="'+s.id+'" '+(reviewed?'checked':'')+'><label for="rev-cb-'+s.id+'">'+(reviewed?'✓ Section reviewed':'Mark section as reviewed')+'</label></div></div>';
+    sec.appendChild(sd);
+  });
+  document.querySelectorAll('.rev-checkbox').forEach(cb=>{
+    cb.addEventListener('change',()=>{const st=revLoad();st['cb_'+cb.dataset.step]=cb.checked;revSave(st);const bar=cb.closest('.reviewer-bar');if(bar){bar.classList.toggle('checked',cb.checked);bar.querySelector('label').textContent=cb.checked?'✓ Section reviewed':'Mark section as reviewed';}renderProgress(SECTIONS.length);updateCompleteBar();});
+  });
+  renderProgress(SECTIONS.length);updateCompleteBar();
+}
+
+const commentEl=document.getElementById('rev-comment');if(commentEl){const s=revLoad();if(s.comment)commentEl.value=s.comment;commentEl.addEventListener('input',()=>{const s=revLoad();s.comment=commentEl.value;revSave(s);});}
+const completeCb=document.getElementById('rev-complete-cb');if(completeCb)completeCb.addEventListener('change',()=>{if(!completeCb.checked)return;const s=revLoad();s.reviewComplete=true;s.completedAt=new Date().toISOString();revSave(s);updateCompleteBar();});
+renderAll();
+</script>
+<script>
+(function(){var scripts=['https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js'];function loadNext(i){if(i>=scripts.length){window._sfFirebaseReady=true;initRevFirebase();return;}var s=document.createElement('script');s.src=scripts[i];s.onload=function(){loadNext(i+1);};s.onerror=function(){window._sfFirebaseReady=false;};document.head.appendChild(s);}loadNext(0);})();
+</script>
+<script>
+function initRevFirebase(){
+  const SF_CONFIG={apiKey:"AIzaSyA-8fatW5D7uR69rcuGFPH54IFqrz0PhU0",authDomain:"sfcertification-grafana.firebaseapp.com",projectId:"sfcertification-grafana",storageBucket:"sfcertification-grafana.firebasestorage.app",messagingSenderId:"227322696511",appId:"1:227322696511:web:12e7ced7dd3d45fa06798a"};
+  if(!firebase.apps.length)firebase.initializeApp(SF_CONFIG);
+  window.sfAuth=firebase.auth();window.sfDb=firebase.firestore();
+  const REV_KEY_FB='reviewer_sf-ds-mlops-certification_module-5';
+  const COURSE_ID='Z7FGzRNrJ1AxIqbSLp6W';
+  function sfDocRef(){if(!window.sfReviewerUid)return null;return window.sfDb.collection('reviewerSessions').doc(window.sfReviewerUid).collection('sf-ds-mlops-certification').doc('module-5');}
+  function sfInitSession(){const local=revLoad();if(!local.startedAt){local.startedAt=new Date().toISOString();localStorage.setItem(REV_KEY,JSON.stringify(local));}if(!window._sfFirebaseReady||!window.sfReviewerUid)return;sfDocRef().set({email:window.sfReviewerEmail,moduleId:'module-5',courseId:COURSE_ID,startedAt:local.startedAt,lastUpdated:firebase.firestore.FieldValue.serverTimestamp(),reviewComplete:local.reviewComplete||false,attemptCount:local.attemptCount||0},{merge:true}).catch(e=>console.warn('SF init:',e.message));}
+  window.sfInitSession=sfInitSession;
+  window.sfWrite=function(extra){if(!window._sfFirebaseReady||!window.sfReviewerUid)return;const ref=sfDocRef();if(!ref)return;const local=revLoad();const payload=Object.assign({},local,extra,{email:window.sfReviewerEmail,moduleId:'module-5',courseId:COURSE_ID,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});ref.set(payload,{merge:true}).catch(e=>console.warn('SF write:',e.message));};
+  window.sfFetchAndMerge=async function(){const ref=sfDocRef();if(!ref)return;try{const snap=await ref.get();if(!snap.exists)return;const remote=snap.data();const local=revLoad();const merged=Object.assign({},local,remote);delete merged.email;delete merged.lastUpdated;localStorage.setItem(REV_KEY,JSON.stringify(merged));if(typeof renderAll==='function'){renderAll();}if(typeof updateCompleteBar==='function')updateCompleteBar();}catch(e){console.warn('SF fetch:',e.message);}};
+  function sfHideOverlayFB(user){window.sfReviewerEmail=user.email;window.sfReviewerUid=user.uid;const ov=document.getElementById('sfSigninOverlay');if(ov)ov.classList.add('hidden');const bar=document.getElementById('sfSignedInBar');const lbl=document.getElementById('sfSignedInEmail');if(bar)bar.classList.remove('hidden');if(lbl)lbl.textContent='Signed in as '+user.email;sfInitSession();window.sfFetchAndMerge();}
+  window.sfAuth.onAuthStateChanged(user=>{if(user){sfHideOverlayFB(user);}else{document.getElementById('sfSigninOverlay').classList.remove('hidden');}});
+}
+</script>
+</body>
+</html>
