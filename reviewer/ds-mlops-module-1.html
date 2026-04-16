@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+<title>[Reviewer] Module 1: DS & MLOps Foundations</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{--bg:#eef2f7;--bg2:#ffffff;--bg3:#f0f4f9;--border:#d0dae8;--text:#1a2332;--text-dim:#4a5568;--text-dimmer:#8fa3bc;--blue:#1a6eb5;--blue-light:#e8f1fb;--blue-mid:#b8d0ed;--green:#1a6b3a;--green-light:#e8f5ed;--coral:#c0392b;--coral-light:#fdf0ee;--radius:12px;}
+  html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Merriweather Sans',sans-serif;font-size:15px;line-height:1.6;}
+  a{color:var(--blue);text-decoration:none;}
+  .reviewer-topbanner{background:#f5f0ff;border-bottom:2px solid #c4bdf0;padding:9px 40px;font-size:12px;font-family:'Source Code Pro',monospace;color:#5b4fcf;display:flex;align-items:center;gap:8px;}
+  .sf-signin-overlay{position:fixed;inset:0;background:rgba(20,30,50,.82);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px);}
+  .sf-signin-overlay.hidden{display:none;}
+  .sf-signin-card{background:#fff;border-radius:16px;padding:36px 40px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;}
+  .sf-signin-logo{font-size:32px;margin-bottom:12px;}
+  .sf-signin-title{font-size:17px;font-weight:700;color:#1a2332;margin-bottom:8px;}
+  .sf-signin-sub{font-size:13px;color:#4a5568;line-height:1.6;margin-bottom:24px;}
+  .sf-google-btn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #d0dae8;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:600;cursor:pointer;color:#1a2332;width:100%;justify-content:center;transition:box-shadow .15s;}
+  .sf-google-btn:hover{box-shadow:0 2px 8px rgba(0,0,0,.12);}
+  .sf-google-btn img{width:20px;height:20px;}
+  .sf-signin-divider{font-size:11px;color:#8fa3bc;text-align:center;margin:14px 0 10px;display:flex;align-items:center;gap:8px;font-family:'Source Code Pro',monospace;}
+  .sf-signin-divider::before,.sf-signin-divider::after{content:'';flex:1;height:1px;background:#d0dae8;}
+  .sf-fallback-input{width:100%;padding:10px 12px;border:1.5px solid #d0dae8;border-radius:8px;font-size:14px;font-family:'Merriweather Sans',sans-serif;color:#1a2332;margin-bottom:10px;outline:none;}
+  .sf-fallback-input:focus{border-color:var(--blue);}
+  .sf-fallback-btn{width:100%;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+  .sf-signin-error{margin-top:14px;font-size:12.5px;color:#c0392b;font-family:'Source Code Pro',monospace;background:#fdf0ee;border:1px solid #f0b8b2;border-radius:6px;padding:10px 12px;display:none;text-align:left;}
+  .sf-signin-error.visible{display:block;}
+  .sf-signed-in-bar{background:#e8f5ed;border-bottom:1px solid #a3d4b8;padding:7px 40px;font-size:11px;font-family:'Source Code Pro',monospace;color:var(--green);display:flex;align-items:center;justify-content:space-between;}
+  .sf-signed-in-bar.hidden{display:none;}
+  .sf-signout-btn{font-size:10px;color:var(--blue);background:none;border:1px solid #b8d0ed;border-radius:4px;padding:2px 8px;cursor:pointer;}
+  .topnav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 40px;height:48px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-dimmer);font-family:'Source Code Pro',monospace;position:sticky;top:0;z-index:100;}
+  .topnav a{color:var(--blue);}
+  .sep{margin:0 4px;color:var(--text-dimmer);}
+  .main{max-width:860px;margin:0 auto;padding:36px 40px 80px;}
+  .module-hero{margin-bottom:28px;}
+  .hero-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:8px;font-family:'Source Code Pro',monospace;}
+  .module-hero h1{font-size:clamp(18px,2.5vw,26px);font-weight:700;color:var(--text);line-height:1.25;}
+  .section-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;}
+  .section-header{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+  .section-header:hover{background:var(--bg3);}
+  .section-num{font-size:10px;font-weight:700;color:var(--text-dimmer);min-width:24px;font-family:'Source Code Pro',monospace;}
+  .section-title{font-weight:600;font-size:14px;flex:1;color:var(--text);}
+  .section-toggle{font-size:11px;color:var(--text-dimmer);transition:transform .2s;}
+  .section-toggle.open{transform:rotate(180deg);}
+  .section-body{display:none;padding:20px 22px 14px;border-top:1px solid var(--border);font-size:14px;color:var(--text-dim);line-height:1.75;}
+  .section-body.open{display:block;}
+  .section-body h3{font-size:15px;font-weight:700;color:var(--text);margin:16px 0 8px;}
+  .section-body p{margin-bottom:10px;}
+  .section-body ul,.section-body ol{margin:8px 0 12px 20px;}
+  .section-body li{margin-bottom:4px;}
+  .section-body code{font-family:'Source Code Pro',monospace;font-size:12.5px;background:var(--bg3);border:1px solid var(--border);padding:1px 5px;border-radius:4px;color:#0f4a7a;}
+  .section-body pre{background:#1e2433;color:#cdd6f4;padding:16px;border-radius:8px;font-size:12.5px;font-family:'Source Code Pro',monospace;overflow-x:auto;margin:12px 0;position:relative;}
+  .copy-btn,.copy-btn-small{position:absolute;top:8px;right:8px;background:#252b3b;border:1px solid #3a4155;color:#7a8ab0;border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;font-family:'Source Code Pro',monospace;}
+  .copy-btn:hover,.copy-btn-small:hover{color:#cdd6f4;}
+  .reviewer-bar{background:#fff8e6;border:1px solid #f0d4a0;border-left:3px solid #92600a;border-radius:8px;padding:10px 16px;margin:18px 0 6px;display:flex;align-items:center;gap:10px;font-size:13px;color:#92600a;font-family:'Source Code Pro',monospace;}
+  .reviewer-bar input[type="checkbox"]{width:16px;height:16px;cursor:pointer;flex-shrink:0;accent-color:var(--green);}
+  .reviewer-bar label{cursor:pointer;font-weight:600;user-select:none;}
+  .reviewer-bar.checked{background:var(--green-light);border-color:#a3d4b8;border-left-color:var(--green);color:var(--green);}
+  .reviewer-panel{background:#f5f0ff;border:1px solid #c4bdf0;border-top:3px solid #5b4fcf;border-radius:12px;padding:24px 28px;margin:32px 0;}
+  .reviewer-panel-label{font-size:9px;font-family:'Source Code Pro',monospace;letter-spacing:.18em;text-transform:uppercase;color:#5b4fcf;font-weight:600;margin-bottom:16px;}
+  .reviewer-q-text{font-size:14px;font-weight:600;color:#1a2332;line-height:1.65;margin-bottom:14px;}
+  .reviewer-options{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+  .reviewer-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid #d0dae8;border-radius:8px;cursor:pointer;font-size:13.5px;color:#4a5568;line-height:1.5;background:#fff;transition:background .12s,border-color .12s;}
+  .reviewer-option:hover{background:#f0f4f9;border-color:#b8d0ed;}
+  .reviewer-option.selected{background:#e8f1fb;border-color:var(--blue);color:#1a2332;}
+  .reviewer-option.correct{background:var(--green-light);border-color:#a3d4b8;color:var(--green);}
+  .reviewer-option.wrong{background:var(--coral-light);border-color:#f0b8b2;color:var(--coral);}
+  .reviewer-option-key{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#8fa3bc;flex-shrink:0;margin-top:1px;}
+  .reviewer-reveal{font-size:12px;font-family:'Source Code Pro',monospace;color:#5b4fcf;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;margin-bottom:14px;display:block;}
+  .reviewer-explanation{font-size:13px;color:#4a5568;line-height:1.7;padding:12px 14px;background:#eef2f7;border-radius:8px;margin-bottom:16px;display:none;}
+  .reviewer-explanation.visible{display:block;}
+  .reviewer-exp-label{font-size:9px;font-family:'Source Code Pro',monospace;letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:4px;}
+  .reviewer-exp-label.correct{color:var(--green);}
+  .reviewer-exp-label.wrong{color:var(--coral);}
+  .reviewer-comment-label{font-size:11px;font-family:'Source Code Pro',monospace;letter-spacing:.12em;text-transform:uppercase;color:#8fa3bc;font-weight:600;margin-bottom:6px;}
+  .reviewer-comment{width:100%;min-height:80px;padding:10px 12px;border:1px solid #c4bdf0;border-radius:8px;font-family:'Merriweather Sans',sans-serif;font-size:13.5px;color:#1a2332;background:#fff;resize:vertical;line-height:1.6;}
+  .reviewer-comment:focus{outline:none;border-color:#5b4fcf;}
+  .reviewer-save-note{font-size:11px;font-family:'Source Code Pro',monospace;color:#8fa3bc;margin-top:6px;}
+  .rev-complete-wrap{margin:28px 0 0;}
+  .rev-complete-bar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:8px;font-size:13.5px;font-family:'Source Code Pro',monospace;font-weight:600;border:1.5px solid var(--border);background:var(--bg3);color:var(--text-dimmer);transition:all .2s;}
+  .rev-complete-bar.disabled{opacity:.6;cursor:not-allowed;}
+  .rev-complete-bar.ready{background:#fff8e6;border-color:#f0d4a0;border-left:3px solid #92600a;color:#92600a;cursor:pointer;}
+  .rev-complete-bar.done{background:var(--green-light);border-color:#a3d4b8;border-left:3px solid var(--green);color:var(--green);cursor:default;}
+  .rev-complete-bar input[type="checkbox"]{width:18px;height:18px;flex-shrink:0;accent-color:var(--green);}
+  .rev-complete-bar.disabled input{cursor:not-allowed;}
+  .rev-complete-hint{font-size:11px;font-family:'Source Code Pro',monospace;color:var(--text-dimmer);margin-top:6px;min-height:16px;}
+  .bottom-nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0 0;border-top:1px solid var(--border);margin-top:40px;}
+  .nav-btn{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-family:'Source Code Pro',monospace;color:var(--blue);text-decoration:none;padding:10px 18px;border:1px solid var(--blue-mid);border-radius:8px;background:var(--blue-light);font-weight:600;}
+  .nav-btn.secondary{background:var(--bg2);color:var(--text-dim);border-color:var(--border);}
+  .nav-btn:hover{background:var(--blue-mid);}
+</style>
+</head>
+<body>
+<div class="sf-signin-overlay" id="sfSigninOverlay">
+  <div class="sf-signin-card">
+    <div class="sf-signin-logo">🔐</div>
+    <div class="sf-signin-title">Sign in to save your progress</div>
+    <div class="sf-signin-sub">Sign in with your SourceFuse Gmail. Review progress, checkboxes and question attempts are saved and restored across devices.</div>
+    <button class="sf-google-btn" id="sfGoogleSignInBtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google</button>
+    <div class="sf-signin-divider">or</div>
+    <input type="text" class="sf-fallback-input" id="sfEmailInput" placeholder="your.name@sourcefuse.com" autocomplete="off" inputmode="email">
+    <button class="sf-fallback-btn" id="sfEmailSignInBtn">Continue with SF email</button>
+    <div class="sf-signin-error" id="sfSigninError"></div>
+  </div>
+</div>
+<div class="sf-signed-in-bar hidden" id="sfSignedInBar"><span id="sfSignedInEmail">Signed in as …</span><button class="sf-signout-btn" id="sfSignoutLink">Sign out</button></div>
+<div class="reviewer-topbanner"><span>👁</span><strong>Reviewer Mode</strong> — Module 1: DS & MLOps Foundations</div>
+<nav class="topnav">
+  <a href="index.html">← Reviewer Hub</a>
+  <span class="sep">/</span>
+  <span>Module 1: DS & MLOps Foundations</span>
+</nav>
+<div class="main">
+  <div class="module-hero">
+    <div class="hero-eyebrow">Module 1 of 5 · Reviewer Mode</div>
+    <h1>DS & MLOps Foundations</h1>
+  </div>
+  <div id="sections-container"></div>
+  
+  <div class="reviewer-panel">
+    <div class="reviewer-panel-label">🔍 Reviewer Question — Module</div>
+    <div class="reviewer-q-text">Data Science is described as sitting at the intersection of three domains. Which of the following correctly identifies all three?</div>
+    <div class="reviewer-options" id="rev-options"><div class="reviewer-option" data-key="A"><span class="reviewer-option-key">A</span><span>Statistics, programming, and domain expertise</span></div><div class="reviewer-option" data-key="B"><span class="reviewer-option-key">B</span><span>Mathematics, computer science, and business</span></div><div class="reviewer-option" data-key="C"><span class="reviewer-option-key">C</span><span>Data engineering, ML research, and software development</span></div><div class="reviewer-option" data-key="D"><span class="reviewer-option-key">D</span><span>Analytics, visualisation, and AI</span></div></div>
+    <button class="reviewer-reveal" id="rev-reveal-btn">Check answer</button>
+    <div class="reviewer-explanation" id="rev-explanation">
+      <div class="reviewer-exp-label" id="rev-exp-label"></div>
+      <div id="rev-exp-text"></div>
+    </div>
+    <div class="reviewer-comment-label">Reviewer notes</div>
+    <textarea class="reviewer-comment" id="rev-comment" placeholder="Add your review notes for this module…"></textarea>
+    <div class="reviewer-save-note">Notes are auto-saved.</div>
+  </div>
+  <script>window.REV_CORRECT="A";window.REV_EXPLANATION="";window.REV_QUESTION={"m":1,"q":"Data Science is described as sitting at the intersection of three domains. Which of the following correctly identifies all three?","o":["Statistics, programming, and domain expertise","Mathematics, computer science, and business","Data engineering, ML research, and software development","Analytics, visualisation, and AI"],"c":0,"exp":""};</script>
+  <div class="rev-complete-wrap">
+    <div class="rev-complete-bar disabled" id="rev-complete-bar">
+      <input type="checkbox" id="rev-complete-cb" disabled>
+      <label for="rev-complete-cb" id="rev-complete-label">Complete all sections and answer the question correctly to unlock</label>
+    </div>
+    <div class="rev-complete-hint" id="rev-complete-hint"></div>
+  </div>
+  <div class="bottom-nav"><span></span><a href="ds-mlops-module-2.html" class="nav-btn">Module 2 →</a></div>
+</div>
+<script>
+function sfShowError(msg){const el=document.getElementById('sfSigninError');if(el){el.textContent=msg;el.classList.add('visible');}}
+function sfHideOverlay(user){
+  window.sfReviewerEmail=user.email||user;window.sfReviewerUid=user.uid||'email_'+btoa(window.sfReviewerEmail).replace(/=/g,'');
+  const ov=document.getElementById('sfSigninOverlay');if(ov)ov.classList.add('hidden');
+  const bar=document.getElementById('sfSignedInBar');const lbl=document.getElementById('sfSignedInEmail');
+  if(bar)bar.classList.remove('hidden');if(lbl)lbl.textContent='Signed in as '+window.sfReviewerEmail;
+  if(typeof sfInitSession==='function')sfInitSession();
+  if(window._sfFirebaseReady&&typeof window.sfDb!=='undefined'&&typeof sfFetchAndMerge==='function')sfFetchAndMerge();
+}
+function sfSignInWithEmail(){const emailEl=document.getElementById('sfEmailInput');if(!emailEl)return;const email=emailEl.value.trim();if(!email||!email.includes('@')){sfShowError('Please enter a valid email address.');return;}if(!email.endsWith('@sourcefuse.com')){sfShowError('Please use your @sourcefuse.com email address.');return;}sfHideOverlay(email);}
+async function sfSignInWithGoogle(){if(typeof firebase==='undefined'||!window._sfFirebaseReady){sfShowError('Popup blocked. Please enter your SF email below.');return;}const provider=new firebase.auth.GoogleAuthProvider();provider.setCustomParameters({hd:'sourcefuse.com',prompt:'select_account'});const t=setTimeout(()=>sfShowError('Popup blocked. Please enter your SF email below.'),30000);try{const r=await firebase.auth().signInWithPopup(provider);clearTimeout(t);sfHideOverlay(r.user);}catch(e){clearTimeout(t);sfShowError('Popup blocked. Please enter your SF email below.');}}
+function sfSignOut(){window.sfReviewerEmail=null;window.sfReviewerUid=null;const bar=document.getElementById('sfSignedInBar');const ov=document.getElementById('sfSigninOverlay');if(bar)bar.classList.add('hidden');if(ov)ov.classList.remove('hidden');if(typeof firebase!=='undefined'&&window._sfFirebaseReady)firebase.auth().signOut();}
+document.addEventListener('DOMContentLoaded',function(){const gb=document.getElementById('sfGoogleSignInBtn');const eb=document.getElementById('sfEmailSignInBtn');const so=document.getElementById('sfSignoutLink');if(gb)gb.addEventListener('click',sfSignInWithGoogle);if(eb)eb.addEventListener('click',sfSignInWithEmail);if(so)so.addEventListener('click',sfSignOut);});
+</script>
+<script>
+const REV_KEY='reviewer_'+window.location.pathname.replace(/[^a-z0-9]/gi,'_');
+const BADGES={foundation:'Foundation',essential:'Essential',important:'Important'};
+const BADGE_CLASSES={foundation:'badge-foundation',essential:'badge-essential',important:'badge-important'};
+const SECTIONS=[
+  {id:1,title:"Why Features Matter More Than Models",content:`
+    <h3>âï¸ The 80/20 of ML Performance</h3>
+    <p>A common misconception is that model selection â choosing Random Forest vs Neural Network vs XGBoost â is the most important decision in building an ML system. In practice, <strong>the quality of your features determines 70â80% of your model's performance</strong>, regardless of algorithm choice.</p>
+    <p>A great set of features with a simple model almost always outperforms a poor set of features with a sophisticated model. This is why experienced ML engineers spend most of their time on feature engineering, not algorithm selection.</p>
+    <div class="callout callout-blue">
+      <h4>ð¡ What Makes a Feature "Good"?</h4>
+      <p>A good feature has <strong>predictive signal</strong> â it correlates with the label you are trying to predict. It is also <strong>available at prediction time</strong> (no data leakage), <strong>consistent</strong> across training and serving, and <strong>interpretable</strong> enough to debug when something goes wrong.</p>
+    </div>
+    <h4>The Feature Engineering Mindset</h4>
+    <p>Think of feature engineering as <strong>encoding domain knowledge into a form a model can learn from</strong>. You are the domain expert. You know that "number of logins in the last 7 days" is more predictive of churn than "account creation date" alone. Feature engineering is the process of expressing that knowledge mathematically.</p>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>Why does feature quality matter more than model selection?</li><li>What are the four properties of a good feature?</li></ul></div>
+  `},
+  {id:2,title:"Numerical Feature Transformations",content:`
+    <h3>ð¢ Working with Numbers</h3>
+    <p>Numerical features (integers, floats) are the most common feature type, but raw numbers are rarely in the right form for a model. Here are the core transformations:</p>
+    <h4>Scaling</h4>
+    <p>Most ML algorithms are sensitive to the scale of numeric inputs. A feature with values in the range 0â100,000 (income) will dominate a feature in the range 0â1 (a probability score) unless you scale them.</p>
+    <ul>
+      <li><strong>Min-Max Scaling:</strong> Rescale to [0, 1]. <code>x_scaled = (x - min) / (max - min)</code>. Good when you know the bounds.</li>
+      <li><strong>Standard Scaling (Z-score):</strong> Rescale to mean=0, std=1. <code>x_scaled = (x - mean) / std</code>. Good for normally distributed data.</li>
+      <li><strong>Robust Scaling:</strong> Uses median and IQR instead of mean/std. Better when data has outliers.</li>
+    </ul>
+    <h4>Log Transformation</h4>
+    <p>When a numerical feature has a skewed distribution (e.g. income, page views, revenue), apply <code>log(x+1)</code> to compress the scale and make the distribution more normal. Most tree-based models don't need this, but linear models and neural networks benefit significantly.</p>
+    <h4>Binning / Discretisation</h4>
+    <p>Convert a continuous number into a category: age â [18-25, 26-35, 36-50, 50+]. Useful when the relationship with the label is non-linear and step-function-like.</p>
+    <div class="callout callout-yellow">
+      <h4>â ï¸ Training vs Serving Consistency</h4>
+      <p>Whatever scaling you apply during training must be applied identically at serving time. The scaler's parameters (min, max, mean, std) must be saved and reused â not recomputed on new data.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>When would you use Robust Scaling over Standard Scaling?</li><li>Why is log transformation useful for skewed features?</li><li>What is binning and when is it appropriate?</li></ul></div>
+  `},
+  {id:3,title:"Categorical Feature Encoding",content:`
+    <h3>ð·ï¸ Turning Categories into Numbers</h3>
+    <p>ML models work with numbers. Categorical features â city names, product categories, user types â must be encoded as numbers. The encoding strategy matters enormously.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Technique</th><th>When to Use</th><th>Example</th></tr>
+      <tr><td><strong>One-Hot Encoding</strong></td><td>Low-cardinality categories (< ~20 values)</td><td>colour = [red,blue,green] â 3 binary columns</td></tr>
+      <tr><td><strong>Label Encoding</strong></td><td>Ordinal categories (inherent order exists)</td><td>size = [S,M,L,XL] â [0,1,2,3]</td></tr>
+      <tr><td><strong>Target Encoding</strong></td><td>High-cardinality categories</td><td>city â mean(churn_rate) per city</td></tr>
+      <tr><td><strong>Binary Encoding</strong></td><td>Medium-high cardinality</td><td>100 categories â 7 binary columns</td></tr>
+      <tr><td><strong>Frequency Encoding</strong></td><td>When popularity itself is informative</td><td>city â count of occurrences in dataset</td></tr>
+    </table></div>
+    <h4>High Cardinality Problem</h4>
+    <p>One-hot encoding a feature with 10,000 unique values (like postal codes) creates 10,000 columns â sparse, computationally expensive, and often noisy. <strong>Target encoding</strong> solves this by replacing each category with a statistic derived from the label (e.g. mean churn rate for that postal code).</p>
+    <div class="callout callout-yellow">
+      <h4>â ï¸ Data Leakage Risk in Target Encoding</h4>
+      <p>When computing target statistics, use only the training fold â never the row's own label. Use cross-fold or leave-one-out encoding to avoid leaking the label into the feature.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the high cardinality problem with one-hot encoding?</li><li>When would you use target encoding over one-hot encoding?</li><li>What is data leakage and how does it relate to target encoding?</li></ul></div>
+  `},
+  {id:4,title:"Handling Missing Values",content:`
+    <h3>â When Data Isn't There</h3>
+    <p>Real-world datasets almost always have missing values. How you handle them has a significant impact on model quality. There is no universally correct approach â each strategy has tradeoffs.</p>
+    <h4>Imputation Strategies</h4>
+    <ul>
+      <li><strong>Mean/Median Imputation:</strong> Replace missing values with the column mean (for symmetric distributions) or median (for skewed data or outliers). Simple and fast, but destroys information about the fact that the value was missing.</li>
+      <li><strong>Mode Imputation:</strong> For categorical features, replace with the most frequent value.</li>
+      <li><strong>Constant Imputation:</strong> Fill with a sentinel value like -1 or "UNKNOWN". Tells the model "this was missing" â the model can potentially learn from this signal.</li>
+      <li><strong>Indicator + Imputation:</strong> Add a binary column <code>feature_was_missing</code> (1/0), then impute the original. Preserves the missingness signal.</li>
+      <li><strong>Model-Based Imputation (KNN, MICE):</strong> Use other features to predict the missing value. Accurate but expensive.</li>
+    </ul>
+    <div class="callout callout-green">
+      <h4>â Best Practice</h4>
+      <p>For high-stakes features where missingness is informative (e.g. "last_login_date is null" might mean the user never logged in), always use <strong>Indicator + Imputation</strong>. For low-stakes columns with < 5% missing, simple median imputation is usually sufficient.</p>
+    </div>
+    <h4>When to Drop</h4>
+    <p>Drop a row only if it is missing the label (target variable). Drop a column only if it has > 50-60% missing values AND you cannot derive the missing information from other columns.</p>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between mean and median imputation and when do you choose each?</li><li>What is Indicator + Imputation and why is it useful?</li><li>When should you drop a column vs impute it?</li></ul></div>
+  `},
+  {id:5,title:"Feature Selection",content:`
+    <h3>âï¸ Keeping What Matters</h3>
+    <p>More features is not always better. Irrelevant or redundant features add noise, slow training, increase memory use, and can hurt model performance. Feature selection is the discipline of choosing the right subset of features.</p>
+    <h4>Three Approaches</h4>
+    <ul>
+      <li><strong>Filter Methods:</strong> Rank features by statistical correlation with the label, independent of any model. Examples: Pearson correlation for numerical features, Chi-squared test for categorical. Fast but ignores feature interactions.</li>
+      <li><strong>Wrapper Methods:</strong> Iteratively add or remove features and measure model performance. Examples: Recursive Feature Elimination (RFE), forward selection. Accurate but computationally expensive.</li>
+      <li><strong>Embedded Methods:</strong> Feature selection is built into the model training process. Examples: Lasso regression (L1 penalty drives unimportant feature weights to zero), tree-based feature importance from Random Forest or XGBoost.</li>
+    </ul>
+    <h4>Feature Importance from Tree Models</h4>
+    <p>Tree-based models (Random Forest, XGBoost, LightGBM) automatically compute a <strong>feature importance score</strong> for each feature â how much each feature contributed to reducing prediction error across all trees. This is a powerful, free signal for feature selection.</p>
+    <div class="callout callout-blue">
+      <h4>ð¡ Variance Threshold</h4>
+      <p>The simplest filter: remove features with near-zero variance. A feature that is the same value in 99% of rows contains almost no information and can safely be dropped before any modelling.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between filter, wrapper, and embedded feature selection?</li><li>How does Lasso regression perform feature selection?</li><li>What does feature importance from a Random Forest represent?</li></ul></div>
+  `},
+  {id:6,title:"Time-Based & Aggregate Features",content:`
+    <h3>â±ï¸ Features Derived from Time</h3>
+    <p>Many real-world ML problems involve time: predicting churn, forecasting demand, detecting fraud. Time-based features are among the most powerful and most commonly underutilised.</p>
+    <h4>Temporal Feature Derivation</h4>
+    <ul>
+      <li><strong>Recency:</strong> How long ago was the last event? <code>days_since_last_login = today - last_login_date</code></li>
+      <li><strong>Frequency:</strong> How many times did an event occur in a window? <code>logins_last_30_days</code></li>
+      <li><strong>Trend:</strong> Is behaviour increasing or decreasing? <code>login_count_this_week - login_count_last_week</code></li>
+      <li><strong>Cyclicality:</strong> Day of week, hour of day, month of year â encoded as <code>sin/cos</code> to preserve circular relationships</li>
+    </ul>
+    <h4>Rolling Window Aggregations</h4>
+    <p>For a user at time T, compute statistics over the last N days: <code>avg_session_duration_7d</code>, <code>max_purchase_amount_30d</code>, <code>stddev_response_time_14d</code>. These capture behavioural patterns that a single snapshot cannot.</p>
+    <div class="callout callout-yellow">
+      <h4>â ï¸ Temporal Data Leakage</h4>
+      <p>When creating time-based features for training, always ensure your feature window is computed from data strictly <em>before</em> the prediction date. Using future data in a training feature causes data leakage â your model will appear to work but will fail in production.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the four temporal feature types (recency, frequency, trend, cyclicality)?</li><li>What is temporal data leakage and how do you prevent it?</li><li>Why encode cyclic features as sin/cos?</li></ul></div>
+  `},
+  {id:7,title:"Feature Engineering Strategy & Workflow",content:`
+    <h3>ð¬ Putting It All Together</h3>
+    <p>Feature engineering is not a random collection of techniques â it follows a disciplined workflow grounded in domain understanding and iterative experimentation.</p>
+    <h4>The Feature Engineering Workflow</h4>
+    <ol>
+      <li><strong>Understand the domain:</strong> What raw data sources exist? What events, entities, and relationships matter for this prediction problem?</li>
+      <li><strong>Exploratory Data Analysis (EDA):</strong> Distribution plots, correlation matrices, missing value maps. Build intuition before writing transformation code.</li>
+      <li><strong>Baseline features:</strong> Start simple â raw values, basic aggregations, obvious encodings.</li>
+      <li><strong>Train a baseline model:</strong> Establish a performance floor before investing in complex features.</li>
+      <li><strong>Feature iteration:</strong> Add new features, measure impact, discard what doesn't help.</li>
+      <li><strong>Feature selection:</strong> Remove noise; keep only what the model actually uses.</li>
+      <li><strong>Document and register:</strong> Store feature definitions in a feature store or shared repository so they can be reused (Module 4).</li>
+    </ol>
+    <div class="callout callout-green">
+      <h4>â Module 2 Summary</h4>
+      <p>You can now articulate: why features matter more than models, how to transform numerical and categorical data, how to handle missing values, how to select relevant features, and how time-based features work. This is precisely the depth that was missing in the candidate feedback that motivated this course.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the correct sequence of the feature engineering workflow?</li><li>Why do you establish a baseline model before investing in complex features?</li><li>What does EDA stand for and what is its purpose?</li></ul></div>
+  `}
+];
+function revLoad(){try{return JSON.parse(localStorage.getItem(REV_KEY))||{};}catch(e){return {};}}
+function revSave(s){localStorage.setItem(REV_KEY,JSON.stringify(s));if(typeof sfWrite==='function')sfWrite(s);}
+function allSectionsChecked(){const items=document.querySelectorAll('.rev-checkbox');for(let i=0;i<items.length;i++){if(!items[i].checked)return false;}return true;}
+function questionAnsweredCorrectly(){return true?revLoad().questionCorrect===true:true;}
+function updateCompleteBar(){
+  const bar=document.getElementById('rev-complete-bar');const cb=document.getElementById('rev-complete-cb');const label=document.getElementById('rev-complete-label');const hint=document.getElementById('rev-complete-hint');
+  if(!bar)return;const s=revLoad();
+  if(s.reviewComplete){bar.className='rev-complete-bar done';cb.disabled=false;cb.checked=true;label.textContent='✓ Review complete';hint.textContent='';return;}
+  const stepsOk=allSectionsChecked();const qOk=questionAnsweredCorrectly();const missing=[];if(!stepsOk)missing.push('all sections checked');if(!qOk)missing.push('question answered correctly');
+  if(stepsOk&&qOk){bar.className='rev-complete-bar ready';cb.disabled=false;label.textContent='Mark review as complete';hint.textContent='';}
+  else{bar.className='rev-complete-bar disabled';cb.disabled=true;label.textContent='Complete all sections and answer the question correctly to unlock';hint.textContent=missing.length?'Still needed: '+missing.join(' · '):'';}
+}
+function renderProgress(total){let done=0;document.querySelectorAll('.rev-checkbox').forEach(c=>{if(c.checked)done++;});const pct=Math.round((done/total)*100);const p=document.getElementById('sidebar-pct');const b=document.getElementById('sidebar-bar');if(p)p.textContent=pct+'%';if(b)b.style.width=pct+'%';}
+window.toggleSection=(id)=>{const body=document.getElementById('body-'+id);const toggle=document.getElementById('toggle-'+id);const isOpen=body.classList.contains('open');document.querySelectorAll('.section-body').forEach(b=>b.classList.remove('open'));document.querySelectorAll('.section-toggle').forEach(t=>t.classList.remove('open'));if(!isOpen){body.classList.add('open');toggle.classList.add('open');}};
+window.copyCode=(btn)=>{const text=btn.parentElement.innerText.replace('Copy','').trim();navigator.clipboard.writeText(text).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);});};
+function renderAll(){
+  const sec=document.getElementById('sections-container');if(!sec)return;sec.innerHTML='';
+  const s0=revLoad();
+  SECTIONS.forEach(s=>{
+    const reviewed=s0['cb_'+s.id]||false;
+    const sd=document.createElement('div');sd.className='section-block';
+    const badgeCls=BADGE_CLASSES[s.badge]||'';const badgeTxt=BADGES[s.badge]||s.badge||'';
+    sd.innerHTML='<div class="section-header" onclick="toggleSection('+s.id+')">'+'<span class="section-num">'+s.id+'.</span>'+'<span class="section-title">'+s.title+'</span>'+(badgeTxt?'<span style="font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;background:#e8f1fb;color:#1a6eb5;font-family:Source Code Pro,monospace;">'+badgeTxt+'</span>':'')+(reviewed?'<span style="font-size:12px;margin-left:4px;">✅</span>':'')+'<span class="section-toggle" id="toggle-'+s.id+'">▼</span>'+'</div>'+'<div class="section-body" id="body-'+s.id+'">'+s.content+'<div class="reviewer-bar '+(reviewed?'checked':'')+'" id="rev-bar-'+s.id+'"><input type="checkbox" class="rev-checkbox" id="rev-cb-'+s.id+'" data-step="'+s.id+'" '+(reviewed?'checked':'')+'><label for="rev-cb-'+s.id+'">'+(reviewed?'✓ Section reviewed':'Mark section as reviewed')+'</label></div></div>';
+    sec.appendChild(sd);
+  });
+  document.querySelectorAll('.rev-checkbox').forEach(cb=>{
+    cb.addEventListener('change',()=>{const st=revLoad();st['cb_'+cb.dataset.step]=cb.checked;revSave(st);const bar=cb.closest('.reviewer-bar');if(bar){bar.classList.toggle('checked',cb.checked);bar.querySelector('label').textContent=cb.checked?'✓ Section reviewed':'Mark section as reviewed';}renderProgress(SECTIONS.length);updateCompleteBar();});
+  });
+  renderProgress(SECTIONS.length);updateCompleteBar();
+}
+
+let revAnswer=null;let revSubmitted=false;
+(function restoreQ(){const s=revLoad();if(s.revAnswer!=null){revAnswer=s.revAnswer;revSubmitted=s.revSubmitted||false;if(revAnswer)applyRevAnswer(revAnswer,revSubmitted);}})();
+document.querySelectorAll('.reviewer-option').forEach(opt=>{opt.addEventListener('click',()=>{if(revSubmitted)return;revAnswer=opt.dataset.key;document.querySelectorAll('.reviewer-option').forEach(o=>o.classList.toggle('selected',o.dataset.key===revAnswer));const s=revLoad();s.revAnswer=revAnswer;revSave(s);});});
+const revBtn=document.getElementById('rev-reveal-btn');if(revBtn)revBtn.addEventListener('click',()=>{if(revAnswer===null){alert('Please select an answer first.');return;}const s0=revLoad();s0.attemptCount=(s0.attemptCount||0)+1;if(!s0.startedAt)s0.startedAt=new Date().toISOString();revSave(s0);revSubmitted=true;const s=revLoad();s.revSubmitted=true;revSave(s);applyRevAnswer(revAnswer,true);});
+function applyRevAnswer(ans,showResult){const correctKey='A';const isCorrect=(ans===correctKey);document.querySelectorAll('.reviewer-option').forEach(o=>{o.classList.remove('selected','correct','wrong');if(showResult){if(o.dataset.key===correctKey)o.classList.add('correct');else if(o.dataset.key===ans&&o.dataset.key!==correctKey)o.classList.add('wrong');}else{if(o.dataset.key===ans)o.classList.add('selected');}});if(showResult){const expEl=document.getElementById('rev-explanation');const lbl=document.getElementById('rev-exp-label');const txt=document.getElementById('rev-exp-text');const btn=document.getElementById('rev-reveal-btn');if(expEl)expEl.classList.add('visible');if(lbl){lbl.textContent=isCorrect?'✓ Correct':'✗ Incorrect';lbl.className='reviewer-exp-label '+(isCorrect?'correct':'wrong');}if(txt)txt.textContent=window.REV_EXPLANATION||'';if(btn)btn.style.display='none';if(isCorrect){const s=revLoad();s.questionCorrect=true;revSave(s);}updateCompleteBar();}}
+const commentEl=document.getElementById('rev-comment');if(commentEl){const s=revLoad();if(s.comment)commentEl.value=s.comment;commentEl.addEventListener('input',()=>{const s=revLoad();s.comment=commentEl.value;revSave(s);});}
+const completeCb=document.getElementById('rev-complete-cb');if(completeCb)completeCb.addEventListener('change',()=>{if(!completeCb.checked)return;const s=revLoad();s.reviewComplete=true;s.completedAt=new Date().toISOString();revSave(s);updateCompleteBar();});
+renderAll();
+</script>
+<script>
+(function(){var scripts=['https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js'];function loadNext(i){if(i>=scripts.length){window._sfFirebaseReady=true;initRevFirebase();return;}var s=document.createElement('script');s.src=scripts[i];s.onload=function(){loadNext(i+1);};s.onerror=function(){window._sfFirebaseReady=false;};document.head.appendChild(s);}loadNext(0);})();
+</script>
+<script>
+function initRevFirebase(){
+  const SF_CONFIG={apiKey:"AIzaSyA-8fatW5D7uR69rcuGFPH54IFqrz0PhU0",authDomain:"sfcertification-grafana.firebaseapp.com",projectId:"sfcertification-grafana",storageBucket:"sfcertification-grafana.firebasestorage.app",messagingSenderId:"227322696511",appId:"1:227322696511:web:12e7ced7dd3d45fa06798a"};
+  if(!firebase.apps.length)firebase.initializeApp(SF_CONFIG);
+  window.sfAuth=firebase.auth();window.sfDb=firebase.firestore();
+  const REV_KEY_FB='reviewer_sf-ds-mlops-certification_module-1';
+  const COURSE_ID='D1BxWqC04OHSBSTMxRkK';
+  function sfDocRef(){if(!window.sfReviewerUid)return null;return window.sfDb.collection('reviewerSessions').doc(window.sfReviewerUid).collection('sf-ds-mlops-certification').doc('module-1');}
+  function sfInitSession(){const local=revLoad();if(!local.startedAt){local.startedAt=new Date().toISOString();localStorage.setItem(REV_KEY,JSON.stringify(local));}if(!window._sfFirebaseReady||!window.sfReviewerUid)return;sfDocRef().set({email:window.sfReviewerEmail,moduleId:'module-1',courseId:COURSE_ID,startedAt:local.startedAt,lastUpdated:firebase.firestore.FieldValue.serverTimestamp(),reviewComplete:local.reviewComplete||false,attemptCount:local.attemptCount||0},{merge:true}).catch(e=>console.warn('SF init:',e.message));}
+  window.sfInitSession=sfInitSession;
+  window.sfWrite=function(extra){if(!window._sfFirebaseReady||!window.sfReviewerUid)return;const ref=sfDocRef();if(!ref)return;const local=revLoad();const payload=Object.assign({},local,extra,{email:window.sfReviewerEmail,moduleId:'module-1',courseId:COURSE_ID,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});ref.set(payload,{merge:true}).catch(e=>console.warn('SF write:',e.message));};
+  window.sfFetchAndMerge=async function(){const ref=sfDocRef();if(!ref)return;try{const snap=await ref.get();if(!snap.exists)return;const remote=snap.data();const local=revLoad();const merged=Object.assign({},local,remote);delete merged.email;delete merged.lastUpdated;localStorage.setItem(REV_KEY,JSON.stringify(merged));if(typeof renderAll==='function'){renderAll();}if(typeof updateCompleteBar==='function')updateCompleteBar();}catch(e){console.warn('SF fetch:',e.message);}};
+  function sfHideOverlayFB(user){window.sfReviewerEmail=user.email;window.sfReviewerUid=user.uid;const ov=document.getElementById('sfSigninOverlay');if(ov)ov.classList.add('hidden');const bar=document.getElementById('sfSignedInBar');const lbl=document.getElementById('sfSignedInEmail');if(bar)bar.classList.remove('hidden');if(lbl)lbl.textContent='Signed in as '+user.email;sfInitSession();window.sfFetchAndMerge();}
+  window.sfAuth.onAuthStateChanged(user=>{if(user){sfHideOverlayFB(user);}else{document.getElementById('sfSigninOverlay').classList.remove('hidden');}});
+}
+</script>
+</body>
+</html>
