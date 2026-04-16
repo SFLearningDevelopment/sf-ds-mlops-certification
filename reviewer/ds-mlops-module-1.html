@@ -163,129 +163,211 @@ const REV_KEY='reviewer_'+window.location.pathname.replace(/[^a-z0-9]/gi,'_');
 const BADGES={foundation:'Foundation',essential:'Essential',important:'Important'};
 const BADGE_CLASSES={foundation:'badge-foundation',essential:'badge-essential',important:'badge-important'};
 const SECTIONS=[
-  {id:1,title:"Why Features Matter More Than Models",content:`
-    <h3>âï¸ The 80/20 of ML Performance</h3>
-    <p>A common misconception is that model selection â choosing Random Forest vs Neural Network vs XGBoost â is the most important decision in building an ML system. In practice, <strong>the quality of your features determines 70â80% of your model's performance</strong>, regardless of algorithm choice.</p>
-    <p>A great set of features with a simple model almost always outperforms a poor set of features with a sophisticated model. This is why experienced ML engineers spend most of their time on feature engineering, not algorithm selection.</p>
+  {id:1, title:"What is Data Science?", badge:"essential", content:`
+    <h3>ð Defining Data Science</h3>
+    <p>Data Science is the discipline of extracting <strong>meaningful insight and actionable knowledge from data</strong>. It sits at the intersection of three domains: statistics (to understand patterns and uncertainty), programming (to process large datasets), and domain expertise (to ask the right questions).</p>
+    <p>In practice, a Data Scientist's job is to take messy, real-world data and convert it into decisions â either by producing dashboards and reports, or by building models that make predictions automatically.</p>
     <div class="callout callout-blue">
-      <h4>ð¡ What Makes a Feature "Good"?</h4>
-      <p>A good feature has <strong>predictive signal</strong> â it correlates with the label you are trying to predict. It is also <strong>available at prediction time</strong> (no data leakage), <strong>consistent</strong> across training and serving, and <strong>interpretable</strong> enough to debug when something goes wrong.</p>
+      <h4>ð¡ Key Distinction</h4>
+      <p>Data Science produces <strong>insight</strong>. Machine Learning (a subset of Data Science) produces <strong>automated predictions</strong>. Not every Data Science task involves ML â sometimes a clear chart tells the whole story.</p>
     </div>
-    <h4>The Feature Engineering Mindset</h4>
-    <p>Think of feature engineering as <strong>encoding domain knowledge into a form a model can learn from</strong>. You are the domain expert. You know that "number of logins in the last 7 days" is more predictive of churn than "account creation date" alone. Feature engineering is the process of expressing that knowledge mathematically.</p>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>Why does feature quality matter more than model selection?</li><li>What are the four properties of a good feature?</li></ul></div>
-  `},
-  {id:2,title:"Numerical Feature Transformations",content:`
-    <h3>ð¢ Working with Numbers</h3>
-    <p>Numerical features (integers, floats) are the most common feature type, but raw numbers are rarely in the right form for a model. Here are the core transformations:</p>
-    <h4>Scaling</h4>
-    <p>Most ML algorithms are sensitive to the scale of numeric inputs. A feature with values in the range 0â100,000 (income) will dominate a feature in the range 0â1 (a probability score) unless you scale them.</p>
+    <h4>What Data Scientists Actually Do</h4>
     <ul>
-      <li><strong>Min-Max Scaling:</strong> Rescale to [0, 1]. <code>x_scaled = (x - min) / (max - min)</code>. Good when you know the bounds.</li>
-      <li><strong>Standard Scaling (Z-score):</strong> Rescale to mean=0, std=1. <code>x_scaled = (x - mean) / std</code>. Good for normally distributed data.</li>
-      <li><strong>Robust Scaling:</strong> Uses median and IQR instead of mean/std. Better when data has outliers.</li>
+      <li><strong>Explore data</strong> â understand distributions, spot anomalies, form hypotheses</li>
+      <li><strong>Clean and prepare data</strong> â handle missing values, remove noise, restructure formats</li>
+      <li><strong>Build and validate models</strong> â train algorithms on historical data to predict future outcomes</li>
+      <li><strong>Communicate findings</strong> â translate technical results into decisions a business can act on</li>
+      <li><strong>Monitor in production</strong> â ensure models continue to work correctly over time</li>
     </ul>
-    <h4>Log Transformation</h4>
-    <p>When a numerical feature has a skewed distribution (e.g. income, page views, revenue), apply <code>log(x+1)</code> to compress the scale and make the distribution more normal. Most tree-based models don't need this, but linear models and neural networks benefit significantly.</p>
-    <h4>Binning / Discretisation</h4>
-    <p>Convert a continuous number into a category: age â [18-25, 26-35, 36-50, 50+]. Useful when the relationship with the label is non-linear and step-function-like.</p>
-    <div class="callout callout-yellow">
-      <h4>â ï¸ Training vs Serving Consistency</h4>
-      <p>Whatever scaling you apply during training must be applied identically at serving time. The scaler's parameters (min, max, mean, std) must be saved and reused â not recomputed on new data.</p>
-    </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>When would you use Robust Scaling over Standard Scaling?</li><li>Why is log transformation useful for skewed features?</li><li>What is binning and when is it appropriate?</li></ul></div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What three disciplines does Data Science sit at the intersection of?</li><li>What is the core difference between Data Science and Machine Learning?</li></ul></div>
   `},
-  {id:3,title:"Categorical Feature Encoding",content:`
-    <h3>ð·ï¸ Turning Categories into Numbers</h3>
-    <p>ML models work with numbers. Categorical features â city names, product categories, user types â must be encoded as numbers. The encoding strategy matters enormously.</p>
-    <div class="table-wrap"><table>
-      <tr><th>Technique</th><th>When to Use</th><th>Example</th></tr>
-      <tr><td><strong>One-Hot Encoding</strong></td><td>Low-cardinality categories (< ~20 values)</td><td>colour = [red,blue,green] â 3 binary columns</td></tr>
-      <tr><td><strong>Label Encoding</strong></td><td>Ordinal categories (inherent order exists)</td><td>size = [S,M,L,XL] â [0,1,2,3]</td></tr>
-      <tr><td><strong>Target Encoding</strong></td><td>High-cardinality categories</td><td>city â mean(churn_rate) per city</td></tr>
-      <tr><td><strong>Binary Encoding</strong></td><td>Medium-high cardinality</td><td>100 categories â 7 binary columns</td></tr>
-      <tr><td><strong>Frequency Encoding</strong></td><td>When popularity itself is informative</td><td>city â count of occurrences in dataset</td></tr>
-    </table></div>
-    <h4>High Cardinality Problem</h4>
-    <p>One-hot encoding a feature with 10,000 unique values (like postal codes) creates 10,000 columns â sparse, computationally expensive, and often noisy. <strong>Target encoding</strong> solves this by replacing each category with a statistic derived from the label (e.g. mean churn rate for that postal code).</p>
-    <div class="callout callout-yellow">
-      <h4>â ï¸ Data Leakage Risk in Target Encoding</h4>
-      <p>When computing target statistics, use only the training fold â never the row's own label. Use cross-fold or leave-one-out encoding to avoid leaking the label into the feature.</p>
+  {id:2, title:"The Machine Learning Lifecycle", badge:"essential", content:`
+    <h3>ð How a Model Goes from Idea to Production</h3>
+    <p>Understanding the ML lifecycle is the single most important mental model in this course. Every concept we cover â features, drift, pipelines, feature stores â is just one step in this lifecycle.</p>
+    <div class="diagram">
+      <div class="diagram-title">ML Lifecycle â End to End</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">1. Define Problem<br/><small>What are we predicting?</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box blue">2. Collect Data<br/><small>Raw signals</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box yellow">3. Feature Engineering<br/><small>Transform â signals</small></div>
+      </div>
+      <div class="diagram-row" style="margin:4px 0"><div class="diagram-arrow" style="transform:rotate(90deg)">â</div></div>
+      <div class="diagram-row">
+        <div class="diagram-box green">6. Monitor & Retrain<br/><small>Detect drift</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box green">5. Deploy to Prod<br/><small>Serve predictions</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box yellow">4. Train & Evaluate<br/><small>Model + metrics</small></div>
+      </div>
     </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the high cardinality problem with one-hot encoding?</li><li>When would you use target encoding over one-hot encoding?</li><li>What is data leakage and how does it relate to target encoding?</li></ul></div>
-  `},
-  {id:4,title:"Handling Missing Values",content:`
-    <h3>â When Data Isn't There</h3>
-    <p>Real-world datasets almost always have missing values. How you handle them has a significant impact on model quality. There is no universally correct approach â each strategy has tradeoffs.</p>
-    <h4>Imputation Strategies</h4>
+    <h4>Each Stage Explained</h4>
     <ul>
-      <li><strong>Mean/Median Imputation:</strong> Replace missing values with the column mean (for symmetric distributions) or median (for skewed data or outliers). Simple and fast, but destroys information about the fact that the value was missing.</li>
-      <li><strong>Mode Imputation:</strong> For categorical features, replace with the most frequent value.</li>
-      <li><strong>Constant Imputation:</strong> Fill with a sentinel value like -1 or "UNKNOWN". Tells the model "this was missing" â the model can potentially learn from this signal.</li>
-      <li><strong>Indicator + Imputation:</strong> Add a binary column <code>feature_was_missing</code> (1/0), then impute the original. Preserves the missingness signal.</li>
-      <li><strong>Model-Based Imputation (KNN, MICE):</strong> Use other features to predict the missing value. Accurate but expensive.</li>
+      <li><strong>Define Problem:</strong> What outcome are we predicting? What is success? (e.g. "predict customer churn with 80% accuracy")</li>
+      <li><strong>Collect Data:</strong> Identify data sources â databases, APIs, logs, user events</li>
+      <li><strong>Feature Engineering:</strong> Transform raw data into the numeric signals a model can learn from</li>
+      <li><strong>Train & Evaluate:</strong> Run a learning algorithm on historical data; measure performance on held-out test data</li>
+      <li><strong>Deploy to Production:</strong> Wrap the model in an API or service so it can serve real predictions</li>
+      <li><strong>Monitor & Retrain:</strong> Watch for degradation; trigger retraining when performance drops</li>
+    </ul>
+    <div class="callout callout-yellow">
+      <h4>â ï¸ Common Interview Trap</h4>
+      <p>Many engineers can explain steps 3 and 4 in detail but stumble at steps 5 and 6. In a production system, <strong>deployment and monitoring are where most ML failures happen</strong>. This is the heart of MLOps.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>List the 6 stages of the ML lifecycle in order.</li><li>Which stage is the focus of MLOps?</li></ul></div>
+  `},
+  {id:3, title:"Core Vocabulary: Dataset, Label, Feature, Model", badge:"essential", content:`
+    <h3>ð§© The Four Foundational Terms</h3>
+    <p>These four terms form the vocabulary layer for everything else in the course. You need to be able to define and use them precisely.</p>
+    <h4>Dataset</h4>
+    <p>A dataset is a structured collection of observations used for training or evaluating a model. Think of it as a table: <strong>each row is one observation</strong> (a customer, a transaction, a sensor reading), and each column is one attribute.</p>
+    <h4>Label (Target Variable)</h4>
+    <p>The label is <strong>what you are trying to predict</strong>. In a churn prediction model, the label is "did this customer churn? (yes/no)". In a house price model, the label is the sale price. In supervised learning, labels come from historical data where the outcome is already known.</p>
+    <h4>Feature</h4>
+    <p>Features are the <strong>input signals the model uses to make a prediction</strong>. They are the columns of your dataset that are not the label. For a churn model, features might be: number of logins in the last 30 days, account age in months, last support ticket date, plan tier.</p>
+    <div class="callout callout-blue">
+      <h4>ð¡ Features vs Raw Data</h4>
+      <p>Raw data is rarely in the right form to be a feature. A timestamp like <code>2024-03-15T09:32:00Z</code> is raw data. Derived features might be: <code>days_since_last_login = 45</code>, <code>is_weekend = false</code>, <code>hour_of_day = 9</code>. The process of creating features from raw data is called <strong>Feature Engineering</strong> (Module 2).</p>
+    </div>
+    <h4>Model</h4>
+    <p>A model is a <strong>mathematical function that maps features to predictions</strong>. During training, the algorithm learns the best parameters of this function from historical data. After training, you "freeze" the model and use it to make predictions on new, unseen data.</p>
+    <div class="diagram">
+      <div class="diagram-title">How a Model Works</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">Features<br/><small>login_count=3, age=24mo</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box purple">Model<br/><small>learned function</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box green">Prediction<br/><small>churn_prob=0.82</small></div>
+      </div>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between a feature and a label?</li><li>What does a model do with features?</li><li>Give an example of transforming raw data into a feature.</li></ul></div>
+  `},
+  {id:4, title:"Data Ingestion: Getting Data In", badge:"essential", content:`
+    <h3>ð° What is Data Ingestion?</h3>
+    <p>Data ingestion is the process of <strong>collecting raw data from its source and loading it into a system where it can be processed</strong>. Before you can engineer features or train a model, your data needs to be somewhere accessible, reliable, and consistently structured.</p>
+    <h4>The Three Ingestion Patterns</h4>
+    <ul>
+      <li><strong>Batch Ingestion:</strong> Data is collected and loaded in scheduled intervals â hourly, daily, weekly. Example: every night at 2am, pull yesterday's sales records from the transactional database into the data warehouse. Simple, predictable, but introduces latency.</li>
+      <li><strong>Streaming Ingestion:</strong> Data is captured and processed as it arrives in real time. Example: every user click event is published to a Kafka topic and consumed immediately. Low latency, but more infrastructure complexity.</li>
+      <li><strong>Change Data Capture (CDC):</strong> A mechanism that tracks changes (inserts, updates, deletes) in a source database and propagates them downstream. Example: Debezium listening to a PostgreSQL write-ahead log. Useful for keeping data warehouses in sync without full table scans.</li>
     </ul>
     <div class="callout callout-green">
-      <h4>â Best Practice</h4>
-      <p>For high-stakes features where missingness is informative (e.g. "last_login_date is null" might mean the user never logged in), always use <strong>Indicator + Imputation</strong>. For low-stakes columns with < 5% missing, simple median imputation is usually sufficient.</p>
+      <h4>â Interview Signal</h4>
+      <p>When asked "how does your data get ingested?", a strong answer names the pattern (batch/streaming/CDC), the tool (Airflow, Kafka, Fivetran, Debezium), the source system, and the destination. "Data comes from our PostgreSQL database via daily Airflow DAGs into BigQuery" is a complete answer.</p>
     </div>
-    <h4>When to Drop</h4>
-    <p>Drop a row only if it is missing the label (target variable). Drop a column only if it has > 50-60% missing values AND you cannot derive the missing information from other columns.</p>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between mean and median imputation and when do you choose each?</li><li>What is Indicator + Imputation and why is it useful?</li><li>When should you drop a column vs impute it?</li></ul></div>
-  `},
-  {id:5,title:"Feature Selection",content:`
-    <h3>âï¸ Keeping What Matters</h3>
-    <p>More features is not always better. Irrelevant or redundant features add noise, slow training, increase memory use, and can hurt model performance. Feature selection is the discipline of choosing the right subset of features.</p>
-    <h4>Three Approaches</h4>
+    <h4>Common Ingestion Tools</h4>
     <ul>
-      <li><strong>Filter Methods:</strong> Rank features by statistical correlation with the label, independent of any model. Examples: Pearson correlation for numerical features, Chi-squared test for categorical. Fast but ignores feature interactions.</li>
-      <li><strong>Wrapper Methods:</strong> Iteratively add or remove features and measure model performance. Examples: Recursive Feature Elimination (RFE), forward selection. Accurate but computationally expensive.</li>
-      <li><strong>Embedded Methods:</strong> Feature selection is built into the model training process. Examples: Lasso regression (L1 penalty drives unimportant feature weights to zero), tree-based feature importance from Random Forest or XGBoost.</li>
+      <li><strong>Apache Kafka</strong> â streaming event bus</li>
+      <li><strong>Apache Airflow</strong> â batch pipeline orchestration</li>
+      <li><strong>Fivetran / Airbyte</strong> â managed connectors for SaaS sources</li>
+      <li><strong>Spark Structured Streaming</strong> â large-scale stream processing</li>
+      <li><strong>Debezium</strong> â CDC from relational databases</li>
     </ul>
-    <h4>Feature Importance from Tree Models</h4>
-    <p>Tree-based models (Random Forest, XGBoost, LightGBM) automatically compute a <strong>feature importance score</strong> for each feature â how much each feature contributed to reducing prediction error across all trees. This is a powerful, free signal for feature selection.</p>
-    <div class="callout callout-blue">
-      <h4>ð¡ Variance Threshold</h4>
-      <p>The simplest filter: remove features with near-zero variance. A feature that is the same value in 99% of rows contains almost no information and can safely be dropped before any modelling.</p>
-    </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between filter, wrapper, and embedded feature selection?</li><li>How does Lasso regression perform feature selection?</li><li>What does feature importance from a Random Forest represent?</li></ul></div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between batch and streaming ingestion?</li><li>What is CDC and when would you use it?</li><li>Name two ingestion tools and their use cases.</li></ul></div>
   `},
-  {id:6,title:"Time-Based & Aggregate Features",content:`
-    <h3>â±ï¸ Features Derived from Time</h3>
-    <p>Many real-world ML problems involve time: predicting churn, forecasting demand, detecting fraud. Time-based features are among the most powerful and most commonly underutilised.</p>
-    <h4>Temporal Feature Derivation</h4>
+  {id:5, title:"Data Processing & Transformation", badge:"essential", content:`
+    <h3>ð§ Turning Raw Data into Usable Data</h3>
+    <p>Ingested data is almost never ready to use. Data processing covers the series of steps that clean, structure, and transform raw data into a consistent, reliable form for downstream use.</p>
+    <h4>The Core Processing Steps</h4>
     <ul>
-      <li><strong>Recency:</strong> How long ago was the last event? <code>days_since_last_login = today - last_login_date</code></li>
-      <li><strong>Frequency:</strong> How many times did an event occur in a window? <code>logins_last_30_days</code></li>
-      <li><strong>Trend:</strong> Is behaviour increasing or decreasing? <code>login_count_this_week - login_count_last_week</code></li>
-      <li><strong>Cyclicality:</strong> Day of week, hour of day, month of year â encoded as <code>sin/cos</code> to preserve circular relationships</li>
+      <li><strong>Parsing & Schema Enforcement:</strong> Ensuring data types are correct (date strings become timestamps, IDs are integers, etc.) and required fields are present.</li>
+      <li><strong>Deduplication:</strong> Removing duplicate records that arose from retries, multiple ingestion runs, or source system issues.</li>
+      <li><strong>Null Handling:</strong> Deciding what to do with missing values â drop the row, fill with a default, or flag for imputation in the feature engineering step.</li>
+      <li><strong>Normalization:</strong> Standardising units, formats, and encodings. A phone number might arrive as <code>+91-9876543210</code>, <code>9876543210</code>, or <code>91-9876543210</code>. Processing unifies these.</li>
+      <li><strong>Joining:</strong> Combining data from multiple sources â user records joined with their transaction history, for example.</li>
+      <li><strong>Aggregation:</strong> Summarising data â counting events per user per day, computing rolling averages, etc.</li>
     </ul>
-    <h4>Rolling Window Aggregations</h4>
-    <p>For a user at time T, compute statistics over the last N days: <code>avg_session_duration_7d</code>, <code>max_purchase_amount_30d</code>, <code>stddev_response_time_14d</code>. These capture behavioural patterns that a single snapshot cannot.</p>
     <div class="callout callout-yellow">
-      <h4>â ï¸ Temporal Data Leakage</h4>
-      <p>When creating time-based features for training, always ensure your feature window is computed from data strictly <em>before</em> the prediction date. Using future data in a training feature causes data leakage â your model will appear to work but will fail in production.</p>
+      <h4>â ï¸ Garbage In, Garbage Out</h4>
+      <p>Poor data quality is the most common reason ML models fail in production â not algorithm choice, not infrastructure. A model trained on poorly processed data will learn the wrong patterns and make unreliable predictions.</p>
     </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the four temporal feature types (recency, frequency, trend, cyclicality)?</li><li>What is temporal data leakage and how do you prevent it?</li><li>Why encode cyclic features as sin/cos?</li></ul></div>
+    <h4>Where Processing Happens</h4>
+    <p>Processing typically happens in a <strong>data pipeline</strong> â an ordered sequence of transformations that data passes through. Common tools: Apache Spark, dbt (data build tool), Pandas (for smaller scale), and cloud-native services like Google Dataflow or AWS Glue.</p>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is deduplication and why is it needed?</li><li>What does "schema enforcement" mean?</li><li>Name the 6 core processing steps.</li></ul></div>
   `},
-  {id:7,title:"Feature Engineering Strategy & Workflow",content:`
-    <h3>ð¬ Putting It All Together</h3>
-    <p>Feature engineering is not a random collection of techniques â it follows a disciplined workflow grounded in domain understanding and iterative experimentation.</p>
-    <h4>The Feature Engineering Workflow</h4>
+  {id:6, title:"Introduction to MLOps", badge:"essential", content:`
+    <h3>ð© What MLOps Actually Means</h3>
+    <p>MLOps stands for <strong>Machine Learning Operations</strong>. It is the practice of applying DevOps principles â automation, reproducibility, monitoring, CI/CD â to the machine learning lifecycle.</p>
+    <p>The core problem MLOps solves: a model that works great in a Jupyter notebook is not automatically reliable, scalable, or maintainable in production. MLOps is the discipline that bridges that gap.</p>
+    <div class="diagram">
+      <div class="diagram-title">MLOps: What It Connects</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">Data Engineering<br/><small>ingest, process, store</small></div>
+        <div class="diagram-box purple">Model Development<br/><small>experiment, train, evaluate</small></div>
+        <div class="diagram-box green">Software Engineering<br/><small>deploy, serve, monitor</small></div>
+      </div>
+      <div class="diagram-row"><span style="color:var(--text2);font-size:0.85rem">â MLOps connects and automates all three â</span></div>
+    </div>
+    <h4>The Key MLOps Capabilities</h4>
+    <ul>
+      <li><strong>Experiment Tracking:</strong> Logging model parameters, metrics, and artifacts so experiments are reproducible. Tools: MLflow, Weights & Biases.</li>
+      <li><strong>Model Registry:</strong> A versioned store of trained models, with metadata about performance and deployment status.</li>
+      <li><strong>CI/CD for ML:</strong> Automated pipelines that retrain, validate, and deploy models when new data or code changes arrive.</li>
+      <li><strong>Model Serving:</strong> Exposing the model as an API endpoint so applications can call it for predictions. Tools: FastAPI, TorchServe, BentoML, SageMaker Endpoints.</li>
+      <li><strong>Monitoring:</strong> Detecting when a deployed model's performance degrades (covered in Module 3).</li>
+    </ul>
+    <div class="callout callout-blue">
+      <h4>ð¡ MLOps Maturity</h4>
+      <p>Teams often start with manual MLOps (everything done by hand) and graduate to automated pipelines. A team that can describe <em>where they are</em> on this spectrum â and <em>why</em> â demonstrates real operational maturity.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What problem does MLOps solve?</li><li>What is a Model Registry?</li><li>Name three MLOps capabilities and associated tools.</li></ul></div>
+  `},
+  {id:7, title:"The Full Picture: Putting It Together", badge:"essential", content:`
+    <h3>ðºï¸ Your Complete Mental Map</h3>
+    <p>You now have all the building blocks. Here is how everything connects into a single coherent system.</p>
+    <div class="diagram">
+      <div class="diagram-title">The Complete ML System</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">Data Sources<br/><small>DB, API, logs, events</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box blue">Ingestion Layer<br/><small>Kafka / Airflow / CDC</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box blue">Processing<br/><small>clean, join, aggregate</small></div>
+      </div>
+      <div class="diagram-row"><div class="diagram-arrow" style="transform:rotate(90deg)">â</div></div>
+      <div class="diagram-row">
+        <div class="diagram-box yellow">Feature Store<br/><small>reusable feature vectors</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box purple">Training Pipeline<br/><small>model + evaluation</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box green">Model Registry<br/><small>versioned artifacts</small></div>
+      </div>
+      <div class="diagram-row"><div class="diagram-arrow" style="transform:rotate(90deg)">â</div></div>
+      <div class="diagram-row">
+        <div class="diagram-box green">Serving Layer<br/><small>API / batch predictions</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box green">Monitoring<br/><small>drift, performance</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box yellow">Retrain Trigger<br/><small>back to pipeline</small></div>
+      </div>
+    </div>
+    <h4>How to Use This Map</h4>
+    <p>When asked to describe your current system in an interview or architecture review, walk through this map from left to right. For each component, say: what it is, what tool implements it, and what goes wrong if it breaks. That structure alone will demonstrate systems thinking.</p>
+    <div class="callout callout-green">
+      <h4>â Module 1 Summary</h4>
+      <p>You now know: what Data Science is, the 6-stage ML lifecycle, the 4 foundational terms (dataset, label, feature, model), the 3 ingestion patterns, the core processing steps, what MLOps is and why it exists, and how all of these form a complete system. Modules 2â5 will go deep on the components that are most commonly misunderstood.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>In a complete ML system, what comes after processing and before training?</li><li>What triggers a model retraining in a well-designed MLOps system?</li><li>Where does a Feature Store fit in the ML pipeline?</li></ul></div>
+  `},
+  {id:8, title:"How to Describe Your Architecture", badge:"practical", content:`
+    <h3>ð£ï¸ The Communication Skill</h3>
+    <p>Technical knowledge alone is not enough. A significant part of this course is about being able to <strong>coherently describe the systems you work on</strong> to any audience â manager, customer, interviewer, or peer.</p>
+    <h4>The 5-Part Architecture Description</h4>
+    <p>Use this template whenever you need to explain a system:</p>
     <ol>
-      <li><strong>Understand the domain:</strong> What raw data sources exist? What events, entities, and relationships matter for this prediction problem?</li>
-      <li><strong>Exploratory Data Analysis (EDA):</strong> Distribution plots, correlation matrices, missing value maps. Build intuition before writing transformation code.</li>
-      <li><strong>Baseline features:</strong> Start simple â raw values, basic aggregations, obvious encodings.</li>
-      <li><strong>Train a baseline model:</strong> Establish a performance floor before investing in complex features.</li>
-      <li><strong>Feature iteration:</strong> Add new features, measure impact, discard what doesn't help.</li>
-      <li><strong>Feature selection:</strong> Remove noise; keep only what the model actually uses.</li>
-      <li><strong>Document and register:</strong> Store feature definitions in a feature store or shared repository so they can be reused (Module 4).</li>
+      <li><strong>What it does (purpose):</strong> "This system predicts which customers are likely to churn in the next 30 days."</li>
+      <li><strong>Where the data comes from (sources):</strong> "We ingest user activity events from Kafka and pull account metadata from our PostgreSQL database nightly via Airflow."</li>
+      <li><strong>How the data is transformed (processing):</strong> "Events are aggregated into per-user daily summaries. Features like login frequency, time since last activity, and support ticket count are computed."</li>
+      <li><strong>How predictions are made (model + serving):</strong> "A gradient boosting model is trained weekly. Predictions are served via a REST API that our CRM queries in real time."</li>
+      <li><strong>How it stays healthy (monitoring):</strong> "We monitor prediction distribution and retrain if the mean churn score shifts by more than 5% week-over-week."</li>
     </ol>
-    <div class="callout callout-green">
-      <h4>â Module 2 Summary</h4>
-      <p>You can now articulate: why features matter more than models, how to transform numerical and categorical data, how to handle missing values, how to select relevant features, and how time-based features work. This is precisely the depth that was missing in the candidate feedback that motivated this course.</p>
+    <div class="callout callout-yellow">
+      <h4>â ï¸ What Interviewers Are Testing</h4>
+      <p>When an interviewer asks "describe the system you currently work on," they are not just testing technical knowledge. They are testing whether you <strong>understand ownership</strong>. Can you explain not just what the system does, but why each part is designed the way it is?</p>
     </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the correct sequence of the feature engineering workflow?</li><li>Why do you establish a baseline model before investing in complex features?</li><li>What does EDA stand for and what is its purpose?</li></ul></div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the 5 parts of a complete architecture description?</li><li>What does "ownership" mean in the context of describing a data system?</li></ul></div>
   `}
 ];
 function revLoad(){try{return JSON.parse(localStorage.getItem(REV_KEY))||{};}catch(e){return {};}}
@@ -337,7 +419,7 @@ function initRevFirebase(){
   if(!firebase.apps.length)firebase.initializeApp(SF_CONFIG);
   window.sfAuth=firebase.auth();window.sfDb=firebase.firestore();
   const REV_KEY_FB='reviewer_sf-ds-mlops-certification_module-1';
-  const COURSE_ID='D1BxWqC04OHSBSTMxRkK';
+  const COURSE_ID='MrmqAmxqRv1x2BKVrQ03';
   function sfDocRef(){if(!window.sfReviewerUid)return null;return window.sfDb.collection('reviewerSessions').doc(window.sfReviewerUid).collection('sf-ds-mlops-certification').doc('module-1');}
   function sfInitSession(){const local=revLoad();if(!local.startedAt){local.startedAt=new Date().toISOString();localStorage.setItem(REV_KEY,JSON.stringify(local));}if(!window._sfFirebaseReady||!window.sfReviewerUid)return;sfDocRef().set({email:window.sfReviewerEmail,moduleId:'module-1',courseId:COURSE_ID,startedAt:local.startedAt,lastUpdated:firebase.firestore.FieldValue.serverTimestamp(),reviewComplete:local.reviewComplete||false,attemptCount:local.attemptCount||0},{merge:true}).catch(e=>console.warn('SF init:',e.message));}
   window.sfInitSession=sfInitSession;
