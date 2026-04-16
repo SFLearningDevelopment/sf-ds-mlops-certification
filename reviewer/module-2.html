@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
-<title>[Reviewer] Module 2: Module 2</title>
+<title>[Reviewer] Module 2: Feature Engineering in Depth</title>
 <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -107,16 +107,16 @@
   </div>
 </div>
 <div class="sf-signed-in-bar hidden" id="sfSignedInBar"><span id="sfSignedInEmail">Signed in as …</span><button class="sf-signout-btn" id="sfSignoutLink">Sign out</button></div>
-<div class="reviewer-topbanner"><span>👁</span><strong>Reviewer Mode</strong> — Module 2: Module 2</div>
+<div class="reviewer-topbanner"><span>👁</span><strong>Reviewer Mode</strong> — Module 2: Feature Engineering in Depth</div>
 <nav class="topnav">
   <a href="index.html">← Reviewer Hub</a>
   <span class="sep">/</span>
-  <span>Module 2: Module 2</span>
+  <span>Module 2: Feature Engineering in Depth</span>
 </nav>
 <div class="main">
   <div class="module-hero">
     <div class="hero-eyebrow">Module 2 of 5 · Reviewer Mode</div>
-    <h1>Module 2</h1>
+    <h1>Feature Engineering in Depth</h1>
   </div>
   <div id="sections-container"></div>
   
@@ -318,7 +318,7 @@ function initRevFirebase(){
   if(!firebase.apps.length)firebase.initializeApp(SF_CONFIG);
   window.sfAuth=firebase.auth();window.sfDb=firebase.firestore();
   const REV_KEY_FB='reviewer_sf-ds-mlops-certification_module-2';
-  const COURSE_ID='Z7FGzRNrJ1AxIqbSLp6W';
+  const COURSE_ID='YO3dciZ36fAENJYJD1yg';
   function sfDocRef(){if(!window.sfReviewerUid)return null;return window.sfDb.collection('reviewerSessions').doc(window.sfReviewerUid).collection('sf-ds-mlops-certification').doc('module-2');}
   function sfInitSession(){const local=revLoad();if(!local.startedAt){local.startedAt=new Date().toISOString();localStorage.setItem(REV_KEY,JSON.stringify(local));}if(!window._sfFirebaseReady||!window.sfReviewerUid)return;sfDocRef().set({email:window.sfReviewerEmail,moduleId:'module-2',courseId:COURSE_ID,startedAt:local.startedAt,lastUpdated:firebase.firestore.FieldValue.serverTimestamp(),reviewComplete:local.reviewComplete||false,attemptCount:local.attemptCount||0},{merge:true}).catch(e=>console.warn('SF init:',e.message));}
   window.sfInitSession=sfInitSession;
