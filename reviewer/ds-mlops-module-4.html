@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+<title>[Reviewer] Module 4: Feature Stores & MLOps Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{--bg:#eef2f7;--bg2:#ffffff;--bg3:#f0f4f9;--border:#d0dae8;--text:#1a2332;--text-dim:#4a5568;--text-dimmer:#8fa3bc;--blue:#1a6eb5;--blue-light:#e8f1fb;--blue-mid:#b8d0ed;--green:#1a6b3a;--green-light:#e8f5ed;--coral:#c0392b;--coral-light:#fdf0ee;--radius:12px;}
+  html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Merriweather Sans',sans-serif;font-size:15px;line-height:1.6;}
+  a{color:var(--blue);text-decoration:none;}
+  .reviewer-topbanner{background:#f5f0ff;border-bottom:2px solid #c4bdf0;padding:9px 40px;font-size:12px;font-family:'Source Code Pro',monospace;color:#5b4fcf;display:flex;align-items:center;gap:8px;}
+  .sf-signin-overlay{position:fixed;inset:0;background:rgba(20,30,50,.82);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px);}
+  .sf-signin-overlay.hidden{display:none;}
+  .sf-signin-card{background:#fff;border-radius:16px;padding:36px 40px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;}
+  .sf-signin-logo{font-size:32px;margin-bottom:12px;}
+  .sf-signin-title{font-size:17px;font-weight:700;color:#1a2332;margin-bottom:8px;}
+  .sf-signin-sub{font-size:13px;color:#4a5568;line-height:1.6;margin-bottom:24px;}
+  .sf-google-btn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #d0dae8;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:600;cursor:pointer;color:#1a2332;width:100%;justify-content:center;transition:box-shadow .15s;}
+  .sf-google-btn:hover{box-shadow:0 2px 8px rgba(0,0,0,.12);}
+  .sf-google-btn img{width:20px;height:20px;}
+  .sf-signin-divider{font-size:11px;color:#8fa3bc;text-align:center;margin:14px 0 10px;display:flex;align-items:center;gap:8px;font-family:'Source Code Pro',monospace;}
+  .sf-signin-divider::before,.sf-signin-divider::after{content:'';flex:1;height:1px;background:#d0dae8;}
+  .sf-fallback-input{width:100%;padding:10px 12px;border:1.5px solid #d0dae8;border-radius:8px;font-size:14px;font-family:'Merriweather Sans',sans-serif;color:#1a2332;margin-bottom:10px;outline:none;}
+  .sf-fallback-input:focus{border-color:var(--blue);}
+  .sf-fallback-btn{width:100%;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+  .sf-signin-error{margin-top:14px;font-size:12.5px;color:#c0392b;font-family:'Source Code Pro',monospace;background:#fdf0ee;border:1px solid #f0b8b2;border-radius:6px;padding:10px 12px;display:none;text-align:left;}
+  .sf-signin-error.visible{display:block;}
+  .sf-signed-in-bar{background:#e8f5ed;border-bottom:1px solid #a3d4b8;padding:7px 40px;font-size:11px;font-family:'Source Code Pro',monospace;color:var(--green);display:flex;align-items:center;justify-content:space-between;}
+  .sf-signed-in-bar.hidden{display:none;}
+  .sf-signout-btn{font-size:10px;color:var(--blue);background:none;border:1px solid #b8d0ed;border-radius:4px;padding:2px 8px;cursor:pointer;}
+  .topnav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 40px;height:48px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-dimmer);font-family:'Source Code Pro',monospace;position:sticky;top:0;z-index:100;}
+  .topnav a{color:var(--blue);}
+  .sep{margin:0 4px;color:var(--text-dimmer);}
+  .main{max-width:860px;margin:0 auto;padding:36px 40px 80px;}
+  .module-hero{margin-bottom:28px;}
+  .hero-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:8px;font-family:'Source Code Pro',monospace;}
+  .module-hero h1{font-size:clamp(18px,2.5vw,26px);font-weight:700;color:var(--text);line-height:1.25;}
+  .section-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;}
+  .section-header{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+  .section-header:hover{background:var(--bg3);}
+  .section-num{font-size:10px;font-weight:700;color:var(--text-dimmer);min-width:24px;font-family:'Source Code Pro',monospace;}
+  .section-title{font-weight:600;font-size:14px;flex:1;color:var(--text);}
+  .section-toggle{font-size:11px;color:var(--text-dimmer);transition:transform .2s;}
+  .section-toggle.open{transform:rotate(180deg);}
+  .section-body{display:none;padding:20px 22px 14px;border-top:1px solid var(--border);font-size:14px;color:var(--text-dim);line-height:1.75;}
+  .section-body.open{display:block;}
+  .section-body h3{font-size:15px;font-weight:700;color:var(--text);margin:16px 0 8px;}
+  .section-body p{margin-bottom:10px;}
+  .section-body ul,.section-body ol{margin:8px 0 12px 20px;}
+  .section-body li{margin-bottom:4px;}
+  .section-body code{font-family:'Source Code Pro',monospace;font-size:12.5px;background:var(--bg3);border:1px solid var(--border);padding:1px 5px;border-radius:4px;color:#0f4a7a;}
+  .section-body pre{background:#1e2433;color:#cdd6f4;padding:16px;border-radius:8px;font-size:12.5px;font-family:'Source Code Pro',monospace;overflow-x:auto;margin:12px 0;position:relative;}
+  .copy-btn,.copy-btn-small{position:absolute;top:8px;right:8px;background:#252b3b;border:1px solid #3a4155;color:#7a8ab0;border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;font-family:'Source Code Pro',monospace;}
+  .copy-btn:hover,.copy-btn-small:hover{color:#cdd6f4;}
+  .reviewer-bar{background:#fff8e6;border:1px solid #f0d4a0;border-left:3px solid #92600a;border-radius:8px;padding:10px 16px;margin:18px 0 6px;display:flex;align-items:center;gap:10px;font-size:13px;color:#92600a;font-family:'Source Code Pro',monospace;}
+  .reviewer-bar input[type="checkbox"]{width:16px;height:16px;cursor:pointer;flex-shrink:0;accent-color:var(--green);}
+  .reviewer-bar label{cursor:pointer;font-weight:600;user-select:none;}
+  .reviewer-bar.checked{background:var(--green-light);border-color:#a3d4b8;border-left-color:var(--green);color:var(--green);}
+  .reviewer-panel{background:#f5f0ff;border:1px solid #c4bdf0;border-top:3px solid #5b4fcf;border-radius:12px;padding:24px 28px;margin:32px 0;}
+  .reviewer-panel-label{font-size:9px;font-family:'Source Code Pro',monospace;letter-spacing:.18em;text-transform:uppercase;color:#5b4fcf;font-weight:600;margin-bottom:16px;}
+  .reviewer-q-text{font-size:14px;font-weight:600;color:#1a2332;line-height:1.65;margin-bottom:14px;}
+  .reviewer-options{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+  .reviewer-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid #d0dae8;border-radius:8px;cursor:pointer;font-size:13.5px;color:#4a5568;line-height:1.5;background:#fff;transition:background .12s,border-color .12s;}
+  .reviewer-option:hover{background:#f0f4f9;border-color:#b8d0ed;}
+  .reviewer-option.selected{background:#e8f1fb;border-color:var(--blue);color:#1a2332;}
+  .reviewer-option.correct{background:var(--green-light);border-color:#a3d4b8;color:var(--green);}
+  .reviewer-option.wrong{background:var(--coral-light);border-color:#f0b8b2;color:var(--coral);}
+  .reviewer-option-key{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#8fa3bc;flex-shrink:0;margin-top:1px;}
+  .reviewer-reveal{font-size:12px;font-family:'Source Code Pro',monospace;color:#5b4fcf;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;margin-bottom:14px;display:block;}
+  .reviewer-explanation{font-size:13px;color:#4a5568;line-height:1.7;padding:12px 14px;background:#eef2f7;border-radius:8px;margin-bottom:16px;display:none;}
+  .reviewer-explanation.visible{display:block;}
+  .reviewer-exp-label{font-size:9px;font-family:'Source Code Pro',monospace;letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:4px;}
+  .reviewer-exp-label.correct{color:var(--green);}
+  .reviewer-exp-label.wrong{color:var(--coral);}
+  .reviewer-comment-label{font-size:11px;font-family:'Source Code Pro',monospace;letter-spacing:.12em;text-transform:uppercase;color:#8fa3bc;font-weight:600;margin-bottom:6px;}
+  .reviewer-comment{width:100%;min-height:80px;padding:10px 12px;border:1px solid #c4bdf0;border-radius:8px;font-family:'Merriweather Sans',sans-serif;font-size:13.5px;color:#1a2332;background:#fff;resize:vertical;line-height:1.6;}
+  .reviewer-comment:focus{outline:none;border-color:#5b4fcf;}
+  .reviewer-save-note{font-size:11px;font-family:'Source Code Pro',monospace;color:#8fa3bc;margin-top:6px;}
+  .rev-complete-wrap{margin:28px 0 0;}
+  .rev-complete-bar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:8px;font-size:13.5px;font-family:'Source Code Pro',monospace;font-weight:600;border:1.5px solid var(--border);background:var(--bg3);color:var(--text-dimmer);transition:all .2s;}
+  .rev-complete-bar.disabled{opacity:.6;cursor:not-allowed;}
+  .rev-complete-bar.ready{background:#fff8e6;border-color:#f0d4a0;border-left:3px solid #92600a;color:#92600a;cursor:pointer;}
+  .rev-complete-bar.done{background:var(--green-light);border-color:#a3d4b8;border-left:3px solid var(--green);color:var(--green);cursor:default;}
+  .rev-complete-bar input[type="checkbox"]{width:18px;height:18px;flex-shrink:0;accent-color:var(--green);}
+  .rev-complete-bar.disabled input{cursor:not-allowed;}
+  .rev-complete-hint{font-size:11px;font-family:'Source Code Pro',monospace;color:var(--text-dimmer);margin-top:6px;min-height:16px;}
+  .bottom-nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0 0;border-top:1px solid var(--border);margin-top:40px;}
+  .nav-btn{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-family:'Source Code Pro',monospace;color:var(--blue);text-decoration:none;padding:10px 18px;border:1px solid var(--blue-mid);border-radius:8px;background:var(--blue-light);font-weight:600;}
+  .nav-btn.secondary{background:var(--bg2);color:var(--text-dim);border-color:var(--border);}
+  .nav-btn:hover{background:var(--blue-mid);}
+</style>
+</head>
+<body>
+<div class="sf-signin-overlay" id="sfSigninOverlay">
+  <div class="sf-signin-card">
+    <div class="sf-signin-logo">🔐</div>
+    <div class="sf-signin-title">Sign in to save your progress</div>
+    <div class="sf-signin-sub">Sign in with your SourceFuse Gmail. Review progress, checkboxes and question attempts are saved and restored across devices.</div>
+    <button class="sf-google-btn" id="sfGoogleSignInBtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google</button>
+    <div class="sf-signin-divider">or</div>
+    <input type="text" class="sf-fallback-input" id="sfEmailInput" placeholder="your.name@sourcefuse.com" autocomplete="off" inputmode="email">
+    <button class="sf-fallback-btn" id="sfEmailSignInBtn">Continue with SF email</button>
+    <div class="sf-signin-error" id="sfSigninError"></div>
+  </div>
+</div>
+<div class="sf-signed-in-bar hidden" id="sfSignedInBar"><span id="sfSignedInEmail">Signed in as …</span><button class="sf-signout-btn" id="sfSignoutLink">Sign out</button></div>
+<div class="reviewer-topbanner"><span>👁</span><strong>Reviewer Mode</strong> — Module 4: Feature Stores & MLOps Architecture</div>
+<nav class="topnav">
+  <a href="index.html">← Reviewer Hub</a>
+  <span class="sep">/</span>
+  <span>Module 4: Feature Stores & MLOps Architecture</span>
+</nav>
+<div class="main">
+  <div class="module-hero">
+    <div class="hero-eyebrow">Module 4 of 5 · Reviewer Mode</div>
+    <h1>Feature Stores & MLOps Architecture</h1>
+  </div>
+  <div id="sections-container"></div>
+  
+  <div class="reviewer-panel">
+    <div class="reviewer-panel-label">🔍 Reviewer Question — Module</div>
+    <div class="reviewer-q-text">What is 'training/serving skew' in the context of feature stores?</div>
+    <div class="reviewer-options" id="rev-options"><div class="reviewer-option" data-key="A"><span class="reviewer-option-key">A</span><span>When the model performs better on training data than on test data</span></div><div class="reviewer-option" data-key="B"><span class="reviewer-option-key">B</span><span>When features are computed differently at training time versus serving time, causing inconsistent predictions</span></div><div class="reviewer-option" data-key="C"><span class="reviewer-option-key">C</span><span>When multiple teams train models on the same dataset with different algorithms</span></div><div class="reviewer-option" data-key="D"><span class="reviewer-option-key">D</span><span>When the model is deployed to a different cloud region than where it was trained</span></div></div>
+    <button class="reviewer-reveal" id="rev-reveal-btn">Check answer</button>
+    <div class="reviewer-explanation" id="rev-explanation">
+      <div class="reviewer-exp-label" id="rev-exp-label"></div>
+      <div id="rev-exp-text"></div>
+    </div>
+    <div class="reviewer-comment-label">Reviewer notes</div>
+    <textarea class="reviewer-comment" id="rev-comment" placeholder="Add your review notes for this module…"></textarea>
+    <div class="reviewer-save-note">Notes are auto-saved.</div>
+  </div>
+  <script>window.REV_CORRECT="B";window.REV_EXPLANATION="";window.REV_QUESTION={"m":4,"q":"What is 'training/serving skew' in the context of feature stores?","o":["When the model performs better on training data than on test data","When features are computed differently at training time versus serving time, causing inconsistent predictions","When multiple teams train models on the same dataset with different algorithms","When the model is deployed to a different cloud region than where it was trained"],"c":1,"exp":""};</script>
+  <div class="rev-complete-wrap">
+    <div class="rev-complete-bar disabled" id="rev-complete-bar">
+      <input type="checkbox" id="rev-complete-cb" disabled>
+      <label for="rev-complete-cb" id="rev-complete-label">Complete all sections and answer the question correctly to unlock</label>
+    </div>
+    <div class="rev-complete-hint" id="rev-complete-hint"></div>
+  </div>
+  <div class="bottom-nav"><a href="ds-mlops-module-3.html" class="nav-btn secondary">← Module 3</a><a href="ds-mlops-module-5.html" class="nav-btn">Module 5 →</a></div>
+</div>
+<script>
+function sfShowError(msg){const el=document.getElementById('sfSigninError');if(el){el.textContent=msg;el.classList.add('visible');}}
+function sfHideOverlay(user){
+  window.sfReviewerEmail=user.email||user;window.sfReviewerUid=user.uid||'email_'+btoa(window.sfReviewerEmail).replace(/=/g,'');
+  const ov=document.getElementById('sfSigninOverlay');if(ov)ov.classList.add('hidden');
+  const bar=document.getElementById('sfSignedInBar');const lbl=document.getElementById('sfSignedInEmail');
+  if(bar)bar.classList.remove('hidden');if(lbl)lbl.textContent='Signed in as '+window.sfReviewerEmail;
+  if(typeof sfInitSession==='function')sfInitSession();
+  if(window._sfFirebaseReady&&typeof window.sfDb!=='undefined'&&typeof sfFetchAndMerge==='function')sfFetchAndMerge();
+}
+function sfSignInWithEmail(){const emailEl=document.getElementById('sfEmailInput');if(!emailEl)return;const email=emailEl.value.trim();if(!email||!email.includes('@')){sfShowError('Please enter a valid email address.');return;}if(!email.endsWith('@sourcefuse.com')){sfShowError('Please use your @sourcefuse.com email address.');return;}sfHideOverlay(email);}
+async function sfSignInWithGoogle(){if(typeof firebase==='undefined'||!window._sfFirebaseReady){sfShowError('Popup blocked. Please enter your SF email below.');return;}const provider=new firebase.auth.GoogleAuthProvider();provider.setCustomParameters({hd:'sourcefuse.com',prompt:'select_account'});const t=setTimeout(()=>sfShowError('Popup blocked. Please enter your SF email below.'),30000);try{const r=await firebase.auth().signInWithPopup(provider);clearTimeout(t);sfHideOverlay(r.user);}catch(e){clearTimeout(t);sfShowError('Popup blocked. Please enter your SF email below.');}}
+function sfSignOut(){window.sfReviewerEmail=null;window.sfReviewerUid=null;const bar=document.getElementById('sfSignedInBar');const ov=document.getElementById('sfSigninOverlay');if(bar)bar.classList.add('hidden');if(ov)ov.classList.remove('hidden');if(typeof firebase!=='undefined'&&window._sfFirebaseReady)firebase.auth().signOut();}
+document.addEventListener('DOMContentLoaded',function(){const gb=document.getElementById('sfGoogleSignInBtn');const eb=document.getElementById('sfEmailSignInBtn');const so=document.getElementById('sfSignoutLink');if(gb)gb.addEventListener('click',sfSignInWithGoogle);if(eb)eb.addEventListener('click',sfSignInWithEmail);if(so)so.addEventListener('click',sfSignOut);});
+</script>
+<script>
+const REV_KEY='reviewer_'+window.location.pathname.replace(/[^a-z0-9]/gi,'_');
+const BADGES={foundation:'Foundation',essential:'Essential',important:'Important'};
+const BADGE_CLASSES={foundation:'badge-foundation',essential:'badge-essential',important:'badge-important'};
+const SECTIONS=[
+  {id:1,title:"The Feature Reuse Problem",content:`
+    <h3>ðï¸ Why Feature Stores Exist</h3>
+    <p>Imagine three data scientists at SourceFuse building three different models â churn prediction, lead scoring, and product recommendations. All three models need user-level features: login frequency, account age, support ticket count, purchase history.</p>
+    <p>Without a feature store, each data scientist writes their own version of these features independently. This creates three problems:</p>
+    <ul>
+      <li><strong>Duplication:</strong> The same feature logic is written three times, with subtle differences in implementation â different window sizes, different null handling, different data sources.</li>
+      <li><strong>Training/serving skew:</strong> Features computed offline for training may be computed differently when served online at prediction time, causing silent performance degradation.</li>
+      <li><strong>No single source of truth:</strong> When the underlying data changes, three codebases need to be updated. Inevitably, they drift out of sync.</li>
+    </ul>
+    <div class="callout callout-purple">
+      <h4>ðï¸ The Feature Store Solution</h4>
+      <p>A feature store is a <strong>centralised platform for creating, storing, sharing, and serving ML features</strong>. Define a feature once; use it in any model, consistently, with guaranteed training/serving consistency.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the three problems feature stores solve?</li><li>What is training/serving skew?</li></ul></div>
+  `},
+  {id:2,title:"Feature Store Architecture: Online vs Offline",content:`
+    <h3>ð¦ Two Stores, One System</h3>
+    <p>A feature store has two fundamental storage layers, each optimised for a different use case.</p>
+    <div class="diagram">
+      <div class="diagram-title">Feature Store Dual Architecture</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">Raw Data Sources<br/><small>DB, streams, warehouses</small></div>
+      </div>
+      <div class="diagram-row"><div class="diagram-arrow">â</div></div>
+      <div class="diagram-row">
+        <div class="diagram-box yellow">Feature Pipelines<br/><small>compute + transform</small></div>
+      </div>
+      <div class="diagram-row">
+        <div class="diagram-arrow" style="transform:rotate(-30deg)">â</div>
+        <div style="width:80px"></div>
+        <div class="diagram-arrow" style="transform:rotate(30deg)">â</div>
+      </div>
+      <div class="diagram-row">
+        <div class="diagram-box purple">Offline Store<br/><small>historical features<br/>S3 / BigQuery / Parquet</small></div>
+        <div style="width:40px"></div>
+        <div class="diagram-box green">Online Store<br/><small>latest feature values<br/>Redis / DynamoDB</small></div>
+      </div>
+      <div class="diagram-row">
+        <div class="diagram-box purple" style="font-size:0.75rem">â Training Pipeline<br/>(batch reads)</div>
+        <div style="width:40px"></div>
+        <div class="diagram-box green" style="font-size:0.75rem">â Serving Layer<br/>(low-latency reads)</div>
+      </div>
+    </div>
+    <h4>Offline Store</h4>
+    <p>Stores <strong>historical feature values</strong> for training. Optimised for high-throughput batch reads. Typically built on cloud storage (S3, GCS), a data warehouse (BigQuery, Snowflake), or a columnar format (Parquet). Training jobs read from the offline store to build training datasets with point-in-time correct feature values.</p>
+    <h4>Online Store</h4>
+    <p>Stores only the <strong>most recent feature values</strong> for real-time serving. Optimised for low-latency lookups (sub-10ms). Typically built on a key-value store like Redis or DynamoDB. When a prediction request arrives, the serving layer fetches the user's latest features from the online store.</p>
+    <div class="callout callout-blue">
+      <h4>ð¡ Point-in-Time Correctness</h4>
+      <p>When creating a training dataset, features must be retrieved using only information available at the time of the label event â not future data. Feature stores enforce this automatically, preventing temporal leakage.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between the offline and online store in a feature store?</li><li>What database types are used for each store and why?</li><li>What is point-in-time correctness?</li></ul></div>
+  `},
+  {id:3,title:"Feature Store Tooling",content:`
+    <h3>ð ï¸ The Feature Store Landscape</h3>
+    <p>Several open-source and commercial feature stores are widely used in industry. Understanding what each offers helps you evaluate architectural choices.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Tool</th><th>Type</th><th>Key Strengths</th><th>Best For</th></tr>
+      <tr><td><strong>Feast</strong></td><td>Open-source</td><td>Lightweight, cloud-agnostic, strong community</td><td>Teams wanting control and flexibility</td></tr>
+      <tr><td><strong>Tecton</strong></td><td>Managed SaaS</td><td>Enterprise features, streaming pipelines, managed infra</td><td>Large orgs wanting turnkey solution</td></tr>
+      <tr><td><strong>Databricks Feature Store</strong></td><td>Managed (on Databricks)</td><td>Tight integration with Delta Lake and MLflow</td><td>Teams already on Databricks</td></tr>
+      <tr><td><strong>Vertex AI Feature Store</strong></td><td>Managed (GCP)</td><td>Auto-scaling, BigQuery integration</td><td>Google Cloud users</td></tr>
+      <tr><td><strong>SageMaker Feature Store</strong></td><td>Managed (AWS)</td><td>Native AWS integration, both online and offline</td><td>AWS-first organisations</td></tr>
+    </table></div>
+    <div class="callout callout-blue">
+      <h4>ð¡ Feast in Practice</h4>
+      <p>Feast (Feature Store) is the most common open-source choice. Key concepts: <strong>Entity</strong> (the primary key â user_id, product_id), <strong>Feature View</strong> (a group of features computed from one data source), <strong>Feature Service</strong> (a named set of features used by a specific model).</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is Feast and what are its three core concepts?</li><li>Name two managed feature store platforms and their cloud providers.</li></ul></div>
+  `},
+  {id:4,title:"MLOps Architecture Patterns",content:`
+    <h3>ðï¸ How Production ML Systems Are Structured</h3>
+    <p>MLOps defines standard architectural patterns for connecting data, training, and serving. Understanding these patterns lets you describe â and evaluate â any ML system.</p>
+    <h4>The Three MLOps Maturity Levels</h4>
+    <ul>
+      <li><strong>Level 0 â Manual Process:</strong> Data scientists train models in notebooks and hand off artifacts manually to engineers for deployment. No automation. High risk of training/serving skew. Retraining is ad-hoc and infrequent.</li>
+      <li><strong>Level 1 â ML Pipeline Automation:</strong> Training is automated as a pipeline. New data triggers retraining automatically. Feature engineering is part of the pipeline. Continuous training but manual deployment approval.</li>
+      <li><strong>Level 2 â CI/CD for ML:</strong> Full automation including testing, validation, and deployment. Model updates are treated like software releases â with unit tests, integration tests, and canary deployments. Rapid, safe iteration.</li>
+    </ul>
+    <div class="callout callout-green">
+      <h4>â Most Production Systems Are Level 1</h4>
+      <p>Level 2 is aspirational for most teams. Being able to articulate where your system sits on this spectrum â and what it would take to move up â demonstrates real MLOps maturity in an interview.</p>
+    </div>
+    <h4>CI/CD for Machine Learning</h4>
+    <p>Continuous Integration for ML means: every code or data change triggers automated training, evaluation, and validation. Continuous Deployment means: models that pass all checks are automatically deployed to production. This requires:</p>
+    <ul>
+      <li>Automated training pipelines (Kubeflow, SageMaker Pipelines, Vertex AI Pipelines, Airflow)</li>
+      <li>Model validation gates (must exceed baseline performance, pass data quality checks)</li>
+      <li>Automated rollback if production performance degrades post-deployment</li>
+    </ul>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the three MLOps maturity levels?</li><li>What does CI/CD mean in the context of ML?</li><li>What is an automated model validation gate?</li></ul></div>
+  `},
+  {id:5,title:"Experiment Tracking & Model Registry",content:`
+    <h3>ð§ª Managing the Model Development Lifecycle</h3>
+    <p>Training a model is an experiment. You try different hyperparameters, different feature sets, different algorithms. Without tracking, you lose the ability to reproduce results or explain why the current production model outperforms alternatives.</p>
+    <h4>Experiment Tracking</h4>
+    <p>Experiment tracking systems log every training run with:</p>
+    <ul>
+      <li><strong>Parameters:</strong> Learning rate, max depth, regularisation strength, feature list</li>
+      <li><strong>Metrics:</strong> Accuracy, F1, AUC-ROC, MAE â on train, validation, and test splits</li>
+      <li><strong>Artifacts:</strong> The model file itself, feature importance plots, confusion matrices</li>
+      <li><strong>Environment:</strong> Library versions, hardware, data version used</li>
+    </ul>
+    <p>The dominant tool is <strong>MLflow</strong> (open-source). Alternatives: Weights & Biases, Neptune, Comet.</p>
+    <h4>Model Registry</h4>
+    <p>A model registry is a <strong>versioned catalog of trained models</strong>. It provides a lifecycle workflow:</p>
+    <ul>
+      <li><strong>Staging:</strong> Model is tested in a pre-production environment</li>
+      <li><strong>Production:</strong> Model is actively serving predictions</li>
+      <li><strong>Archived:</strong> Model is retired but preserved for auditing</li>
+    </ul>
+    <div class="callout callout-blue">
+      <h4>ð¡ MLflow in Practice</h4>
+      <p>MLflow has four components: Tracking (experiment logs), Projects (reproducible code), Models (model packaging format), and Registry (model lifecycle management). Most teams use Tracking and Registry as their starting point.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What four things does experiment tracking log for each run?</li><li>What are the three stages in a model registry lifecycle?</li><li>Name two experiment tracking tools.</li></ul></div>
+  `},
+  {id:6,title:"Model Serving Patterns",content:`
+    <h3>ð Getting Predictions to Users</h3>
+    <p>A trained model needs to be served â exposed in a way that applications can request predictions. The serving architecture you choose has significant implications for latency, throughput, and cost.</p>
+    <h4>Serving Patterns</h4>
+    <ul>
+      <li><strong>REST API (Online Serving):</strong> Model wrapped in an HTTP endpoint. Synchronous â the caller waits for a prediction. Ideal for real-time use cases: fraud detection, recommendations, pricing. Typical tools: FastAPI, Flask, BentoML, TorchServe.</li>
+      <li><strong>Batch Prediction:</strong> Run predictions on a large dataset offline, store results. Asynchronous â predictions are pre-computed and looked up. Ideal when: predictions are needed for all users before they request them (e.g. weekly churn scores emailed to account managers).</li>
+      <li><strong>Streaming Prediction:</strong> Model consumes from a Kafka/Kinesis stream and produces predictions to an output stream. Ideal for high-throughput event-driven systems.</li>
+    </ul>
+    <div class="callout callout-yellow">
+      <h4>â ï¸ Choosing the Right Pattern</h4>
+      <p>Match serving to the latency requirement. If a user needs a prediction within 100ms (e.g. real-time recommendations), REST API. If predictions can be pre-computed overnight (e.g. "customers to call tomorrow"), batch. If you're processing millions of events per second (e.g. clickstream fraud), streaming.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between online and batch prediction serving?</li><li>When would you choose batch prediction over REST API?</li><li>Name two tools used for online model serving.</li></ul></div>
+  `},
+  {id:7,title:"Module Summary: The Complete MLOps Stack",content:`
+    <h3>ð Connecting the Architecture</h3>
+    <p>A complete production ML architecture connects all four modules you have studied so far:</p>
+    <div class="diagram">
+      <div class="diagram-title">The Full MLOps Stack</div>
+      <div class="diagram-row">
+        <div class="diagram-box blue">Raw Data<br/><small>M1: Ingestion patterns</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box yellow">Feature Engineering<br/><small>M2: Transform â signals</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box purple">Feature Store<br/><small>M4: Offline + Online</small></div>
+      </div>
+      <div class="diagram-row"><div class="diagram-arrow" style="transform:rotate(90deg)">â</div></div>
+      <div class="diagram-row">
+        <div class="diagram-box green">Monitoring & Drift<br/><small>M3: PSI, retrain triggers</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box green">Model Serving<br/><small>M4: REST/batch/stream</small></div>
+        <div class="diagram-arrow">â</div>
+        <div class="diagram-box green">Model Registry<br/><small>M4: versioned + staged</small></div>
+      </div>
+    </div>
+    <div class="callout callout-green">
+      <h4>â Module 4 Summary</h4>
+      <p>You now understand: the feature reuse problem and how feature stores solve it, the offline/online store architecture, major feature store tools (Feast, Tecton, Databricks), the three MLOps maturity levels, CI/CD for ML, experiment tracking with MLflow, model registry lifecycle stages, and the three serving patterns. Module 5 will focus on the communication layer â how to own and articulate this stack.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>Where does a feature store sit in the ML pipeline?</li><li>What is the difference between MLOps Level 1 and Level 2?</li></ul></div>
+  `}
+];
+function revLoad(){try{return JSON.parse(localStorage.getItem(REV_KEY))||{};}catch(e){return {};}}
+function revSave(s){localStorage.setItem(REV_KEY,JSON.stringify(s));if(typeof sfWrite==='function')sfWrite(s);}
+function allSectionsChecked(){const items=document.querySelectorAll('.rev-checkbox');for(let i=0;i<items.length;i++){if(!items[i].checked)return false;}return true;}
+function questionAnsweredCorrectly(){return true?revLoad().questionCorrect===true:true;}
+function updateCompleteBar(){
+  const bar=document.getElementById('rev-complete-bar');const cb=document.getElementById('rev-complete-cb');const label=document.getElementById('rev-complete-label');const hint=document.getElementById('rev-complete-hint');
+  if(!bar)return;const s=revLoad();
+  if(s.reviewComplete){bar.className='rev-complete-bar done';cb.disabled=false;cb.checked=true;label.textContent='✓ Review complete';hint.textContent='';return;}
+  const stepsOk=allSectionsChecked();const qOk=questionAnsweredCorrectly();const missing=[];if(!stepsOk)missing.push('all sections checked');if(!qOk)missing.push('question answered correctly');
+  if(stepsOk&&qOk){bar.className='rev-complete-bar ready';cb.disabled=false;label.textContent='Mark review as complete';hint.textContent='';}
+  else{bar.className='rev-complete-bar disabled';cb.disabled=true;label.textContent='Complete all sections and answer the question correctly to unlock';hint.textContent=missing.length?'Still needed: '+missing.join(' · '):'';}
+}
+function renderProgress(total){let done=0;document.querySelectorAll('.rev-checkbox').forEach(c=>{if(c.checked)done++;});const pct=Math.round((done/total)*100);const p=document.getElementById('sidebar-pct');const b=document.getElementById('sidebar-bar');if(p)p.textContent=pct+'%';if(b)b.style.width=pct+'%';}
+window.toggleSection=(id)=>{const body=document.getElementById('body-'+id);const toggle=document.getElementById('toggle-'+id);const isOpen=body.classList.contains('open');document.querySelectorAll('.section-body').forEach(b=>b.classList.remove('open'));document.querySelectorAll('.section-toggle').forEach(t=>t.classList.remove('open'));if(!isOpen){body.classList.add('open');toggle.classList.add('open');}};
+window.copyCode=(btn)=>{const text=btn.parentElement.innerText.replace('Copy','').trim();navigator.clipboard.writeText(text).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);});};
+function renderAll(){
+  const sec=document.getElementById('sections-container');if(!sec)return;sec.innerHTML='';
+  const s0=revLoad();
+  SECTIONS.forEach(s=>{
+    const reviewed=s0['cb_'+s.id]||false;
+    const sd=document.createElement('div');sd.className='section-block';
+    const badgeCls=BADGE_CLASSES[s.badge]||'';const badgeTxt=BADGES[s.badge]||s.badge||'';
+    sd.innerHTML='<div class="section-header" onclick="toggleSection('+s.id+')">'+'<span class="section-num">'+s.id+'.</span>'+'<span class="section-title">'+s.title+'</span>'+(badgeTxt?'<span style="font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;background:#e8f1fb;color:#1a6eb5;font-family:Source Code Pro,monospace;">'+badgeTxt+'</span>':'')+(reviewed?'<span style="font-size:12px;margin-left:4px;">✅</span>':'')+'<span class="section-toggle" id="toggle-'+s.id+'">▼</span>'+'</div>'+'<div class="section-body" id="body-'+s.id+'">'+s.content+'<div class="reviewer-bar '+(reviewed?'checked':'')+'" id="rev-bar-'+s.id+'"><input type="checkbox" class="rev-checkbox" id="rev-cb-'+s.id+'" data-step="'+s.id+'" '+(reviewed?'checked':'')+'><label for="rev-cb-'+s.id+'">'+(reviewed?'✓ Section reviewed':'Mark section as reviewed')+'</label></div></div>';
+    sec.appendChild(sd);
+  });
+  document.querySelectorAll('.rev-checkbox').forEach(cb=>{
+    cb.addEventListener('change',()=>{const st=revLoad();st['cb_'+cb.dataset.step]=cb.checked;revSave(st);const bar=cb.closest('.reviewer-bar');if(bar){bar.classList.toggle('checked',cb.checked);bar.querySelector('label').textContent=cb.checked?'✓ Section reviewed':'Mark section as reviewed';}renderProgress(SECTIONS.length);updateCompleteBar();});
+  });
+  renderProgress(SECTIONS.length);updateCompleteBar();
+}
+
+let revAnswer=null;let revSubmitted=false;
+(function restoreQ(){const s=revLoad();if(s.revAnswer!=null){revAnswer=s.revAnswer;revSubmitted=s.revSubmitted||false;if(revAnswer)applyRevAnswer(revAnswer,revSubmitted);}})();
+document.querySelectorAll('.reviewer-option').forEach(opt=>{opt.addEventListener('click',()=>{if(revSubmitted)return;revAnswer=opt.dataset.key;document.querySelectorAll('.reviewer-option').forEach(o=>o.classList.toggle('selected',o.dataset.key===revAnswer));const s=revLoad();s.revAnswer=revAnswer;revSave(s);});});
+const revBtn=document.getElementById('rev-reveal-btn');if(revBtn)revBtn.addEventListener('click',()=>{if(revAnswer===null){alert('Please select an answer first.');return;}const s0=revLoad();s0.attemptCount=(s0.attemptCount||0)+1;if(!s0.startedAt)s0.startedAt=new Date().toISOString();revSave(s0);revSubmitted=true;const s=revLoad();s.revSubmitted=true;revSave(s);applyRevAnswer(revAnswer,true);});
+function applyRevAnswer(ans,showResult){const correctKey='B';const isCorrect=(ans===correctKey);document.querySelectorAll('.reviewer-option').forEach(o=>{o.classList.remove('selected','correct','wrong');if(showResult){if(o.dataset.key===correctKey)o.classList.add('correct');else if(o.dataset.key===ans&&o.dataset.key!==correctKey)o.classList.add('wrong');}else{if(o.dataset.key===ans)o.classList.add('selected');}});if(showResult){const expEl=document.getElementById('rev-explanation');const lbl=document.getElementById('rev-exp-label');const txt=document.getElementById('rev-exp-text');const btn=document.getElementById('rev-reveal-btn');if(expEl)expEl.classList.add('visible');if(lbl){lbl.textContent=isCorrect?'✓ Correct':'✗ Incorrect';lbl.className='reviewer-exp-label '+(isCorrect?'correct':'wrong');}if(txt)txt.textContent=window.REV_EXPLANATION||'';if(btn)btn.style.display='none';if(isCorrect){const s=revLoad();s.questionCorrect=true;revSave(s);}updateCompleteBar();}}
+const commentEl=document.getElementById('rev-comment');if(commentEl){const s=revLoad();if(s.comment)commentEl.value=s.comment;commentEl.addEventListener('input',()=>{const s=revLoad();s.comment=commentEl.value;revSave(s);});}
+const completeCb=document.getElementById('rev-complete-cb');if(completeCb)completeCb.addEventListener('change',()=>{if(!completeCb.checked)return;const s=revLoad();s.reviewComplete=true;s.completedAt=new Date().toISOString();revSave(s);updateCompleteBar();});
+renderAll();
+</script>
+<script>
+(function(){var scripts=['https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js'];function loadNext(i){if(i>=scripts.length){window._sfFirebaseReady=true;initRevFirebase();return;}var s=document.createElement('script');s.src=scripts[i];s.onload=function(){loadNext(i+1);};s.onerror=function(){window._sfFirebaseReady=false;};document.head.appendChild(s);}loadNext(0);})();
+</script>
+<script>
+function initRevFirebase(){
+  const SF_CONFIG={apiKey:"AIzaSyA-8fatW5D7uR69rcuGFPH54IFqrz0PhU0",authDomain:"sfcertification-grafana.firebaseapp.com",projectId:"sfcertification-grafana",storageBucket:"sfcertification-grafana.firebasestorage.app",messagingSenderId:"227322696511",appId:"1:227322696511:web:12e7ced7dd3d45fa06798a"};
+  if(!firebase.apps.length)firebase.initializeApp(SF_CONFIG);
+  window.sfAuth=firebase.auth();window.sfDb=firebase.firestore();
+  const REV_KEY_FB='reviewer_sf-ds-mlops-certification_module-4';
+  const COURSE_ID='D1BxWqC04OHSBSTMxRkK';
+  function sfDocRef(){if(!window.sfReviewerUid)return null;return window.sfDb.collection('reviewerSessions').doc(window.sfReviewerUid).collection('sf-ds-mlops-certification').doc('module-4');}
+  function sfInitSession(){const local=revLoad();if(!local.startedAt){local.startedAt=new Date().toISOString();localStorage.setItem(REV_KEY,JSON.stringify(local));}if(!window._sfFirebaseReady||!window.sfReviewerUid)return;sfDocRef().set({email:window.sfReviewerEmail,moduleId:'module-4',courseId:COURSE_ID,startedAt:local.startedAt,lastUpdated:firebase.firestore.FieldValue.serverTimestamp(),reviewComplete:local.reviewComplete||false,attemptCount:local.attemptCount||0},{merge:true}).catch(e=>console.warn('SF init:',e.message));}
+  window.sfInitSession=sfInitSession;
+  window.sfWrite=function(extra){if(!window._sfFirebaseReady||!window.sfReviewerUid)return;const ref=sfDocRef();if(!ref)return;const local=revLoad();const payload=Object.assign({},local,extra,{email:window.sfReviewerEmail,moduleId:'module-4',courseId:COURSE_ID,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});ref.set(payload,{merge:true}).catch(e=>console.warn('SF write:',e.message));};
+  window.sfFetchAndMerge=async function(){const ref=sfDocRef();if(!ref)return;try{const snap=await ref.get();if(!snap.exists)return;const remote=snap.data();const local=revLoad();const merged=Object.assign({},local,remote);delete merged.email;delete merged.lastUpdated;localStorage.setItem(REV_KEY,JSON.stringify(merged));if(typeof renderAll==='function'){renderAll();}if(typeof updateCompleteBar==='function')updateCompleteBar();}catch(e){console.warn('SF fetch:',e.message);}};
+  function sfHideOverlayFB(user){window.sfReviewerEmail=user.email;window.sfReviewerUid=user.uid;const ov=document.getElementById('sfSigninOverlay');if(ov)ov.classList.add('hidden');const bar=document.getElementById('sfSignedInBar');const lbl=document.getElementById('sfSignedInEmail');if(bar)bar.classList.remove('hidden');if(lbl)lbl.textContent='Signed in as '+user.email;sfInitSession();window.sfFetchAndMerge();}
+  window.sfAuth.onAuthStateChanged(user=>{if(user){sfHideOverlayFB(user);}else{document.getElementById('sfSigninOverlay').classList.remove('hidden');}});
+}
+</script>
+</body>
+</html>
