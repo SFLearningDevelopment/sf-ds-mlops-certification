@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+<title>[Reviewer] Module 3: Model Lifecycle & Drift</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{--bg:#eef2f7;--bg2:#ffffff;--bg3:#f0f4f9;--border:#d0dae8;--text:#1a2332;--text-dim:#4a5568;--text-dimmer:#8fa3bc;--blue:#1a6eb5;--blue-light:#e8f1fb;--blue-mid:#b8d0ed;--green:#1a6b3a;--green-light:#e8f5ed;--coral:#c0392b;--coral-light:#fdf0ee;--radius:12px;}
+  html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:'Merriweather Sans',sans-serif;font-size:15px;line-height:1.6;}
+  a{color:var(--blue);text-decoration:none;}
+  .reviewer-topbanner{background:#f5f0ff;border-bottom:2px solid #c4bdf0;padding:9px 40px;font-size:12px;font-family:'Source Code Pro',monospace;color:#5b4fcf;display:flex;align-items:center;gap:8px;}
+  .sf-signin-overlay{position:fixed;inset:0;background:rgba(20,30,50,.82);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(3px);}
+  .sf-signin-overlay.hidden{display:none;}
+  .sf-signin-card{background:#fff;border-radius:16px;padding:36px 40px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center;}
+  .sf-signin-logo{font-size:32px;margin-bottom:12px;}
+  .sf-signin-title{font-size:17px;font-weight:700;color:#1a2332;margin-bottom:8px;}
+  .sf-signin-sub{font-size:13px;color:#4a5568;line-height:1.6;margin-bottom:24px;}
+  .sf-google-btn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #d0dae8;border-radius:8px;padding:11px 20px;font-size:14px;font-weight:600;cursor:pointer;color:#1a2332;width:100%;justify-content:center;transition:box-shadow .15s;}
+  .sf-google-btn:hover{box-shadow:0 2px 8px rgba(0,0,0,.12);}
+  .sf-google-btn img{width:20px;height:20px;}
+  .sf-signin-divider{font-size:11px;color:#8fa3bc;text-align:center;margin:14px 0 10px;display:flex;align-items:center;gap:8px;font-family:'Source Code Pro',monospace;}
+  .sf-signin-divider::before,.sf-signin-divider::after{content:'';flex:1;height:1px;background:#d0dae8;}
+  .sf-fallback-input{width:100%;padding:10px 12px;border:1.5px solid #d0dae8;border-radius:8px;font-size:14px;font-family:'Merriweather Sans',sans-serif;color:#1a2332;margin-bottom:10px;outline:none;}
+  .sf-fallback-input:focus{border-color:var(--blue);}
+  .sf-fallback-btn{width:100%;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+  .sf-signin-error{margin-top:14px;font-size:12.5px;color:#c0392b;font-family:'Source Code Pro',monospace;background:#fdf0ee;border:1px solid #f0b8b2;border-radius:6px;padding:10px 12px;display:none;text-align:left;}
+  .sf-signin-error.visible{display:block;}
+  .sf-signed-in-bar{background:#e8f5ed;border-bottom:1px solid #a3d4b8;padding:7px 40px;font-size:11px;font-family:'Source Code Pro',monospace;color:var(--green);display:flex;align-items:center;justify-content:space-between;}
+  .sf-signed-in-bar.hidden{display:none;}
+  .sf-signout-btn{font-size:10px;color:var(--blue);background:none;border:1px solid #b8d0ed;border-radius:4px;padding:2px 8px;cursor:pointer;}
+  .topnav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 40px;height:48px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-dimmer);font-family:'Source Code Pro',monospace;position:sticky;top:0;z-index:100;}
+  .topnav a{color:var(--blue);}
+  .sep{margin:0 4px;color:var(--text-dimmer);}
+  .main{max-width:860px;margin:0 auto;padding:36px 40px 80px;}
+  .module-hero{margin-bottom:28px;}
+  .hero-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:8px;font-family:'Source Code Pro',monospace;}
+  .module-hero h1{font-size:clamp(18px,2.5vw,26px);font-weight:700;color:var(--text);line-height:1.25;}
+  .section-block{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;}
+  .section-header{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;}
+  .section-header:hover{background:var(--bg3);}
+  .section-num{font-size:10px;font-weight:700;color:var(--text-dimmer);min-width:24px;font-family:'Source Code Pro',monospace;}
+  .section-title{font-weight:600;font-size:14px;flex:1;color:var(--text);}
+  .section-toggle{font-size:11px;color:var(--text-dimmer);transition:transform .2s;}
+  .section-toggle.open{transform:rotate(180deg);}
+  .section-body{display:none;padding:20px 22px 14px;border-top:1px solid var(--border);font-size:14px;color:var(--text-dim);line-height:1.75;}
+  .section-body.open{display:block;}
+  .section-body h3{font-size:15px;font-weight:700;color:var(--text);margin:16px 0 8px;}
+  .section-body p{margin-bottom:10px;}
+  .section-body ul,.section-body ol{margin:8px 0 12px 20px;}
+  .section-body li{margin-bottom:4px;}
+  .section-body code{font-family:'Source Code Pro',monospace;font-size:12.5px;background:var(--bg3);border:1px solid var(--border);padding:1px 5px;border-radius:4px;color:#0f4a7a;}
+  .section-body pre{background:#1e2433;color:#cdd6f4;padding:16px;border-radius:8px;font-size:12.5px;font-family:'Source Code Pro',monospace;overflow-x:auto;margin:12px 0;position:relative;}
+  .copy-btn,.copy-btn-small{position:absolute;top:8px;right:8px;background:#252b3b;border:1px solid #3a4155;color:#7a8ab0;border-radius:4px;padding:2px 8px;font-size:10px;cursor:pointer;font-family:'Source Code Pro',monospace;}
+  .copy-btn:hover,.copy-btn-small:hover{color:#cdd6f4;}
+  .reviewer-bar{background:#fff8e6;border:1px solid #f0d4a0;border-left:3px solid #92600a;border-radius:8px;padding:10px 16px;margin:18px 0 6px;display:flex;align-items:center;gap:10px;font-size:13px;color:#92600a;font-family:'Source Code Pro',monospace;}
+  .reviewer-bar input[type="checkbox"]{width:16px;height:16px;cursor:pointer;flex-shrink:0;accent-color:var(--green);}
+  .reviewer-bar label{cursor:pointer;font-weight:600;user-select:none;}
+  .reviewer-bar.checked{background:var(--green-light);border-color:#a3d4b8;border-left-color:var(--green);color:var(--green);}
+  .reviewer-panel{background:#f5f0ff;border:1px solid #c4bdf0;border-top:3px solid #5b4fcf;border-radius:12px;padding:24px 28px;margin:32px 0;}
+  .reviewer-panel-label{font-size:9px;font-family:'Source Code Pro',monospace;letter-spacing:.18em;text-transform:uppercase;color:#5b4fcf;font-weight:600;margin-bottom:16px;}
+  .reviewer-q-text{font-size:14px;font-weight:600;color:#1a2332;line-height:1.65;margin-bottom:14px;}
+  .reviewer-options{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+  .reviewer-option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid #d0dae8;border-radius:8px;cursor:pointer;font-size:13.5px;color:#4a5568;line-height:1.5;background:#fff;transition:background .12s,border-color .12s;}
+  .reviewer-option:hover{background:#f0f4f9;border-color:#b8d0ed;}
+  .reviewer-option.selected{background:#e8f1fb;border-color:var(--blue);color:#1a2332;}
+  .reviewer-option.correct{background:var(--green-light);border-color:#a3d4b8;color:var(--green);}
+  .reviewer-option.wrong{background:var(--coral-light);border-color:#f0b8b2;color:var(--coral);}
+  .reviewer-option-key{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#8fa3bc;flex-shrink:0;margin-top:1px;}
+  .reviewer-reveal{font-size:12px;font-family:'Source Code Pro',monospace;color:#5b4fcf;cursor:pointer;text-decoration:underline;background:none;border:none;padding:0;margin-bottom:14px;display:block;}
+  .reviewer-explanation{font-size:13px;color:#4a5568;line-height:1.7;padding:12px 14px;background:#eef2f7;border-radius:8px;margin-bottom:16px;display:none;}
+  .reviewer-explanation.visible{display:block;}
+  .reviewer-exp-label{font-size:9px;font-family:'Source Code Pro',monospace;letter-spacing:.15em;text-transform:uppercase;font-weight:700;margin-bottom:4px;}
+  .reviewer-exp-label.correct{color:var(--green);}
+  .reviewer-exp-label.wrong{color:var(--coral);}
+  .reviewer-comment-label{font-size:11px;font-family:'Source Code Pro',monospace;letter-spacing:.12em;text-transform:uppercase;color:#8fa3bc;font-weight:600;margin-bottom:6px;}
+  .reviewer-comment{width:100%;min-height:80px;padding:10px 12px;border:1px solid #c4bdf0;border-radius:8px;font-family:'Merriweather Sans',sans-serif;font-size:13.5px;color:#1a2332;background:#fff;resize:vertical;line-height:1.6;}
+  .reviewer-comment:focus{outline:none;border-color:#5b4fcf;}
+  .reviewer-save-note{font-size:11px;font-family:'Source Code Pro',monospace;color:#8fa3bc;margin-top:6px;}
+  .rev-complete-wrap{margin:28px 0 0;}
+  .rev-complete-bar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-radius:8px;font-size:13.5px;font-family:'Source Code Pro',monospace;font-weight:600;border:1.5px solid var(--border);background:var(--bg3);color:var(--text-dimmer);transition:all .2s;}
+  .rev-complete-bar.disabled{opacity:.6;cursor:not-allowed;}
+  .rev-complete-bar.ready{background:#fff8e6;border-color:#f0d4a0;border-left:3px solid #92600a;color:#92600a;cursor:pointer;}
+  .rev-complete-bar.done{background:var(--green-light);border-color:#a3d4b8;border-left:3px solid var(--green);color:var(--green);cursor:default;}
+  .rev-complete-bar input[type="checkbox"]{width:18px;height:18px;flex-shrink:0;accent-color:var(--green);}
+  .rev-complete-bar.disabled input{cursor:not-allowed;}
+  .rev-complete-hint{font-size:11px;font-family:'Source Code Pro',monospace;color:var(--text-dimmer);margin-top:6px;min-height:16px;}
+  .bottom-nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0 0;border-top:1px solid var(--border);margin-top:40px;}
+  .nav-btn{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-family:'Source Code Pro',monospace;color:var(--blue);text-decoration:none;padding:10px 18px;border:1px solid var(--blue-mid);border-radius:8px;background:var(--blue-light);font-weight:600;}
+  .nav-btn.secondary{background:var(--bg2);color:var(--text-dim);border-color:var(--border);}
+  .nav-btn:hover{background:var(--blue-mid);}
+</style>
+</head>
+<body>
+<div class="sf-signin-overlay" id="sfSigninOverlay">
+  <div class="sf-signin-card">
+    <div class="sf-signin-logo">🔐</div>
+    <div class="sf-signin-title">Sign in to save your progress</div>
+    <div class="sf-signin-sub">Sign in with your SourceFuse Gmail. Review progress, checkboxes and question attempts are saved and restored across devices.</div>
+    <button class="sf-google-btn" id="sfGoogleSignInBtn"><img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Sign in with Google</button>
+    <div class="sf-signin-divider">or</div>
+    <input type="text" class="sf-fallback-input" id="sfEmailInput" placeholder="your.name@sourcefuse.com" autocomplete="off" inputmode="email">
+    <button class="sf-fallback-btn" id="sfEmailSignInBtn">Continue with SF email</button>
+    <div class="sf-signin-error" id="sfSigninError"></div>
+  </div>
+</div>
+<div class="sf-signed-in-bar hidden" id="sfSignedInBar"><span id="sfSignedInEmail">Signed in as …</span><button class="sf-signout-btn" id="sfSignoutLink">Sign out</button></div>
+<div class="reviewer-topbanner"><span>👁</span><strong>Reviewer Mode</strong> — Module 3: Model Lifecycle & Drift</div>
+<nav class="topnav">
+  <a href="index.html">← Reviewer Hub</a>
+  <span class="sep">/</span>
+  <span>Module 3: Model Lifecycle & Drift</span>
+</nav>
+<div class="main">
+  <div class="module-hero">
+    <div class="hero-eyebrow">Module 3 of 5 · Reviewer Mode</div>
+    <h1>Model Lifecycle & Drift</h1>
+  </div>
+  <div id="sections-container"></div>
+  
+  <div class="reviewer-panel">
+    <div class="reviewer-panel-label">🔍 Reviewer Question — Module</div>
+    <div class="reviewer-q-text">A fraud detection model was trained in 2022. In 2024, the types of fraud transactions have changed significantly, but the input feature distributions remain similar. Which type of drift is this?</div>
+    <div class="reviewer-options" id="rev-options"><div class="reviewer-option" data-key="A"><span class="reviewer-option-key">A</span><span>Data drift</span></div><div class="reviewer-option" data-key="B"><span class="reviewer-option-key">B</span><span>Concept drift</span></div><div class="reviewer-option" data-key="C"><span class="reviewer-option-key">C</span><span>Label drift</span></div><div class="reviewer-option" data-key="D"><span class="reviewer-option-key">D</span><span>Upstream data drift</span></div></div>
+    <button class="reviewer-reveal" id="rev-reveal-btn">Check answer</button>
+    <div class="reviewer-explanation" id="rev-explanation">
+      <div class="reviewer-exp-label" id="rev-exp-label"></div>
+      <div id="rev-exp-text"></div>
+    </div>
+    <div class="reviewer-comment-label">Reviewer notes</div>
+    <textarea class="reviewer-comment" id="rev-comment" placeholder="Add your review notes for this module…"></textarea>
+    <div class="reviewer-save-note">Notes are auto-saved.</div>
+  </div>
+  <script>window.REV_CORRECT="B";window.REV_EXPLANATION="";window.REV_QUESTION={"m":3,"q":"A fraud detection model was trained in 2022. In 2024, the types of fraud transactions have changed significantly, but the input feature distributions remain similar. Which type of drift is this?","o":["Data drift","Concept drift","Label drift","Upstream data drift"],"c":1,"exp":""};</script>
+  <div class="rev-complete-wrap">
+    <div class="rev-complete-bar disabled" id="rev-complete-bar">
+      <input type="checkbox" id="rev-complete-cb" disabled>
+      <label for="rev-complete-cb" id="rev-complete-label">Complete all sections and answer the question correctly to unlock</label>
+    </div>
+    <div class="rev-complete-hint" id="rev-complete-hint"></div>
+  </div>
+  <div class="bottom-nav"><a href="ds-mlops-module-2.html" class="nav-btn secondary">← Module 2</a><a href="ds-mlops-module-4.html" class="nav-btn">Module 4 →</a></div>
+</div>
+<script>
+function sfShowError(msg){const el=document.getElementById('sfSigninError');if(el){el.textContent=msg;el.classList.add('visible');}}
+function sfHideOverlay(user){
+  window.sfReviewerEmail=user.email||user;window.sfReviewerUid=user.uid||'email_'+btoa(window.sfReviewerEmail).replace(/=/g,'');
+  const ov=document.getElementById('sfSigninOverlay');if(ov)ov.classList.add('hidden');
+  const bar=document.getElementById('sfSignedInBar');const lbl=document.getElementById('sfSignedInEmail');
+  if(bar)bar.classList.remove('hidden');if(lbl)lbl.textContent='Signed in as '+window.sfReviewerEmail;
+  if(typeof sfInitSession==='function')sfInitSession();
+  if(window._sfFirebaseReady&&typeof window.sfDb!=='undefined'&&typeof sfFetchAndMerge==='function')sfFetchAndMerge();
+}
+function sfSignInWithEmail(){const emailEl=document.getElementById('sfEmailInput');if(!emailEl)return;const email=emailEl.value.trim();if(!email||!email.includes('@')){sfShowError('Please enter a valid email address.');return;}if(!email.endsWith('@sourcefuse.com')){sfShowError('Please use your @sourcefuse.com email address.');return;}sfHideOverlay(email);}
+async function sfSignInWithGoogle(){if(typeof firebase==='undefined'||!window._sfFirebaseReady){sfShowError('Popup blocked. Please enter your SF email below.');return;}const provider=new firebase.auth.GoogleAuthProvider();provider.setCustomParameters({hd:'sourcefuse.com',prompt:'select_account'});const t=setTimeout(()=>sfShowError('Popup blocked. Please enter your SF email below.'),30000);try{const r=await firebase.auth().signInWithPopup(provider);clearTimeout(t);sfHideOverlay(r.user);}catch(e){clearTimeout(t);sfShowError('Popup blocked. Please enter your SF email below.');}}
+function sfSignOut(){window.sfReviewerEmail=null;window.sfReviewerUid=null;const bar=document.getElementById('sfSignedInBar');const ov=document.getElementById('sfSigninOverlay');if(bar)bar.classList.add('hidden');if(ov)ov.classList.remove('hidden');if(typeof firebase!=='undefined'&&window._sfFirebaseReady)firebase.auth().signOut();}
+document.addEventListener('DOMContentLoaded',function(){const gb=document.getElementById('sfGoogleSignInBtn');const eb=document.getElementById('sfEmailSignInBtn');const so=document.getElementById('sfSignoutLink');if(gb)gb.addEventListener('click',sfSignInWithGoogle);if(eb)eb.addEventListener('click',sfSignInWithEmail);if(so)so.addEventListener('click',sfSignOut);});
+</script>
+<script>
+const REV_KEY='reviewer_'+window.location.pathname.replace(/[^a-z0-9]/gi,'_');
+const BADGES={foundation:'Foundation',essential:'Essential',important:'Important'};
+const BADGE_CLASSES={foundation:'badge-foundation',essential:'badge-essential',important:'badge-important'};
+const SECTIONS=[
+  {id:1,title:"Why Models Degrade Over Time",content:`
+    <h3>ð The Silent Failure</h3>
+    <p>When a model is deployed, it was trained on historical data. The world, however, does not stay the same as it was when that training data was collected. User behaviour changes, products evolve, market conditions shift, and new customer segments emerge.</p>
+    <p>As the gap widens between the world the model learned from and the world it is now predicting in, <strong>model performance silently degrades</strong>. This is model drift â and it is the most common cause of ML system failure in production.</p>
+    <div class="callout callout-red">
+      <h4>ð¨ Why "Silent" is the Dangerous Part</h4>
+      <p>Unlike a server crash that triggers an alert immediately, model drift is gradual. The API continues returning predictions, the system appears healthy, but accuracy is declining week by week. Without active monitoring, teams often discover drift only when a business metric breaks â sometimes months later.</p>
+    </div>
+    <h4>Real-World Examples of Drift</h4>
+    <ul>
+      <li>A fraud detection model trained pre-2020 encounters new fraud patterns that emerged during the pandemic</li>
+      <li>A recommendation model trained on desktop users struggles after 60% of traffic shifts to mobile</li>
+      <li>A demand forecasting model trained before a new product launch fails to account for the new product cannibalizing existing sales</li>
+    </ul>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>Why is model drift described as a "silent" failure?</li><li>Give two real-world examples of events that could cause model drift.</li></ul></div>
+  `},
+  {id:2,title:"Types of Drift: Data, Concept, and Model",content:`
+    <h3>ð Three Distinct Types of Drift</h3>
+    <p>Drift is not a single phenomenon. Understanding which type you are dealing with determines the correct response.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Type</th><th>Definition</th><th>Example</th><th>Fix</th></tr>
+      <tr><td><strong>Data Drift</strong><br/>(Feature Drift)</td><td>The statistical distribution of input features changes</td><td>Average user age shifts from 28 to 42 as product matures</td><td>Retrain on recent data; update feature engineering</td></tr>
+      <tr><td><strong>Concept Drift</strong></td><td>The relationship between features and the label changes</td><td>Features that predicted churn in 2022 no longer predict churn in 2024 due to changed user behaviour</td><td>Retrain with label data from the new period</td></tr>
+      <tr><td><strong>Label Drift</strong></td><td>The distribution of the label itself changes</td><td>Churn rate drops from 15% to 3% after product improvement â model now over-predicts churn</td><td>Recalibrate model; update classification thresholds</td></tr>
+      <tr><td><strong>Upstream Data Drift</strong></td><td>A change in data pipelines or sources changes what arrives at the model</td><td>A schema change in the event tracking system causes a feature to be NULL for all new users</td><td>Fix the pipeline; add data quality checks</td></tr>
+    </table></div>
+    <div class="callout callout-blue">
+      <h4>ð¡ Data Drift vs Concept Drift â The Key Difference</h4>
+      <p><strong>Data drift:</strong> the inputs look different but the relationship between inputs and outputs is the same. <strong>Concept drift:</strong> even if inputs look the same, they mean something different for the prediction task. Concept drift is harder to detect and more damaging.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between data drift and concept drift?</li><li>What causes label drift and how is it detected?</li><li>What is upstream data drift?</li></ul></div>
+  `},
+  {id:3,title:"Detecting Drift: Statistical Methods",content:`
+    <h3>ð Measuring What Changed</h3>
+    <p>Detecting drift requires comparing the distribution of data at training time against the distribution seen in production. Several statistical tests are used for this.</p>
+    <h4>For Numerical Features</h4>
+    <ul>
+      <li><strong>Population Stability Index (PSI):</strong> Measures how much a distribution has shifted between two periods. PSI < 0.1: no significant change. PSI 0.1â0.2: moderate shift. PSI > 0.2: significant drift â investigate.</li>
+      <li><strong>Kolmogorov-Smirnov (KS) Test:</strong> Statistical test comparing two cumulative distributions. Returns a p-value â low p-value means distributions are significantly different.</li>
+      <li><strong>Wasserstein Distance:</strong> Measures the "work" needed to transform one distribution into another. Intuitive for comparing feature distributions.</li>
+    </ul>
+    <h4>For Categorical Features</h4>
+    <ul>
+      <li><strong>Chi-Squared Test:</strong> Tests whether the frequency distribution of categories has changed significantly.</li>
+      <li><strong>Jensen-Shannon Divergence:</strong> Measures the similarity between two probability distributions. Symmetric version of KL divergence.</li>
+    </ul>
+    <h4>For Model Output</h4>
+    <ul>
+      <li><strong>Prediction Distribution Shift:</strong> Monitor the distribution of model output scores over time. A sudden shift often indicates upstream data issues even before performance metrics degrade.</li>
+      <li><strong>Calibration Monitoring:</strong> Track whether predicted probabilities match observed frequencies.</li>
+    </ul>
+    <div class="callout callout-green">
+      <h4>â PSI in Practice</h4>
+      <p>PSI is the most widely used drift metric in industry because it produces an intuitive single number per feature, making it easy to alert on and report. Most ML monitoring tools implement PSI out of the box.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What does PSI measure and what thresholds indicate concern?</li><li>What is the KS test used for in drift detection?</li><li>Why monitor prediction distribution even without ground truth labels?</li></ul></div>
+  `},
+  {id:4,title:"Retraining Strategies",content:`
+    <h3>ð When and How to Retrain</h3>
+    <p>Detecting drift tells you something is wrong. Retraining is the response. But retraining has costs â compute, engineering time, risk of regression â so the strategy matters.</p>
+    <h4>Retraining Triggers</h4>
+    <ul>
+      <li><strong>Schedule-Based:</strong> Retrain on a fixed cadence regardless of drift (weekly, monthly). Simple to implement, but may retrain unnecessarily or too late.</li>
+      <li><strong>Metric-Based:</strong> Retrain when a monitored metric crosses a threshold (e.g. PSI > 0.2 on a key feature, or accuracy drops below 75%). Reactive but targeted.</li>
+      <li><strong>Continuous / Online Learning:</strong> Model updates incrementally with every new batch of data. Low latency but complex to implement and validate.</li>
+    </ul>
+    <h4>Retraining Approaches</h4>
+    <ul>
+      <li><strong>Full Retraining:</strong> Train a new model from scratch on the full updated dataset. Simplest approach, but expensive.</li>
+      <li><strong>Windowed Retraining:</strong> Train on only the most recent N months of data. Helps the model adapt to recent behaviour while discarding stale patterns.</li>
+      <li><strong>Fine-Tuning:</strong> Take the existing model and continue training on new data. Faster than full retraining; works well for neural networks.</li>
+      <li><strong>Champion/Challenger:</strong> Keep the existing model in production (champion) while training a challenger in parallel. Switch when the challenger demonstrates better performance in shadow mode.</li>
+    </ul>
+    <div class="callout callout-yellow">
+      <h4>â ï¸ Retraining â  Redeploying</h4>
+      <p>A retrained model must go through the same validation, testing, and deployment pipeline as the original. Shortcuts here create new failure modes. MLOps CI/CD pipelines automate this safely.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between schedule-based and metric-based retraining triggers?</li><li>What is the champion/challenger approach?</li><li>What is windowed retraining and why use it?</li></ul></div>
+  `},
+  {id:5,title:"Model Performance Metrics",content:`
+    <h3>ð Measuring Whether Your Model Works</h3>
+    <p>Before you can detect drift, you need to know what good performance looks like. These are the core metrics for evaluating ML model quality.</p>
+    <h4>Classification Metrics</h4>
+    <ul>
+      <li><strong>Accuracy:</strong> % of correct predictions. Misleading on imbalanced datasets (a model that always predicts "no churn" is 95% accurate if only 5% of users churn).</li>
+      <li><strong>Precision:</strong> Of all positive predictions, what fraction were correct? High precision = few false positives.</li>
+      <li><strong>Recall:</strong> Of all actual positives, what fraction did we catch? High recall = few false negatives.</li>
+      <li><strong>F1 Score:</strong> Harmonic mean of precision and recall. Useful when you need to balance both.</li>
+      <li><strong>AUC-ROC:</strong> Area under the ROC curve. Measures the model's ability to discriminate between classes. 0.5 = random; 1.0 = perfect.</li>
+    </ul>
+    <h4>Regression Metrics</h4>
+    <ul>
+      <li><strong>MAE (Mean Absolute Error):</strong> Average absolute difference between predicted and actual values. Intuitive, robust to outliers.</li>
+      <li><strong>RMSE (Root Mean Squared Error):</strong> Penalises large errors more than MAE. Use when large errors are disproportionately costly.</li>
+      <li><strong>RÂ² (R-squared):</strong> Proportion of variance explained by the model. 1.0 = perfect fit; 0 = no better than predicting the mean.</li>
+    </ul>
+    <div class="callout callout-blue">
+      <h4>ð¡ Choosing the Right Metric</h4>
+      <p>Match the metric to the business problem. For fraud detection (where false negatives are expensive), optimise for Recall. For a spam filter (where false positives irritate users), optimise for Precision. For general model health monitoring, track AUC-ROC over time.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>Why is accuracy a poor metric for imbalanced datasets?</li><li>What is the difference between precision and recall?</li><li>What does AUC-ROC measure?</li></ul></div>
+  `},
+  {id:6,title:"Monitoring Infrastructure & Tools",content:`
+    <h3>ð­ Building a Monitoring System</h3>
+    <p>Monitoring a model in production requires infrastructure â not just dashboards, but automated checks, alerting, and data pipelines that continuously compare training-time distributions against serving-time distributions.</p>
+    <h4>What to Monitor</h4>
+    <ul>
+      <li><strong>Input features:</strong> Statistical distributions of every input feature. Alert on PSI/KS test violations.</li>
+      <li><strong>Prediction distribution:</strong> The distribution of model output scores over time.</li>
+      <li><strong>Model latency:</strong> p50, p95, p99 prediction latency. A suddenly slow model often indicates resource or infrastructure issues.</li>
+      <li><strong>Data quality:</strong> Null rates, schema violations, out-of-range values in incoming features.</li>
+      <li><strong>Business metrics:</strong> Click-through rates, conversion rates, customer satisfaction â the downstream metrics that the model is supposed to improve.</li>
+    </ul>
+    <h4>MLOps Monitoring Tools</h4>
+    <ul>
+      <li><strong>Evidently AI:</strong> Open-source library for ML monitoring reports and test suites. Generates HTML reports on data drift and model quality.</li>
+      <li><strong>Arize AI:</strong> Production monitoring platform with drift detection and root-cause analysis.</li>
+      <li><strong>WhyLogs / WhyLabs:</strong> Lightweight statistical logging for ML pipelines.</li>
+      <li><strong>MLflow:</strong> Primarily for experiment tracking but includes model serving and can integrate with monitoring tools.</li>
+      <li><strong>Grafana + Prometheus:</strong> General-purpose monitoring that can be adapted for ML metric dashboards.</li>
+    </ul>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What five categories of signals should you monitor for a deployed model?</li><li>Name two dedicated ML monitoring tools.</li><li>What is the role of Evidently AI?</li></ul></div>
+  `},
+  {id:7,title:"Module Summary: The Drift Response Playbook",content:`
+    <h3>ð Putting It Into Practice</h3>
+    <p>When you suspect or detect model degradation, follow this structured response:</p>
+    <ol>
+      <li><strong>Check upstream data first:</strong> Is there a pipeline issue? Missing values, schema changes, or NULL floods are common culprits and easier to fix than retraining.</li>
+      <li><strong>Identify which features drifted:</strong> Run PSI/KS tests across all input features. Pinpoint the most drifted features â these are your investigation priority.</li>
+      <li><strong>Determine drift type:</strong> Is the input distribution changing (data drift) or is the feature-to-label relationship changing (concept drift)? Check label distributions too.</li>
+      <li><strong>Assess business impact:</strong> Has performance degradation translated to a business metric drop? Quantify the impact before investing in retraining.</li>
+      <li><strong>Choose retraining strategy:</strong> Full retrain, windowed retrain, or fine-tuning? Run champion/challenger if risk is high.</li>
+      <li><strong>Validate and deploy:</strong> New model must pass all existing tests before promotion. Track performance post-deployment for at least one business cycle.</li>
+    </ol>
+    <div class="callout callout-green">
+      <h4>â Module 3 Summary</h4>
+      <p>You can now explain: why models degrade, the four types of drift (data, concept, label, upstream), six statistical detection methods, four retraining strategies, core performance metrics, and a structured response playbook. This is the complete framework the candidate was missing.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the first step when you suspect model degradation?</li><li>In what order would you diagnose a drift incident?</li></ul></div>
+  `}
+];
+function revLoad(){try{return JSON.parse(localStorage.getItem(REV_KEY))||{};}catch(e){return {};}}
+function revSave(s){localStorage.setItem(REV_KEY,JSON.stringify(s));if(typeof sfWrite==='function')sfWrite(s);}
+function allSectionsChecked(){const items=document.querySelectorAll('.rev-checkbox');for(let i=0;i<items.length;i++){if(!items[i].checked)return false;}return true;}
+function questionAnsweredCorrectly(){return true?revLoad().questionCorrect===true:true;}
+function updateCompleteBar(){
+  const bar=document.getElementById('rev-complete-bar');const cb=document.getElementById('rev-complete-cb');const label=document.getElementById('rev-complete-label');const hint=document.getElementById('rev-complete-hint');
+  if(!bar)return;const s=revLoad();
+  if(s.reviewComplete){bar.className='rev-complete-bar done';cb.disabled=false;cb.checked=true;label.textContent='✓ Review complete';hint.textContent='';return;}
+  const stepsOk=allSectionsChecked();const qOk=questionAnsweredCorrectly();const missing=[];if(!stepsOk)missing.push('all sections checked');if(!qOk)missing.push('question answered correctly');
+  if(stepsOk&&qOk){bar.className='rev-complete-bar ready';cb.disabled=false;label.textContent='Mark review as complete';hint.textContent='';}
+  else{bar.className='rev-complete-bar disabled';cb.disabled=true;label.textContent='Complete all sections and answer the question correctly to unlock';hint.textContent=missing.length?'Still needed: '+missing.join(' · '):'';}
+}
+function renderProgress(total){let done=0;document.querySelectorAll('.rev-checkbox').forEach(c=>{if(c.checked)done++;});const pct=Math.round((done/total)*100);const p=document.getElementById('sidebar-pct');const b=document.getElementById('sidebar-bar');if(p)p.textContent=pct+'%';if(b)b.style.width=pct+'%';}
+window.toggleSection=(id)=>{const body=document.getElementById('body-'+id);const toggle=document.getElementById('toggle-'+id);const isOpen=body.classList.contains('open');document.querySelectorAll('.section-body').forEach(b=>b.classList.remove('open'));document.querySelectorAll('.section-toggle').forEach(t=>t.classList.remove('open'));if(!isOpen){body.classList.add('open');toggle.classList.add('open');}};
+window.copyCode=(btn)=>{const text=btn.parentElement.innerText.replace('Copy','').trim();navigator.clipboard.writeText(text).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);});};
+function renderAll(){
+  const sec=document.getElementById('sections-container');if(!sec)return;sec.innerHTML='';
+  const s0=revLoad();
+  SECTIONS.forEach(s=>{
+    const reviewed=s0['cb_'+s.id]||false;
+    const sd=document.createElement('div');sd.className='section-block';
+    const badgeCls=BADGE_CLASSES[s.badge]||'';const badgeTxt=BADGES[s.badge]||s.badge||'';
+    sd.innerHTML='<div class="section-header" onclick="toggleSection('+s.id+')">'+'<span class="section-num">'+s.id+'.</span>'+'<span class="section-title">'+s.title+'</span>'+(badgeTxt?'<span style="font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;background:#e8f1fb;color:#1a6eb5;font-family:Source Code Pro,monospace;">'+badgeTxt+'</span>':'')+(reviewed?'<span style="font-size:12px;margin-left:4px;">✅</span>':'')+'<span class="section-toggle" id="toggle-'+s.id+'">▼</span>'+'</div>'+'<div class="section-body" id="body-'+s.id+'">'+s.content+'<div class="reviewer-bar '+(reviewed?'checked':'')+'" id="rev-bar-'+s.id+'"><input type="checkbox" class="rev-checkbox" id="rev-cb-'+s.id+'" data-step="'+s.id+'" '+(reviewed?'checked':'')+'><label for="rev-cb-'+s.id+'">'+(reviewed?'✓ Section reviewed':'Mark section as reviewed')+'</label></div></div>';
+    sec.appendChild(sd);
+  });
+  document.querySelectorAll('.rev-checkbox').forEach(cb=>{
+    cb.addEventListener('change',()=>{const st=revLoad();st['cb_'+cb.dataset.step]=cb.checked;revSave(st);const bar=cb.closest('.reviewer-bar');if(bar){bar.classList.toggle('checked',cb.checked);bar.querySelector('label').textContent=cb.checked?'✓ Section reviewed':'Mark section as reviewed';}renderProgress(SECTIONS.length);updateCompleteBar();});
+  });
+  renderProgress(SECTIONS.length);updateCompleteBar();
+}
+
+let revAnswer=null;let revSubmitted=false;
+(function restoreQ(){const s=revLoad();if(s.revAnswer!=null){revAnswer=s.revAnswer;revSubmitted=s.revSubmitted||false;if(revAnswer)applyRevAnswer(revAnswer,revSubmitted);}})();
+document.querySelectorAll('.reviewer-option').forEach(opt=>{opt.addEventListener('click',()=>{if(revSubmitted)return;revAnswer=opt.dataset.key;document.querySelectorAll('.reviewer-option').forEach(o=>o.classList.toggle('selected',o.dataset.key===revAnswer));const s=revLoad();s.revAnswer=revAnswer;revSave(s);});});
+const revBtn=document.getElementById('rev-reveal-btn');if(revBtn)revBtn.addEventListener('click',()=>{if(revAnswer===null){alert('Please select an answer first.');return;}const s0=revLoad();s0.attemptCount=(s0.attemptCount||0)+1;if(!s0.startedAt)s0.startedAt=new Date().toISOString();revSave(s0);revSubmitted=true;const s=revLoad();s.revSubmitted=true;revSave(s);applyRevAnswer(revAnswer,true);});
+function applyRevAnswer(ans,showResult){const correctKey='B';const isCorrect=(ans===correctKey);document.querySelectorAll('.reviewer-option').forEach(o=>{o.classList.remove('selected','correct','wrong');if(showResult){if(o.dataset.key===correctKey)o.classList.add('correct');else if(o.dataset.key===ans&&o.dataset.key!==correctKey)o.classList.add('wrong');}else{if(o.dataset.key===ans)o.classList.add('selected');}});if(showResult){const expEl=document.getElementById('rev-explanation');const lbl=document.getElementById('rev-exp-label');const txt=document.getElementById('rev-exp-text');const btn=document.getElementById('rev-reveal-btn');if(expEl)expEl.classList.add('visible');if(lbl){lbl.textContent=isCorrect?'✓ Correct':'✗ Incorrect';lbl.className='reviewer-exp-label '+(isCorrect?'correct':'wrong');}if(txt)txt.textContent=window.REV_EXPLANATION||'';if(btn)btn.style.display='none';if(isCorrect){const s=revLoad();s.questionCorrect=true;revSave(s);}updateCompleteBar();}}
+const commentEl=document.getElementById('rev-comment');if(commentEl){const s=revLoad();if(s.comment)commentEl.value=s.comment;commentEl.addEventListener('input',()=>{const s=revLoad();s.comment=commentEl.value;revSave(s);});}
+const completeCb=document.getElementById('rev-complete-cb');if(completeCb)completeCb.addEventListener('change',()=>{if(!completeCb.checked)return;const s=revLoad();s.reviewComplete=true;s.completedAt=new Date().toISOString();revSave(s);updateCompleteBar();});
+renderAll();
+</script>
+<script>
+(function(){var scripts=['https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js'];function loadNext(i){if(i>=scripts.length){window._sfFirebaseReady=true;initRevFirebase();return;}var s=document.createElement('script');s.src=scripts[i];s.onload=function(){loadNext(i+1);};s.onerror=function(){window._sfFirebaseReady=false;};document.head.appendChild(s);}loadNext(0);})();
+</script>
+<script>
+function initRevFirebase(){
+  const SF_CONFIG={apiKey:"AIzaSyA-8fatW5D7uR69rcuGFPH54IFqrz0PhU0",authDomain:"sfcertification-grafana.firebaseapp.com",projectId:"sfcertification-grafana",storageBucket:"sfcertification-grafana.firebasestorage.app",messagingSenderId:"227322696511",appId:"1:227322696511:web:12e7ced7dd3d45fa06798a"};
+  if(!firebase.apps.length)firebase.initializeApp(SF_CONFIG);
+  window.sfAuth=firebase.auth();window.sfDb=firebase.firestore();
+  const REV_KEY_FB='reviewer_sf-ds-mlops-certification_module-3';
+  const COURSE_ID='D1BxWqC04OHSBSTMxRkK';
+  function sfDocRef(){if(!window.sfReviewerUid)return null;return window.sfDb.collection('reviewerSessions').doc(window.sfReviewerUid).collection('sf-ds-mlops-certification').doc('module-3');}
+  function sfInitSession(){const local=revLoad();if(!local.startedAt){local.startedAt=new Date().toISOString();localStorage.setItem(REV_KEY,JSON.stringify(local));}if(!window._sfFirebaseReady||!window.sfReviewerUid)return;sfDocRef().set({email:window.sfReviewerEmail,moduleId:'module-3',courseId:COURSE_ID,startedAt:local.startedAt,lastUpdated:firebase.firestore.FieldValue.serverTimestamp(),reviewComplete:local.reviewComplete||false,attemptCount:local.attemptCount||0},{merge:true}).catch(e=>console.warn('SF init:',e.message));}
+  window.sfInitSession=sfInitSession;
+  window.sfWrite=function(extra){if(!window._sfFirebaseReady||!window.sfReviewerUid)return;const ref=sfDocRef();if(!ref)return;const local=revLoad();const payload=Object.assign({},local,extra,{email:window.sfReviewerEmail,moduleId:'module-3',courseId:COURSE_ID,lastUpdated:firebase.firestore.FieldValue.serverTimestamp()});ref.set(payload,{merge:true}).catch(e=>console.warn('SF write:',e.message));};
+  window.sfFetchAndMerge=async function(){const ref=sfDocRef();if(!ref)return;try{const snap=await ref.get();if(!snap.exists)return;const remote=snap.data();const local=revLoad();const merged=Object.assign({},local,remote);delete merged.email;delete merged.lastUpdated;localStorage.setItem(REV_KEY,JSON.stringify(merged));if(typeof renderAll==='function'){renderAll();}if(typeof updateCompleteBar==='function')updateCompleteBar();}catch(e){console.warn('SF fetch:',e.message);}};
+  function sfHideOverlayFB(user){window.sfReviewerEmail=user.email;window.sfReviewerUid=user.uid;const ov=document.getElementById('sfSigninOverlay');if(ov)ov.classList.add('hidden');const bar=document.getElementById('sfSignedInBar');const lbl=document.getElementById('sfSignedInEmail');if(bar)bar.classList.remove('hidden');if(lbl)lbl.textContent='Signed in as '+user.email;sfInitSession();window.sfFetchAndMerge();}
+  window.sfAuth.onAuthStateChanged(user=>{if(user){sfHideOverlayFB(user);}else{document.getElementById('sfSigninOverlay').classList.remove('hidden');}});
+}
+</script>
+</body>
+</html>
