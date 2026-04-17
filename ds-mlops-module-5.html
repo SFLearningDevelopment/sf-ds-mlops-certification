@@ -3,14 +3,18 @@
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
-<title>Module 4: Feature Stores & MLOps Architecture — SF DS & MLOps Certification</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<title>Module 5: System Articulation & Pipeline Ownership — SF DS & MLOps Certification</title>
 <style>
-:root{--bg:#080c14;--surface:#0f1520;--surface2:#141c2e;--border:#1e2a40;--accent:#2563eb;--accent2:#3b82f6;--text:#e2e8f0;--text2:#7d8fa8;--green:#10b981;--yellow:#f59e0b;--red:#ef4444;--purple:#8b5cf6;--radius:14px;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;}
+:root{
+  --bg:#f8fafc;--surface:#ffffff;--surface2:#f1f5f9;--border:#e2e8f0;
+  --accent:#2563eb;--accent2:#3b82f6;--text:#0f172a;--text2:#64748b;
+  --green:#16a34a;--yellow:#f59e0b;--red:#dc2626;--purple:#7c3aed;
+  --radius:14px;--font:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;--mono:'Courier New',monospace;
+}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
 a{color:var(--accent);}
-.auth-overlay{position:fixed;inset:0;background:rgba(8,12,20,0.97);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.auth-overlay{position:fixed;inset:0;background:rgba(248,250,252,0.97);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
 .auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;max-width:400px;width:90%;}
 .auth-card h2{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
 .auth-card p{color:var(--text2);font-size:0.875rem;margin-bottom:28px;line-height:1.6;}
@@ -31,7 +35,7 @@ a{color:var(--accent);}
 .user-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--text2);}
 .signout-btn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;font-family:var(--font);}
 .module-hero{padding:52px 28px 40px;max-width:900px;margin:0 auto;}
-.hero-module-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:20px;padding:5px 14px;font-size:0.75rem;font-weight:700;color:var(--purple);margin-bottom:20px;text-transform:uppercase;letter-spacing:0.06em;}
+.hero-module-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:20px;padding:5px 14px;font-size:0.75rem;font-weight:700;color:var(--green);margin-bottom:20px;text-transform:uppercase;letter-spacing:0.06em;}
 .module-hero h1{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-0.03em;line-height:1.2;margin-bottom:14px;}
 .module-hero p{color:var(--text2);font-size:0.95rem;line-height:1.7;max-width:680px;}
 .module-progress-bar{height:4px;background:var(--surface2);border-radius:2px;margin-top:28px;overflow:hidden;}
@@ -54,34 +58,23 @@ a{color:var(--accent);}
 .section-body h4{font-size:0.9rem;font-weight:700;margin:16px 0 8px;color:var(--accent2);}
 .section-body p{color:var(--text2);font-size:0.9rem;line-height:1.75;margin-bottom:12px;}
 .section-body ul,.section-body ol{padding-left:22px;margin-bottom:12px;}
-.section-body li{color:var(--text2);font-size:0.88rem;line-height:1.7;margin-bottom:4px;}
+.section-body li{color:var(--text2);font-size:0.88rem;line-height:1.7;margin-bottom:6px;}
 .section-body li strong{color:var(--text);}
 .section-body code{font-family:var(--mono);background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:5px;font-size:0.82rem;color:var(--accent2);}
 .callout{border-radius:10px;padding:16px 18px;margin:16px 0;border-left:3px solid;}
 .callout-blue{background:rgba(37,99,235,0.08);border-color:var(--accent);}
 .callout-green{background:rgba(16,185,129,0.08);border-color:var(--green);}
 .callout-yellow{background:rgba(245,158,11,0.08);border-color:var(--yellow);}
-.callout-purple{background:rgba(139,92,246,0.08);border-color:var(--purple);}
 .callout h4{font-size:0.85rem;font-weight:700;margin-bottom:6px;}
-.callout p{font-size:0.85rem;margin-bottom:0;}
+.callout p,.callout li{font-size:0.85rem;margin-bottom:4px;color:var(--text2);}
+.callout ul{padding-left:16px;margin-top:6px;}
 .callout-blue h4{color:var(--accent2);}
 .callout-green h4{color:var(--green);}
 .callout-yellow h4{color:var(--yellow);}
-.callout-purple h4{color:var(--purple);}
-.diagram{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
-.diagram-title{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:16px;}
-.diagram-row{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0;}
-.diagram-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:0.82rem;font-weight:600;}
-.diagram-box.blue{border-color:rgba(37,99,235,0.4);color:var(--accent2);}
-.diagram-box.green{border-color:rgba(16,185,129,0.4);color:var(--green);}
-.diagram-box.yellow{border-color:rgba(245,158,11,0.4);color:var(--yellow);}
-.diagram-box.purple{border-color:rgba(139,92,246,0.4);color:var(--purple);}
-.diagram-arrow{color:var(--text2);font-size:1.2rem;}
-.table-wrap{overflow-x:auto;margin:16px 0;}
-table{width:100%;border-collapse:collapse;font-size:0.85rem;}
-th{background:var(--surface2);color:var(--text);font-weight:700;padding:10px 14px;text-align:left;border:1px solid var(--border);}
-td{padding:9px 14px;border:1px solid var(--border);color:var(--text2);}
-td strong{color:var(--text);}
+.scenario-block{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin:16px 0;}
+.scenario-q{font-size:0.85rem;font-weight:700;color:var(--yellow);margin-bottom:10px;}
+.scenario-a{font-size:0.85rem;color:var(--text2);line-height:1.7;}
+.scenario-a strong{color:var(--text);}
 .test-questions{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:16px 18px;margin-top:18px;}
 .test-questions h4{font-size:0.82rem;font-weight:700;color:var(--accent2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;}
 .test-questions ul{padding-left:18px;}
@@ -100,8 +93,8 @@ td strong{color:var(--text);}
 <body>
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-card">
-    <div style="font-size:2rem;margin-bottom:16px">🏗️</div>
-    <h2>SF DS & MLOps Certification</h2>
+    <div style="font-size:2rem;margin-bottom:16px">🗣️</div>
+    <h2>SF Certified Data Science &amp; MLOps Practitioner</h2>
     <p>Sign in with your SourceFuse account to continue.</p>
     <button class="google-btn" onclick="signInWithGoogle()">
       <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
@@ -112,7 +105,7 @@ td strong{color:var(--text);}
 <div class="header" id="mainHeader" style="display:none">
   <div class="header-left">
     <a class="back-link" href="index.html">← Course Hub</a>
-    <span class="module-label">Module 4 of 5</span>
+    <span class="module-label">Module 5 of 5</span>
   </div>
   <div class="header-right">
     <span class="user-pill" id="userEmail">—</span>
@@ -121,15 +114,15 @@ td strong{color:var(--text);}
 </div>
 <div id="mainContent" style="display:none">
   <div class="module-hero">
-    <div class="hero-module-badge">🏗️ Module 4 · Advanced</div>
-    <h1>Feature Stores & MLOps Architecture</h1>
-    <p>Centralised feature management and the architectural patterns that make ML systems scalable, reproducible, and maintainable. This module covers the infrastructure that separates ad-hoc experimentation from production-grade ML.</p>
+    <div class="hero-module-badge">🗣️ Module 5 · Advanced</div>
+    <h1>System Articulation & Pipeline Ownership</h1>
+    <p>Technical knowledge only creates value when you can communicate it. This final module is about the professional skill of owning a system — describing it precisely, defending design decisions, and speaking fluently to technical and non-technical audiences alike.</p>
     <div class="module-progress-bar"><div class="module-progress-fill" id="modProgressFill"></div></div>
   </div>
   <div class="content-wrap" id="sectionsContainer"></div>
   <div class="bottom-nav">
-    <a href="ds-mlops-module-3.html" class="nav-btn">← Module 3</a>
-    <a href="ds-mlops-module-5.html" class="nav-btn primary disabled" id="nextBtn">Module 5 →</a>
+    <a href="ds-mlops-module-4.html" class="nav-btn">← Module 4</a>
+    <a href="index.html" class="nav-btn primary disabled" id="nextBtn">→ Take the Exam</a>
   </div>
 </div>
 
@@ -139,169 +132,162 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail, is
 import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyC-I-IOCq2fCwa471fsD5xOn6SYQSBDp7Q",authDomain:"sfcertification-grafana.firebaseapp.com",projectId:"sfcertification-grafana",storageBucket:"sfcertification-grafana.firebasestorage.app",messagingSenderId:"227322696511",appId:"1:227322696511:web:12e7ced7dd3d45fa06798a"};
-const COURSE_ID="dsMlops2026SFCert",MODULE_ID="module-4";
+const COURSE_ID="dsMlops2026SFCert",MODULE_ID="module-5";
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 let currentUser=null,sectionStates={};
 
 const SECTIONS=[
-  {id:1,title:"The Feature Reuse Problem",content:`
-    <h3>🏗️ Why Feature Stores Exist</h3>
-    <p>Imagine three data scientists at SourceFuse building three different models — churn prediction, lead scoring, and product recommendations. All three models need user-level features: login frequency, account age, support ticket count, purchase history.</p>
-    <p>Without a feature store, each data scientist writes their own version of these features independently. This creates three problems:</p>
-    <ul>
-      <li><strong>Duplication:</strong> The same feature logic is written three times, with subtle differences in implementation — different window sizes, different null handling, different data sources.</li>
-      <li><strong>Training/serving skew:</strong> Features computed offline for training may be computed differently when served online at prediction time, causing silent performance degradation.</li>
-      <li><strong>No single source of truth:</strong> When the underlying data changes, three codebases need to be updated. Inevitably, they drift out of sync.</li>
-    </ul>
-    <div class="callout callout-purple">
-      <h4>🏗️ The Feature Store Solution</h4>
-      <p>A feature store is a <strong>centralised platform for creating, storing, sharing, and serving ML features</strong>. Define a feature once; use it in any model, consistently, with guaranteed training/serving consistency.</p>
-    </div>
-    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the three problems feature stores solve?</li><li>What is training/serving skew?</li></ul></div>
-  `},
-  {id:2,title:"Feature Store Architecture: Online vs Offline",content:`
-    <h3>📦 Two Stores, One System</h3>
-    <p>A feature store has two fundamental storage layers, each optimised for a different use case.</p>
-    <div class="diagram">
-      <div class="diagram-title">Feature Store Dual Architecture</div>
-      <div class="diagram-row">
-        <div class="diagram-box blue">Raw Data Sources<br/><small>DB, streams, warehouses</small></div>
-      </div>
-      <div class="diagram-row"><div class="diagram-arrow">↓</div></div>
-      <div class="diagram-row">
-        <div class="diagram-box yellow">Feature Pipelines<br/><small>compute + transform</small></div>
-      </div>
-      <div class="diagram-row">
-        <div class="diagram-arrow" style="transform:rotate(-30deg)">↙</div>
-        <div style="width:80px"></div>
-        <div class="diagram-arrow" style="transform:rotate(30deg)">↘</div>
-      </div>
-      <div class="diagram-row">
-        <div class="diagram-box purple">Offline Store<br/><small>historical features<br/>S3 / BigQuery / Parquet</small></div>
-        <div style="width:40px"></div>
-        <div class="diagram-box green">Online Store<br/><small>latest feature values<br/>Redis / DynamoDB</small></div>
-      </div>
-      <div class="diagram-row">
-        <div class="diagram-box purple" style="font-size:0.75rem">↓ Training Pipeline<br/>(batch reads)</div>
-        <div style="width:40px"></div>
-        <div class="diagram-box green" style="font-size:0.75rem">↓ Serving Layer<br/>(low-latency reads)</div>
-      </div>
-    </div>
-    <h4>Offline Store</h4>
-    <p>Stores <strong>historical feature values</strong> for training. Optimised for high-throughput batch reads. Typically built on cloud storage (S3, GCS), a data warehouse (BigQuery, Snowflake), or a columnar format (Parquet). Training jobs read from the offline store to build training datasets with point-in-time correct feature values.</p>
-    <h4>Online Store</h4>
-    <p>Stores only the <strong>most recent feature values</strong> for real-time serving. Optimised for low-latency lookups (sub-10ms). Typically built on a key-value store like Redis or DynamoDB. When a prediction request arrives, the serving layer fetches the user's latest features from the online store.</p>
-    <div class="callout callout-blue">
-      <h4>💡 Point-in-Time Correctness</h4>
-      <p>When creating a training dataset, features must be retrieved using only information available at the time of the label event — not future data. Feature stores enforce this automatically, preventing temporal leakage.</p>
-    </div>
-    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the difference between the offline and online store in a feature store?</li><li>What database types are used for each store and why?</li><li>What is point-in-time correctness?</li></ul></div>
-  `},
-  {id:3,title:"Feature Store Tooling",content:`
-    <h3>🛠️ The Feature Store Landscape</h3>
-    <p>Several open-source and commercial feature stores are widely used in industry. Understanding what each offers helps you evaluate architectural choices.</p>
-    <div class="table-wrap"><table>
-      <tr><th>Tool</th><th>Type</th><th>Key Strengths</th><th>Best For</th></tr>
-      <tr><td><strong>Feast</strong></td><td>Open-source</td><td>Lightweight, cloud-agnostic, strong community</td><td>Teams wanting control and flexibility</td></tr>
-      <tr><td><strong>Tecton</strong></td><td>Managed SaaS</td><td>Enterprise features, streaming pipelines, managed infra</td><td>Large orgs wanting turnkey solution</td></tr>
-      <tr><td><strong>Databricks Feature Store</strong></td><td>Managed (on Databricks)</td><td>Tight integration with Delta Lake and MLflow</td><td>Teams already on Databricks</td></tr>
-      <tr><td><strong>Vertex AI Feature Store</strong></td><td>Managed (GCP)</td><td>Auto-scaling, BigQuery integration</td><td>Google Cloud users</td></tr>
-      <tr><td><strong>SageMaker Feature Store</strong></td><td>Managed (AWS)</td><td>Native AWS integration, both online and offline</td><td>AWS-first organisations</td></tr>
-    </table></div>
-    <div class="callout callout-blue">
-      <h4>💡 Feast in Practice</h4>
-      <p>Feast (Feature Store) is the most common open-source choice. Key concepts: <strong>Entity</strong> (the primary key — user_id, product_id), <strong>Feature View</strong> (a group of features computed from one data source), <strong>Feature Service</strong> (a named set of features used by a specific model).</p>
-    </div>
-    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is Feast and what are its three core concepts?</li><li>Name two managed feature store platforms and their cloud providers.</li></ul></div>
-  `},
-  {id:4,title:"MLOps Architecture Patterns",content:`
-    <h3>🏛️ How Production ML Systems Are Structured</h3>
-    <p>MLOps defines standard architectural patterns for connecting data, training, and serving. Understanding these patterns lets you describe — and evaluate — any ML system.</p>
-    <h4>The Three MLOps Maturity Levels</h4>
-    <ul>
-      <li><strong>Level 0 — Manual Process:</strong> Data scientists train models in notebooks and hand off artifacts manually to engineers for deployment. No automation. High risk of training/serving skew. Retraining is ad-hoc and infrequent.</li>
-      <li><strong>Level 1 — ML Pipeline Automation:</strong> Training is automated as a pipeline. New data triggers retraining automatically. Feature engineering is part of the pipeline. Continuous training but manual deployment approval.</li>
-      <li><strong>Level 2 — CI/CD for ML:</strong> Full automation including testing, validation, and deployment. Model updates are treated like software releases — with unit tests, integration tests, and canary deployments. Rapid, safe iteration.</li>
-    </ul>
-    <div class="callout callout-green">
-      <h4>✅ Most Production Systems Are Level 1</h4>
-      <p>Level 2 is aspirational for most teams. Being able to articulate where your system sits on this spectrum — and what it would take to move up — demonstrates real MLOps maturity in an interview.</p>
-    </div>
-    <h4>CI/CD for Machine Learning</h4>
-    <p>Continuous Integration for ML means: every code or data change triggers automated training, evaluation, and validation. Continuous Deployment means: models that pass all checks are automatically deployed to production. This requires:</p>
-    <ul>
-      <li>Automated training pipelines (Kubeflow, SageMaker Pipelines, Vertex AI Pipelines, Airflow)</li>
-      <li>Model validation gates (must exceed baseline performance, pass data quality checks)</li>
-      <li>Automated rollback if production performance degrades post-deployment</li>
-    </ul>
-    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the three MLOps maturity levels?</li><li>What does CI/CD mean in the context of ML?</li><li>What is an automated model validation gate?</li></ul></div>
-  `},
-  {id:5,title:"Experiment Tracking & Model Registry",content:`
-    <h3>🧪 Managing the Model Development Lifecycle</h3>
-    <p>Training a model is an experiment. You try different hyperparameters, different feature sets, different algorithms. Without tracking, you lose the ability to reproduce results or explain why the current production model outperforms alternatives.</p>
-    <h4>Experiment Tracking</h4>
-    <p>Experiment tracking systems log every training run with:</p>
-    <ul>
-      <li><strong>Parameters:</strong> Learning rate, max depth, regularisation strength, feature list</li>
-      <li><strong>Metrics:</strong> Accuracy, F1, AUC-ROC, MAE — on train, validation, and test splits</li>
-      <li><strong>Artifacts:</strong> The model file itself, feature importance plots, confusion matrices</li>
-      <li><strong>Environment:</strong> Library versions, hardware, data version used</li>
-    </ul>
-    <p>The dominant tool is <strong>MLflow</strong> (open-source). Alternatives: Weights & Biases, Neptune, Comet.</p>
-    <h4>Model Registry</h4>
-    <p>A model registry is a <strong>versioned catalog of trained models</strong>. It provides a lifecycle workflow:</p>
-    <ul>
-      <li><strong>Staging:</strong> Model is tested in a pre-production environment</li>
-      <li><strong>Production:</strong> Model is actively serving predictions</li>
-      <li><strong>Archived:</strong> Model is retired but preserved for auditing</li>
-    </ul>
-    <div class="callout callout-blue">
-      <h4>💡 MLflow in Practice</h4>
-      <p>MLflow has four components: Tracking (experiment logs), Projects (reproducible code), Models (model packaging format), and Registry (model lifecycle management). Most teams use Tracking and Registry as their starting point.</p>
-    </div>
-    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What four things does experiment tracking log for each run?</li><li>What are the three stages in a model registry lifecycle?</li><li>Name two experiment tracking tools.</li></ul></div>
-  `},
-  {id:6,title:"Model Serving Patterns",content:`
-    <h3>🚀 Getting Predictions to Users</h3>
-    <p>A trained model needs to be served — exposed in a way that applications can request predictions. The serving architecture you choose has significant implications for latency, throughput, and cost.</p>
-    <h4>Serving Patterns</h4>
-    <ul>
-      <li><strong>REST API (Online Serving):</strong> Model wrapped in an HTTP endpoint. Synchronous — the caller waits for a prediction. Ideal for real-time use cases: fraud detection, recommendations, pricing. Typical tools: FastAPI, Flask, BentoML, TorchServe.</li>
-      <li><strong>Batch Prediction:</strong> Run predictions on a large dataset offline, store results. Asynchronous — predictions are pre-computed and looked up. Ideal when: predictions are needed for all users before they request them (e.g. weekly churn scores emailed to account managers).</li>
-      <li><strong>Streaming Prediction:</strong> Model consumes from a Kafka/Kinesis stream and produces predictions to an output stream. Ideal for high-throughput event-driven systems.</li>
-    </ul>
+  {id:1,title:"What 'Owning a System' Actually Means",content:`
+    <h3>🗣️ Ownership Is a Communication Standard</h3>
+    <p>In engineering, "owning" a system means more than having written the code. It means you can answer four questions for any system you work on:</p>
+    <ol>
+      <li><strong>What does this system do?</strong> — The purpose, the prediction task, the business value it creates.</li>
+      <li><strong>How does the data flow?</strong> — From source, through ingestion, through processing, to the model, to the output.</li>
+      <li><strong>Why is it designed this way?</strong> — The trade-offs behind each architectural decision.</li>
+      <li><strong>What breaks and how do you know?</strong> — Failure modes, monitoring signals, and the response playbook.</li>
+    </ol>
+    <p>If you cannot answer all four questions about a system you work on, you are a contributor to it — not an owner of it.</p>
     <div class="callout callout-yellow">
-      <h4>⚠️ Choosing the Right Pattern</h4>
-      <p>Match serving to the latency requirement. If a user needs a prediction within 100ms (e.g. real-time recommendations), REST API. If predictions can be pre-computed overnight (e.g. "customers to call tomorrow"), batch. If you're processing millions of events per second (e.g. clickstream fraud), streaming.</p>
+      <h4>⚠️ The Interview Failure Mode</h4>
+      <p>The most common way engineers fail technical interviews about their own systems is not lack of knowledge — it is lack of structure. They describe the system in fragments, skip the data flow, and cannot explain why decisions were made. This module gives you the structure to prevent that.</p>
     </div>
-    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the difference between online and batch prediction serving?</li><li>When would you choose batch prediction over REST API?</li><li>Name two tools used for online model serving.</li></ul></div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the four questions that define system ownership?</li><li>What is the difference between a contributor and an owner of a system?</li></ul></div>
   `},
-  {id:7,title:"Module Summary: The Complete MLOps Stack",content:`
-    <h3>📐 Connecting the Architecture</h3>
-    <p>A complete production ML architecture connects all four modules you have studied so far:</p>
-    <div class="diagram">
-      <div class="diagram-title">The Full MLOps Stack</div>
-      <div class="diagram-row">
-        <div class="diagram-box blue">Raw Data<br/><small>M1: Ingestion patterns</small></div>
-        <div class="diagram-arrow">→</div>
-        <div class="diagram-box yellow">Feature Engineering<br/><small>M2: Transform → signals</small></div>
-        <div class="diagram-arrow">→</div>
-        <div class="diagram-box purple">Feature Store<br/><small>M4: Offline + Online</small></div>
+  {id:2,title:"The 5-Part Architecture Description Framework",content:`
+    <h3>📐 A Repeatable Structure</h3>
+    <p>Use this framework every time you need to describe a data or ML system — in interviews, in documentation, in architecture reviews, or in customer meetings.</p>
+    <ol>
+      <li>
+        <strong>Purpose (What)</strong><br/>
+        One sentence. What does the system predict or produce? What business outcome does it drive?<br/>
+        <em>Example: "This system predicts which customers are likely to cancel their subscription within the next 30 days, with an output of a probability score per customer."</em>
+      </li>
+      <li>
+        <strong>Data Sources (Where does data come from)</strong><br/>
+        Name the source systems and the ingestion method.<br/>
+        <em>Example: "User activity events are ingested from Kafka in real time. Account metadata is pulled nightly from our PostgreSQL CRM database via Airflow."</em>
+      </li>
+      <li>
+        <strong>Processing & Features (How data is transformed)</strong><br/>
+        Describe the transformations and the features produced.<br/>
+        <em>Example: "Events are aggregated into per-user daily summaries. Key features include login frequency (7-day rolling), days since last purchase, support ticket count, and plan tier encoded as ordinal."</em>
+      </li>
+      <li>
+        <strong>Model & Serving (How predictions are made)</strong><br/>
+        Name the algorithm, training cadence, and serving method.<br/>
+        <em>Example: "We use a gradient boosting model (XGBoost) retrained weekly on the last 90 days of data. Predictions are served via a REST API that our CRM queries on page load."</em>
+      </li>
+      <li>
+        <strong>Monitoring & Health (How you know it's working)</strong><br/>
+        Describe what you monitor and what the alert threshold is.<br/>
+        <em>Example: "We monitor PSI on all 12 input features weekly. If PSI exceeds 0.2 on any key feature, we trigger an investigation. Model performance is benchmarked against a monthly holdout set."</em>
+      </li>
+    </ol>
+    <div class="callout callout-green">
+      <h4>✅ Practise This Out Loud</h4>
+      <p>Write a version of this for the system you currently work on. Speak it aloud in under 3 minutes. If you cannot, that gap is your preparation task before any technical interview.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the 5 parts of the architecture description framework?</li><li>What should a "Purpose" statement include?</li></ul></div>
+  `},
+  {id:3,title:"Describing Data Ingestion Coherently",content:`
+    <h3>🚰 Making the Data Flow Clear</h3>
+    <p>The part of system description that most engineers stumble on is the data ingestion section. They say "the data comes from our database" and stop there. A complete ingestion description has four components:</p>
+    <ol>
+      <li><strong>Source:</strong> What system holds the raw data? (PostgreSQL, S3, Kafka, Salesforce, event logs)</li>
+      <li><strong>Pattern:</strong> How is it collected? (Batch/streaming/CDC — and at what frequency for batch)</li>
+      <li><strong>Tool:</strong> What orchestrates or transmits the data? (Airflow, Kafka, Fivetran, Debezium)</li>
+      <li><strong>Destination:</strong> Where does ingested data land? (Data warehouse, data lake, feature store)</li>
+    </ol>
+    <div class="scenario-block">
+      <div class="scenario-q">❌ Weak Answer: "The data comes from our database."</div>
+      <div class="scenario-a">This tells the listener nothing about the ingestion pattern, tool, or timing. It does not demonstrate ownership.</div>
+    </div>
+    <div class="scenario-block">
+      <div class="scenario-q">✅ Strong Answer:</div>
+      <div class="scenario-a">"We have two ingestion flows. User behavioural events are published to a Kafka topic in real time by our web application and consumed by a Spark Structured Streaming job that writes to our BigQuery data warehouse. Account-level metadata is pulled nightly from our PostgreSQL database using an Airflow DAG and loaded into the same warehouse. Both flows land in dedicated tables that serve as the input to our feature engineering pipeline."</div>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the four components of a complete ingestion description?</li><li>What makes a "weak" ingestion description weak?</li></ul></div>
+  `},
+  {id:4,title:"Explaining Design Decisions",content:`
+    <h3>🔍 Why, Not Just What</h3>
+    <p>The deepest signal of system ownership is the ability to explain <em>why</em> the system is designed the way it is. Anyone can describe what a system does by reading its documentation. Ownership requires understanding the trade-offs behind each decision.</p>
+    <h4>The Trade-off Framework</h4>
+    <p>For any architectural decision, you should be able to articulate:</p>
+    <ul>
+      <li><strong>What we chose</strong> — the decision made</li>
+      <li><strong>What we considered</strong> — the alternatives evaluated</li>
+      <li><strong>Why we chose it</strong> — the deciding constraint (latency, cost, team expertise, scale)</li>
+      <li><strong>What we gave up</strong> — the trade-off accepted</li>
+    </ul>
+    <div class="scenario-block">
+      <div class="scenario-q">Q: "Why did you use batch prediction instead of real-time serving?"</div>
+      <div class="scenario-a">
+        <strong>Strong Answer:</strong> "We evaluated both. Real-time serving would require us to maintain an online feature store with sub-10ms lookup, which we didn't have the infrastructure for. Since our sales team checks churn scores once a day in the morning, a daily batch job that pre-computes and stores scores in our CRM meets the latency requirement at a fraction of the infrastructure cost. The trade-off is that our scores are at most 24 hours stale — which is acceptable for this use case."
       </div>
-      <div class="diagram-row"><div class="diagram-arrow" style="transform:rotate(90deg)">↓</div></div>
-      <div class="diagram-row">
-        <div class="diagram-box green">Monitoring & Drift<br/><small>M3: PSI, retrain triggers</small></div>
-        <div class="diagram-arrow">←</div>
-        <div class="diagram-box green">Model Serving<br/><small>M4: REST/batch/stream</small></div>
-        <div class="diagram-arrow">←</div>
-        <div class="diagram-box green">Model Registry<br/><small>M4: versioned + staged</small></div>
-      </div>
+    </div>
+    <div class="callout callout-blue">
+      <h4>💡 Constraint-Driven Design</h4>
+      <p>Real engineering decisions are always constrained by: <strong>latency requirements, budget, team size, existing infrastructure, data availability, and risk tolerance</strong>. Explaining the constraint that drove a decision demonstrates that you understand the full picture — not just the technology.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the four parts of the trade-off framework?</li><li>Name six types of constraints that drive architectural decisions.</li></ul></div>
+  `},
+  {id:5,title:"Communicating to Different Audiences",content:`
+    <h3>📡 Adapting Your Message</h3>
+    <p>System ownership also means being able to translate the same technical system into appropriate language for different audiences. This is not about dumbing down — it is about choosing the right level of abstraction.</p>
+    <div class="callout callout-blue">
+      <h4>Technical Audience (Data Scientist / ML Engineer)</h4>
+      <ul>
+        <li>Include algorithm names, hyperparameters, data split strategy</li>
+        <li>Discuss feature engineering choices and why</li>
+        <li>Reference specific tools and infrastructure</li>
+        <li>Share metrics with confidence intervals if available</li>
+      </ul>
     </div>
     <div class="callout callout-green">
-      <h4>✅ Module 4 Summary</h4>
-      <p>You now understand: the feature reuse problem and how feature stores solve it, the offline/online store architecture, major feature store tools (Feast, Tecton, Databricks), the three MLOps maturity levels, CI/CD for ML, experiment tracking with MLflow, model registry lifecycle stages, and the three serving patterns. Module 5 will focus on the communication layer — how to own and articulate this stack.</p>
+      <h4>Product / Business Audience</h4>
+      <ul>
+        <li>Lead with the business outcome: "This system identifies customers at risk of leaving 30 days in advance"</li>
+        <li>Express performance in business terms: "We catch 8 out of 10 customers who would have churned"</li>
+        <li>Skip algorithm details; focus on input signals and output actions</li>
+        <li>Frame limitations as business constraints, not technical ones</li>
+      </ul>
     </div>
-    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>Where does a feature store sit in the ML pipeline?</li><li>What is the difference between MLOps Level 1 and Level 2?</li></ul></div>
+    <div class="callout callout-yellow">
+      <h4>Customer / External Audience</h4>
+      <ul>
+        <li>Lead with value delivered: "You receive early warning signals before customers disengage"</li>
+        <li>Avoid all jargon (no "PSI", no "XGBoost", no "Kafka")</li>
+        <li>Focus on reliability, fairness, and privacy commitments</li>
+        <li>Be prepared to answer "how does it know?" without revealing proprietary signals</li>
+      </ul>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>How does a technical audience description differ from a business audience description?</li><li>What should you lead with when describing a system to a business audience?</li></ul></div>
+  `},
+  {id:6,title:"Course Completion: Your Integrated Framework",content:`
+    <h3>🎓 Everything You Now Know</h3>
+    <p>You have completed all five modules. Here is the integrated framework you now possess:</p>
+    <div class="callout callout-blue">
+      <h4>Module 1 — Foundation</h4>
+      <p>What Data Science is, the 6-stage ML lifecycle, core vocabulary (dataset, label, feature, model), ingestion patterns (batch, streaming, CDC), data processing steps, and what MLOps solves.</p>
+    </div>
+    <div class="callout callout-yellow">
+      <h4>Module 2 — Feature Engineering</h4>
+      <p>Why features matter more than models, numerical transformations (scaling, log, binning), categorical encoding (one-hot, target, label), missing value strategies (imputation, indicator), feature selection (filter, wrapper, embedded), time-based features, and the FE workflow.</p>
+    </div>
+    <div class="callout callout-blue" style="border-color:var(--red);background:rgba(239,68,68,0.06)">
+      <h4 style="color:var(--red)">Module 3 — Model Drift</h4>
+      <p>Why models degrade, data vs concept vs label vs upstream drift, statistical detection (PSI, KS test, JS divergence), retraining strategies (schedule, metric-based, champion/challenger, windowed), performance metrics (accuracy, F1, AUC-ROC, RMSE), and the drift response playbook.</p>
+    </div>
+    <div class="callout callout-purple">
+      <h4>Module 4 — MLOps Architecture</h4>
+      <p>Feature store architecture (offline/online stores, Feast, Tecton), MLOps maturity levels 0–2, CI/CD for ML, experiment tracking (MLflow), model registry lifecycle, and serving patterns (REST, batch, streaming).</p>
+    </div>
+    <div class="callout callout-green">
+      <h4>Module 5 — System Articulation</h4>
+      <p>The four ownership questions, the 5-part architecture description framework, complete ingestion descriptions (4 components), trade-off framework for design decisions, and audience-adaptive communication.</p>
+    </div>
+    <p style="margin-top:18px;font-size:0.95rem;color:var(--text2);line-height:1.7;">You are now ready for the certification exam. 30 questions, 45 minutes, 70% to pass. The exam tests application of these concepts, not just recall — read each question carefully and reason from first principles.</p>
+    <div class="test-questions"><h4>🎯 Final Preparation Checklist</h4><ul><li>Can you describe the ML lifecycle in 6 steps from memory?</li><li>Can you define all four drift types and their causes?</li><li>Can you explain what a feature store's offline and online components do?</li><li>Can you deliver the 5-part architecture description for a system you know?</li><li>Can you articulate what PSI measures and its thresholds?</li></ul></div>
   `}
 ];
 
