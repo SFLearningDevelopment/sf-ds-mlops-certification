@@ -92,6 +92,36 @@
   .nav-btn.secondary{background:var(--bg2);color:var(--text-dim);border-color:var(--border);}
   .nav-btn:hover{background:var(--blue-mid);}
 </style>
+<style>
+.section-questions{margin-top:16px;border-top:2px solid #e2e8f0;padding-top:16px;}
+.section-question-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;margin-bottom:12px;}
+.section-question-item.answered-correct{border-color:#16a34a;background:#f0fdf4;}
+.section-question-item.answered-wrong{border-color:#dc2626;background:#fef2f2;}
+.sq-text{font-size:14px;font-weight:600;color:#0f172a;margin-bottom:10px;}
+.sq-options{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+.sq-option{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:13px;background:#fff;transition:all .15s;}
+.sq-option:hover{border-color:#2563eb;background:#eff6ff;}
+.sq-option.selected{border-color:#2563eb;background:#eff6ff;}
+.sq-option.correct{border-color:#16a34a;background:#f0fdf4;color:#16a34a;font-weight:600;}
+.sq-option.wrong{border-color:#dc2626;background:#fef2f2;color:#dc2626;}
+.sq-option-key{font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#94a3b8;min-width:18px;}
+.sq-feedback{font-size:12px;font-weight:700;padding:4px 0;}
+.sq-feedback.correct{color:#16a34a;}
+.sq-feedback.wrong{color:#dc2626;}
+.sq-check-btn{background:#2563eb;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;margin-top:6px;}
+.sq-check-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.section-complete-btn{display:flex;align-items:center;gap:8px;background:transparent;border:2px solid #e2e8f0;color:#94a3b8;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:not-allowed;margin-top:14px;transition:all .2s;}
+.section-complete-btn.unlocked{border-color:#16a34a;color:#16a34a;cursor:pointer;background:#f0fdf4;}
+.section-complete-btn.done{border-color:#16a34a;background:#16a34a;color:#fff;cursor:default;}
+.module-complete-wrap{background:#f8fafc;border:2px solid #e2e8f0;border-radius:12px;padding:20px;margin-top:28px;text-align:center;}
+.module-complete-btn{background:#16a34a;color:#fff;border:none;border-radius:10px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;opacity:0.4;pointer-events:none;transition:all .2s;}
+.module-complete-btn.unlocked{opacity:1;pointer-events:auto;}
+.module-complete-hint{font-size:13px;color:#64748b;margin-top:8px;}
+.reviewer-comment-wrap{margin-top:20px;}
+.reviewer-comment-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#64748b;margin-bottom:6px;}
+.reviewer-comment{width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;resize:vertical;min-height:80px;outline:none;}
+.reviewer-comment:focus{border-color:#2563eb;}
+</style>
 </head>
 <body>
 <div class="sf-signin-overlay" id="sfSigninOverlay">
@@ -108,40 +138,21 @@
 </div>
 <div class="sf-signed-in-bar hidden" id="sfSignedInBar"><span id="sfSignedInEmail">Signed in as …</span><button class="sf-signout-btn" id="sfSignoutLink">Sign out</button></div>
 <div class="reviewer-topbanner"><span>👁</span><strong>Reviewer Mode</strong> — Module 5: System Articulation & Pipeline Ownership</div>
-<nav class="topnav">
-  <a href="index.html">← Reviewer Hub</a>
-  <span class="sep">/</span>
-  <span>Module 5: System Articulation & Pipeline Ownership</span>
-</nav>
 <div class="main">
   <div class="module-hero">
     <div class="hero-eyebrow">Module 5 of 5 · Reviewer Mode</div>
     <h1>System Articulation & Pipeline Ownership</h1>
+    <p style="color:#64748b;font-size:14px;margin-top:8px;">Review each section carefully and answer all questions correctly to mark sections complete. Once all sections are complete, submit your module review.</p>
   </div>
   <div id="sections-container"></div>
-  
-  <div class="reviewer-panel">
-    <div class="reviewer-panel-label">🔍 Reviewer Question — Module</div>
-    <div class="reviewer-q-text">According to the 5-part architecture description framework, which element comes THIRD?</div>
-    <div class="reviewer-options" id="rev-options"><div class="reviewer-option" data-key="A"><span class="reviewer-option-key">A</span><span>Purpose â what the system predicts</span></div><div class="reviewer-option" data-key="B"><span class="reviewer-option-key">B</span><span>Model & Serving â algorithm and serving method</span></div><div class="reviewer-option" data-key="C"><span class="reviewer-option-key">C</span><span>Processing & Features â how raw data is transformed into features</span></div><div class="reviewer-option" data-key="D"><span class="reviewer-option-key">D</span><span>Monitoring & Health â what signals are tracked</span></div></div>
-    <button class="reviewer-reveal" id="rev-reveal-btn">Check answer</button>
-    <div class="reviewer-explanation" id="rev-explanation">
-      <div class="reviewer-exp-label" id="rev-exp-label"></div>
-      <div id="rev-exp-text"></div>
+  <div class="module-complete-wrap">
+    <div class="module-complete-hint" id="module-complete-hint">Complete all sections to unlock</div>
+    <div class="reviewer-comment-wrap">
+      <div class="reviewer-comment-label">Module Review Notes</div>
+      <textarea class="reviewer-comment" id="module-comment" placeholder="Add your overall notes for this module…"></textarea>
     </div>
-    <div class="reviewer-comment-label">Reviewer notes</div>
-    <textarea class="reviewer-comment" id="rev-comment" placeholder="Add your review notes for this module…"></textarea>
-    <div class="reviewer-save-note">Notes are auto-saved.</div>
+    <button class="module-complete-btn" id="module-complete-btn" onclick="submitModuleComplete()">✓ Mark Module 5 as Reviewed</button>
   </div>
-  <script>window.REV_CORRECT="C";window.REV_EXPLANATION="";window.REV_QUESTION={"m":5,"q":"According to the 5-part architecture description framework, which element comes THIRD?","o":["Purpose â what the system predicts","Model & Serving â algorithm and serving method","Processing & Features â how raw data is transformed into features","Monitoring & Health â what signals are tracked"],"c":2,"exp":""};</script>
-  <div class="rev-complete-wrap">
-    <div class="rev-complete-bar disabled" id="rev-complete-bar">
-      <input type="checkbox" id="rev-complete-cb" disabled>
-      <label for="rev-complete-cb" id="rev-complete-label">Complete all sections and answer the question correctly to unlock</label>
-    </div>
-    <div class="rev-complete-hint" id="rev-complete-hint"></div>
-  </div>
-  <div class="bottom-nav"><a href="ds-mlops-module-4.html" class="nav-btn secondary">← Module 4</a><span></span></div>
 </div>
 <script>
 function sfShowError(msg){const el=document.getElementById('sfSigninError');if(el){el.textContent=msg;el.classList.add('visible');}}
@@ -161,206 +172,281 @@ document.addEventListener('DOMContentLoaded',function(){const gb=document.getEle
 <script>
 const REV_KEY='reviewer_'+window.location.pathname.replace(/[^a-z0-9]/gi,'_');
 const BADGES={foundation:'Foundation',essential:'Essential',important:'Important'};
-const BADGE_CLASSES={foundation:'badge-foundation',essential:'badge-essential',important:'badge-important'};
 const SECTIONS=[
-  {id:1,title:"The Feature Reuse Problem",content:`
-    <h3>ðï¸ Why Feature Stores Exist</h3>
-    <p>Imagine three data scientists at SourceFuse building three different models â churn prediction, lead scoring, and product recommendations. All three models need user-level features: login frequency, account age, support ticket count, purchase history.</p>
-    <p>Without a feature store, each data scientist writes their own version of these features independently. This creates three problems:</p>
-    <ul>
-      <li><strong>Duplication:</strong> The same feature logic is written three times, with subtle differences in implementation â different window sizes, different null handling, different data sources.</li>
-      <li><strong>Training/serving skew:</strong> Features computed offline for training may be computed differently when served online at prediction time, causing silent performance degradation.</li>
-      <li><strong>No single source of truth:</strong> When the underlying data changes, three codebases need to be updated. Inevitably, they drift out of sync.</li>
-    </ul>
-    <div class="callout callout-purple">
-      <h4>ðï¸ The Feature Store Solution</h4>
-      <p>A feature store is a <strong>centralised platform for creating, storing, sharing, and serving ML features</strong>. Define a feature once; use it in any model, consistently, with guaranteed training/serving consistency.</p>
-    </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the three problems feature stores solve?</li><li>What is training/serving skew?</li></ul></div>
-  `},
-  {id:2,title:"Feature Store Architecture: Online vs Offline",content:`
-    <h3>ð¦ Two Stores, One System</h3>
-    <p>A feature store has two fundamental storage layers, each optimised for a different use case.</p>
-    <div class="diagram">
-      <div class="diagram-title">Feature Store Dual Architecture</div>
-      <div class="diagram-row">
-        <div class="diagram-box blue">Raw Data Sources<br/><small>DB, streams, warehouses</small></div>
-      </div>
-      <div class="diagram-row"><div class="diagram-arrow">â</div></div>
-      <div class="diagram-row">
-        <div class="diagram-box yellow">Feature Pipelines<br/><small>compute + transform</small></div>
-      </div>
-      <div class="diagram-row">
-        <div class="diagram-arrow" style="transform:rotate(-30deg)">â</div>
-        <div style="width:80px"></div>
-        <div class="diagram-arrow" style="transform:rotate(30deg)">â</div>
-      </div>
-      <div class="diagram-row">
-        <div class="diagram-box purple">Offline Store<br/><small>historical features<br/>S3 / BigQuery / Parquet</small></div>
-        <div style="width:40px"></div>
-        <div class="diagram-box green">Online Store<br/><small>latest feature values<br/>Redis / DynamoDB</small></div>
-      </div>
-      <div class="diagram-row">
-        <div class="diagram-box purple" style="font-size:0.75rem">â Training Pipeline<br/>(batch reads)</div>
-        <div style="width:40px"></div>
-        <div class="diagram-box green" style="font-size:0.75rem">â Serving Layer<br/>(low-latency reads)</div>
-      </div>
-    </div>
-    <h4>Offline Store</h4>
-    <p>Stores <strong>historical feature values</strong> for training. Optimised for high-throughput batch reads. Typically built on cloud storage (S3, GCS), a data warehouse (BigQuery, Snowflake), or a columnar format (Parquet). Training jobs read from the offline store to build training datasets with point-in-time correct feature values.</p>
-    <h4>Online Store</h4>
-    <p>Stores only the <strong>most recent feature values</strong> for real-time serving. Optimised for low-latency lookups (sub-10ms). Typically built on a key-value store like Redis or DynamoDB. When a prediction request arrives, the serving layer fetches the user's latest features from the online store.</p>
-    <div class="callout callout-blue">
-      <h4>ð¡ Point-in-Time Correctness</h4>
-      <p>When creating a training dataset, features must be retrieved using only information available at the time of the label event â not future data. Feature stores enforce this automatically, preventing temporal leakage.</p>
-    </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between the offline and online store in a feature store?</li><li>What database types are used for each store and why?</li><li>What is point-in-time correctness?</li></ul></div>
-  `},
-  {id:3,title:"Feature Store Tooling",content:`
-    <h3>ð ï¸ The Feature Store Landscape</h3>
-    <p>Several open-source and commercial feature stores are widely used in industry. Understanding what each offers helps you evaluate architectural choices.</p>
-    <div class="table-wrap"><table>
-      <tr><th>Tool</th><th>Type</th><th>Key Strengths</th><th>Best For</th></tr>
-      <tr><td><strong>Feast</strong></td><td>Open-source</td><td>Lightweight, cloud-agnostic, strong community</td><td>Teams wanting control and flexibility</td></tr>
-      <tr><td><strong>Tecton</strong></td><td>Managed SaaS</td><td>Enterprise features, streaming pipelines, managed infra</td><td>Large orgs wanting turnkey solution</td></tr>
-      <tr><td><strong>Databricks Feature Store</strong></td><td>Managed (on Databricks)</td><td>Tight integration with Delta Lake and MLflow</td><td>Teams already on Databricks</td></tr>
-      <tr><td><strong>Vertex AI Feature Store</strong></td><td>Managed (GCP)</td><td>Auto-scaling, BigQuery integration</td><td>Google Cloud users</td></tr>
-      <tr><td><strong>SageMaker Feature Store</strong></td><td>Managed (AWS)</td><td>Native AWS integration, both online and offline</td><td>AWS-first organisations</td></tr>
-    </table></div>
-    <div class="callout callout-blue">
-      <h4>ð¡ Feast in Practice</h4>
-      <p>Feast (Feature Store) is the most common open-source choice. Key concepts: <strong>Entity</strong> (the primary key â user_id, product_id), <strong>Feature View</strong> (a group of features computed from one data source), <strong>Feature Service</strong> (a named set of features used by a specific model).</p>
-    </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is Feast and what are its three core concepts?</li><li>Name two managed feature store platforms and their cloud providers.</li></ul></div>
-  `},
-  {id:4,title:"MLOps Architecture Patterns",content:`
-    <h3>ðï¸ How Production ML Systems Are Structured</h3>
-    <p>MLOps defines standard architectural patterns for connecting data, training, and serving. Understanding these patterns lets you describe â and evaluate â any ML system.</p>
-    <h4>The Three MLOps Maturity Levels</h4>
-    <ul>
-      <li><strong>Level 0 â Manual Process:</strong> Data scientists train models in notebooks and hand off artifacts manually to engineers for deployment. No automation. High risk of training/serving skew. Retraining is ad-hoc and infrequent.</li>
-      <li><strong>Level 1 â ML Pipeline Automation:</strong> Training is automated as a pipeline. New data triggers retraining automatically. Feature engineering is part of the pipeline. Continuous training but manual deployment approval.</li>
-      <li><strong>Level 2 â CI/CD for ML:</strong> Full automation including testing, validation, and deployment. Model updates are treated like software releases â with unit tests, integration tests, and canary deployments. Rapid, safe iteration.</li>
-    </ul>
-    <div class="callout callout-green">
-      <h4>â Most Production Systems Are Level 1</h4>
-      <p>Level 2 is aspirational for most teams. Being able to articulate where your system sits on this spectrum â and what it would take to move up â demonstrates real MLOps maturity in an interview.</p>
-    </div>
-    <h4>CI/CD for Machine Learning</h4>
-    <p>Continuous Integration for ML means: every code or data change triggers automated training, evaluation, and validation. Continuous Deployment means: models that pass all checks are automatically deployed to production. This requires:</p>
-    <ul>
-      <li>Automated training pipelines (Kubeflow, SageMaker Pipelines, Vertex AI Pipelines, Airflow)</li>
-      <li>Model validation gates (must exceed baseline performance, pass data quality checks)</li>
-      <li>Automated rollback if production performance degrades post-deployment</li>
-    </ul>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the three MLOps maturity levels?</li><li>What does CI/CD mean in the context of ML?</li><li>What is an automated model validation gate?</li></ul></div>
-  `},
-  {id:5,title:"Experiment Tracking & Model Registry",content:`
-    <h3>ð§ª Managing the Model Development Lifecycle</h3>
-    <p>Training a model is an experiment. You try different hyperparameters, different feature sets, different algorithms. Without tracking, you lose the ability to reproduce results or explain why the current production model outperforms alternatives.</p>
-    <h4>Experiment Tracking</h4>
-    <p>Experiment tracking systems log every training run with:</p>
-    <ul>
-      <li><strong>Parameters:</strong> Learning rate, max depth, regularisation strength, feature list</li>
-      <li><strong>Metrics:</strong> Accuracy, F1, AUC-ROC, MAE â on train, validation, and test splits</li>
-      <li><strong>Artifacts:</strong> The model file itself, feature importance plots, confusion matrices</li>
-      <li><strong>Environment:</strong> Library versions, hardware, data version used</li>
-    </ul>
-    <p>The dominant tool is <strong>MLflow</strong> (open-source). Alternatives: Weights & Biases, Neptune, Comet.</p>
-    <h4>Model Registry</h4>
-    <p>A model registry is a <strong>versioned catalog of trained models</strong>. It provides a lifecycle workflow:</p>
-    <ul>
-      <li><strong>Staging:</strong> Model is tested in a pre-production environment</li>
-      <li><strong>Production:</strong> Model is actively serving predictions</li>
-      <li><strong>Archived:</strong> Model is retired but preserved for auditing</li>
-    </ul>
-    <div class="callout callout-blue">
-      <h4>ð¡ MLflow in Practice</h4>
-      <p>MLflow has four components: Tracking (experiment logs), Projects (reproducible code), Models (model packaging format), and Registry (model lifecycle management). Most teams use Tracking and Registry as their starting point.</p>
-    </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What four things does experiment tracking log for each run?</li><li>What are the three stages in a model registry lifecycle?</li><li>Name two experiment tracking tools.</li></ul></div>
-  `},
-  {id:6,title:"Model Serving Patterns",content:`
-    <h3>ð Getting Predictions to Users</h3>
-    <p>A trained model needs to be served â exposed in a way that applications can request predictions. The serving architecture you choose has significant implications for latency, throughput, and cost.</p>
-    <h4>Serving Patterns</h4>
-    <ul>
-      <li><strong>REST API (Online Serving):</strong> Model wrapped in an HTTP endpoint. Synchronous â the caller waits for a prediction. Ideal for real-time use cases: fraud detection, recommendations, pricing. Typical tools: FastAPI, Flask, BentoML, TorchServe.</li>
-      <li><strong>Batch Prediction:</strong> Run predictions on a large dataset offline, store results. Asynchronous â predictions are pre-computed and looked up. Ideal when: predictions are needed for all users before they request them (e.g. weekly churn scores emailed to account managers).</li>
-      <li><strong>Streaming Prediction:</strong> Model consumes from a Kafka/Kinesis stream and produces predictions to an output stream. Ideal for high-throughput event-driven systems.</li>
-    </ul>
+  {id:1,title:"What 'Owning a System' Actually Means",content:`
+    <h3>ð£ï¸ Ownership Is a Communication Standard</h3>
+    <p>In engineering, "owning" a system means more than having written the code. It means you can answer four questions for any system you work on:</p>
+    <ol>
+      <li><strong>What does this system do?</strong> â The purpose, the prediction task, the business value it creates.</li>
+      <li><strong>How does the data flow?</strong> â From source, through ingestion, through processing, to the model, to the output.</li>
+      <li><strong>Why is it designed this way?</strong> â The trade-offs behind each architectural decision.</li>
+      <li><strong>What breaks and how do you know?</strong> â Failure modes, monitoring signals, and the response playbook.</li>
+    </ol>
+    <p>If you cannot answer all four questions about a system you work on, you are a contributor to it â not an owner of it.</p>
     <div class="callout callout-yellow">
-      <h4>â ï¸ Choosing the Right Pattern</h4>
-      <p>Match serving to the latency requirement. If a user needs a prediction within 100ms (e.g. real-time recommendations), REST API. If predictions can be pre-computed overnight (e.g. "customers to call tomorrow"), batch. If you're processing millions of events per second (e.g. clickstream fraud), streaming.</p>
+      <h4>â ï¸ The Interview Failure Mode</h4>
+      <p>The most common way engineers fail technical interviews about their own systems is not lack of knowledge â it is lack of structure. They describe the system in fragments, skip the data flow, and cannot explain why decisions were made. This module gives you the structure to prevent that.</p>
     </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What is the difference between online and batch prediction serving?</li><li>When would you choose batch prediction over REST API?</li><li>Name two tools used for online model serving.</li></ul></div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the four questions that define system ownership?</li><li>What is the difference between a contributor and an owner of a system?</li></ul></div>
   `},
-  {id:7,title:"Module Summary: The Complete MLOps Stack",content:`
-    <h3>ð Connecting the Architecture</h3>
-    <p>A complete production ML architecture connects all four modules you have studied so far:</p>
-    <div class="diagram">
-      <div class="diagram-title">The Full MLOps Stack</div>
-      <div class="diagram-row">
-        <div class="diagram-box blue">Raw Data<br/><small>M1: Ingestion patterns</small></div>
-        <div class="diagram-arrow">â</div>
-        <div class="diagram-box yellow">Feature Engineering<br/><small>M2: Transform â signals</small></div>
-        <div class="diagram-arrow">â</div>
-        <div class="diagram-box purple">Feature Store<br/><small>M4: Offline + Online</small></div>
+  {id:2,title:"The 5-Part Architecture Description Framework",content:`
+    <h3>ð A Repeatable Structure</h3>
+    <p>Use this framework every time you need to describe a data or ML system â in interviews, in documentation, in architecture reviews, or in customer meetings.</p>
+    <ol>
+      <li>
+        <strong>Purpose (What)</strong><br/>
+        One sentence. What does the system predict or produce? What business outcome does it drive?<br/>
+        <em>Example: "This system predicts which customers are likely to cancel their subscription within the next 30 days, with an output of a probability score per customer."</em>
+      </li>
+      <li>
+        <strong>Data Sources (Where does data come from)</strong><br/>
+        Name the source systems and the ingestion method.<br/>
+        <em>Example: "User activity events are ingested from Kafka in real time. Account metadata is pulled nightly from our PostgreSQL CRM database via Airflow."</em>
+      </li>
+      <li>
+        <strong>Processing & Features (How data is transformed)</strong><br/>
+        Describe the transformations and the features produced.<br/>
+        <em>Example: "Events are aggregated into per-user daily summaries. Key features include login frequency (7-day rolling), days since last purchase, support ticket count, and plan tier encoded as ordinal."</em>
+      </li>
+      <li>
+        <strong>Model & Serving (How predictions are made)</strong><br/>
+        Name the algorithm, training cadence, and serving method.<br/>
+        <em>Example: "We use a gradient boosting model (XGBoost) retrained weekly on the last 90 days of data. Predictions are served via a REST API that our CRM queries on page load."</em>
+      </li>
+      <li>
+        <strong>Monitoring & Health (How you know it's working)</strong><br/>
+        Describe what you monitor and what the alert threshold is.<br/>
+        <em>Example: "We monitor PSI on all 12 input features weekly. If PSI exceeds 0.2 on any key feature, we trigger an investigation. Model performance is benchmarked against a monthly holdout set."</em>
+      </li>
+    </ol>
+    <div class="callout callout-green">
+      <h4>â Practise This Out Loud</h4>
+      <p>Write a version of this for the system you currently work on. Speak it aloud in under 3 minutes. If you cannot, that gap is your preparation task before any technical interview.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the 5 parts of the architecture description framework?</li><li>What should a "Purpose" statement include?</li></ul></div>
+  `},
+  {id:3,title:"Describing Data Ingestion Coherently",content:`
+    <h3>ð° Making the Data Flow Clear</h3>
+    <p>The part of system description that most engineers stumble on is the data ingestion section. They say "the data comes from our database" and stop there. A complete ingestion description has four components:</p>
+    <ol>
+      <li><strong>Source:</strong> What system holds the raw data? (PostgreSQL, S3, Kafka, Salesforce, event logs)</li>
+      <li><strong>Pattern:</strong> How is it collected? (Batch/streaming/CDC â and at what frequency for batch)</li>
+      <li><strong>Tool:</strong> What orchestrates or transmits the data? (Airflow, Kafka, Fivetran, Debezium)</li>
+      <li><strong>Destination:</strong> Where does ingested data land? (Data warehouse, data lake, feature store)</li>
+    </ol>
+    <div class="scenario-block">
+      <div class="scenario-q">â Weak Answer: "The data comes from our database."</div>
+      <div class="scenario-a">This tells the listener nothing about the ingestion pattern, tool, or timing. It does not demonstrate ownership.</div>
+    </div>
+    <div class="scenario-block">
+      <div class="scenario-q">â Strong Answer:</div>
+      <div class="scenario-a">"We have two ingestion flows. User behavioural events are published to a Kafka topic in real time by our web application and consumed by a Spark Structured Streaming job that writes to our BigQuery data warehouse. Account-level metadata is pulled nightly from our PostgreSQL database using an Airflow DAG and loaded into the same warehouse. Both flows land in dedicated tables that serve as the input to our feature engineering pipeline."</div>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the four components of a complete ingestion description?</li><li>What makes a "weak" ingestion description weak?</li></ul></div>
+  `},
+  {id:4,title:"Explaining Design Decisions",content:`
+    <h3>ð Why, Not Just What</h3>
+    <p>The deepest signal of system ownership is the ability to explain <em>why</em> the system is designed the way it is. Anyone can describe what a system does by reading its documentation. Ownership requires understanding the trade-offs behind each decision.</p>
+    <h4>The Trade-off Framework</h4>
+    <p>For any architectural decision, you should be able to articulate:</p>
+    <ul>
+      <li><strong>What we chose</strong> â the decision made</li>
+      <li><strong>What we considered</strong> â the alternatives evaluated</li>
+      <li><strong>Why we chose it</strong> â the deciding constraint (latency, cost, team expertise, scale)</li>
+      <li><strong>What we gave up</strong> â the trade-off accepted</li>
+    </ul>
+    <div class="scenario-block">
+      <div class="scenario-q">Q: "Why did you use batch prediction instead of real-time serving?"</div>
+      <div class="scenario-a">
+        <strong>Strong Answer:</strong> "We evaluated both. Real-time serving would require us to maintain an online feature store with sub-10ms lookup, which we didn't have the infrastructure for. Since our sales team checks churn scores once a day in the morning, a daily batch job that pre-computes and stores scores in our CRM meets the latency requirement at a fraction of the infrastructure cost. The trade-off is that our scores are at most 24 hours stale â which is acceptable for this use case."
       </div>
-      <div class="diagram-row"><div class="diagram-arrow" style="transform:rotate(90deg)">â</div></div>
-      <div class="diagram-row">
-        <div class="diagram-box green">Monitoring & Drift<br/><small>M3: PSI, retrain triggers</small></div>
-        <div class="diagram-arrow">â</div>
-        <div class="diagram-box green">Model Serving<br/><small>M4: REST/batch/stream</small></div>
-        <div class="diagram-arrow">â</div>
-        <div class="diagram-box green">Model Registry<br/><small>M4: versioned + staged</small></div>
-      </div>
+    </div>
+    <div class="callout callout-blue">
+      <h4>ð¡ Constraint-Driven Design</h4>
+      <p>Real engineering decisions are always constrained by: <strong>latency requirements, budget, team size, existing infrastructure, data availability, and risk tolerance</strong>. Explaining the constraint that drove a decision demonstrates that you understand the full picture â not just the technology.</p>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>What are the four parts of the trade-off framework?</li><li>Name six types of constraints that drive architectural decisions.</li></ul></div>
+  `},
+  {id:5,title:"Communicating to Different Audiences",content:`
+    <h3>ð¡ Adapting Your Message</h3>
+    <p>System ownership also means being able to translate the same technical system into appropriate language for different audiences. This is not about dumbing down â it is about choosing the right level of abstraction.</p>
+    <div class="callout callout-blue">
+      <h4>Technical Audience (Data Scientist / ML Engineer)</h4>
+      <ul>
+        <li>Include algorithm names, hyperparameters, data split strategy</li>
+        <li>Discuss feature engineering choices and why</li>
+        <li>Reference specific tools and infrastructure</li>
+        <li>Share metrics with confidence intervals if available</li>
+      </ul>
     </div>
     <div class="callout callout-green">
-      <h4>â Module 4 Summary</h4>
-      <p>You now understand: the feature reuse problem and how feature stores solve it, the offline/online store architecture, major feature store tools (Feast, Tecton, Databricks), the three MLOps maturity levels, CI/CD for ML, experiment tracking with MLflow, model registry lifecycle stages, and the three serving patterns. Module 5 will focus on the communication layer â how to own and articulate this stack.</p>
+      <h4>Product / Business Audience</h4>
+      <ul>
+        <li>Lead with the business outcome: "This system identifies customers at risk of leaving 30 days in advance"</li>
+        <li>Express performance in business terms: "We catch 8 out of 10 customers who would have churned"</li>
+        <li>Skip algorithm details; focus on input signals and output actions</li>
+        <li>Frame limitations as business constraints, not technical ones</li>
+      </ul>
     </div>
-    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>Where does a feature store sit in the ML pipeline?</li><li>What is the difference between MLOps Level 1 and Level 2?</li></ul></div>
+    <div class="callout callout-yellow">
+      <h4>Customer / External Audience</h4>
+      <ul>
+        <li>Lead with value delivered: "You receive early warning signals before customers disengage"</li>
+        <li>Avoid all jargon (no "PSI", no "XGBoost", no "Kafka")</li>
+        <li>Focus on reliability, fairness, and privacy commitments</li>
+        <li>Be prepared to answer "how does it know?" without revealing proprietary signals</li>
+      </ul>
+    </div>
+    <div class="test-questions"><h4>ð¯ Likely Exam Questions</h4><ul><li>How does a technical audience description differ from a business audience description?</li><li>What should you lead with when describing a system to a business audience?</li></ul></div>
+  `},
+  {id:6,title:"Course Completion: Your Integrated Framework",content:`
+    <h3>ð Everything You Now Know</h3>
+    <p>You have completed all five modules. Here is the integrated framework you now possess:</p>
+    <div class="callout callout-blue">
+      <h4>Module 1 â Foundation</h4>
+      <p>What Data Science is, the 6-stage ML lifecycle, core vocabulary (dataset, label, feature, model), ingestion patterns (batch, streaming, CDC), data processing steps, and what MLOps solves.</p>
+    </div>
+    <div class="callout callout-yellow">
+      <h4>Module 2 â Feature Engineering</h4>
+      <p>Why features matter more than models, numerical transformations (scaling, log, binning), categorical encoding (one-hot, target, label), missing value strategies (imputation, indicator), feature selection (filter, wrapper, embedded), time-based features, and the FE workflow.</p>
+    </div>
+    <div class="callout callout-blue" style="border-color:var(--red);background:rgba(239,68,68,0.06)">
+      <h4 style="color:var(--red)">Module 3 â Model Drift</h4>
+      <p>Why models degrade, data vs concept vs label vs upstream drift, statistical detection (PSI, KS test, JS divergence), retraining strategies (schedule, metric-based, champion/challenger, windowed), performance metrics (accuracy, F1, AUC-ROC, RMSE), and the drift response playbook.</p>
+    </div>
+    <div class="callout callout-purple">
+      <h4>Module 4 â MLOps Architecture</h4>
+      <p>Feature store architecture (offline/online stores, Feast, Tecton), MLOps maturity levels 0â2, CI/CD for ML, experiment tracking (MLflow), model registry lifecycle, and serving patterns (REST, batch, streaming).</p>
+    </div>
+    <div class="callout callout-green">
+      <h4>Module 5 â System Articulation</h4>
+      <p>The four ownership questions, the 5-part architecture description framework, complete ingestion descriptions (4 components), trade-off framework for design decisions, and audience-adaptive communication.</p>
+    </div>
+    <p style="margin-top:18px;font-size:0.95rem;color:var(--text2);line-height:1.7;">You are now ready for the certification exam. 30 questions, 45 minutes, 70% to pass. The exam tests application of these concepts, not just recall â read each question carefully and reason from first principles.</p>
+    <div class="test-questions"><h4>ð¯ Final Preparation Checklist</h4><ul><li>Can you describe the ML lifecycle in 6 steps from memory?</li><li>Can you define all four drift types and their causes?</li><li>Can you explain what a feature store's offline and online components do?</li><li>Can you deliver the 5-part architecture description for a system you know?</li><li>Can you articulate what PSI measures and its thresholds?</li></ul></div>
   `}
 ];
+const SQ=typeof SECTION_QUESTIONS!=='undefined'?SECTION_QUESTIONS:{};
 function revLoad(){try{return JSON.parse(localStorage.getItem(REV_KEY))||{};}catch(e){return {};}}
 function revSave(s){localStorage.setItem(REV_KEY,JSON.stringify(s));if(typeof sfWrite==='function')sfWrite(s);}
-function allSectionsChecked(){const items=document.querySelectorAll('.rev-checkbox');for(let i=0;i<items.length;i++){if(!items[i].checked)return false;}return true;}
-function questionAnsweredCorrectly(){return true?revLoad().questionCorrect===true:true;}
-function updateCompleteBar(){
-  const bar=document.getElementById('rev-complete-bar');const cb=document.getElementById('rev-complete-cb');const label=document.getElementById('rev-complete-label');const hint=document.getElementById('rev-complete-hint');
-  if(!bar)return;const s=revLoad();
-  if(s.reviewComplete){bar.className='rev-complete-bar done';cb.disabled=false;cb.checked=true;label.textContent='✓ Review complete';hint.textContent='';return;}
-  const stepsOk=allSectionsChecked();const qOk=questionAnsweredCorrectly();const missing=[];if(!stepsOk)missing.push('all sections checked');if(!qOk)missing.push('question answered correctly');
-  if(stepsOk&&qOk){bar.className='rev-complete-bar ready';cb.disabled=false;label.textContent='Mark review as complete';hint.textContent='';}
-  else{bar.className='rev-complete-bar disabled';cb.disabled=true;label.textContent='Complete all sections and answer the question correctly to unlock';hint.textContent=missing.length?'Still needed: '+missing.join(' · '):'';}
+
+function allSectionsComplete(){
+  return SECTIONS.every(s=>revLoad()['section_complete_'+s.id]===true);
 }
-function renderProgress(total){let done=0;document.querySelectorAll('.rev-checkbox').forEach(c=>{if(c.checked)done++;});const pct=Math.round((done/total)*100);const p=document.getElementById('sidebar-pct');const b=document.getElementById('sidebar-bar');if(p)p.textContent=pct+'%';if(b)b.style.width=pct+'%';}
+
+function updateModuleCompleteBtn(){
+  const btn=document.getElementById('module-complete-btn');
+  const hint=document.getElementById('module-complete-hint');
+  if(!btn)return;
+  const state=revLoad();
+  if(state.completed){
+    btn.textContent='✓ Module Review Submitted';
+    btn.classList.add('unlocked');
+    btn.disabled=true;
+    if(hint)hint.textContent='Review submitted on '+new Date(state.completedAt).toLocaleString();
+    return;
+  }
+  const done=SECTIONS.filter(s=>state['section_complete_'+s.id]===true).length;
+  const total=SECTIONS.length;
+  if(done===total){
+    btn.classList.add('unlocked');
+    if(hint)hint.textContent='All '+total+' sections complete. You may now submit your module review.';
+  } else {
+    btn.classList.remove('unlocked');
+    if(hint)hint.textContent=done+' of '+total+' sections complete. Complete all sections to unlock.';
+  }
+}
+
+function buildQuestionBlock(secId,questions){
+  if(!questions||!questions.length)return '';
+  const keys=['A','B','C','D'];
+  const state=revLoad();
+  const secDone=state['section_complete_'+secId]===true;
+  let html='<div class="section-questions">';
+  questions.forEach((q,qi)=>{
+    const answered=state['sq_'+secId+'_'+qi+'_correct']===true;
+    html+='<div class="section-question-item'+(answered?' answered-correct':'')+'" id="sq-item-'+secId+'-'+qi+'">';
+    html+='<div class="sq-text">'+(qi+1)+'. '+q.q.replace(/</g,'&lt;')+'</div>';
+    html+='<div class="sq-options" id="sq-opts-'+secId+'-'+qi+'">';
+    q.o.forEach((opt,oi)=>{
+      html+='<div class="sq-option" data-sec="'+secId+'" data-q="'+qi+'" data-i="'+oi+'" onclick="sqSelect(this)"><span class="sq-option-key">'+keys[oi]+'</span><span>'+opt.replace(/</g,'&lt;')+'</span></div>';
+    });
+    html+='</div>';
+    html+='<div class="sq-feedback" id="sq-fb-'+secId+'-'+qi+'"></div>';
+    html+='<button class="sq-check-btn" id="sq-btn-'+secId+'-'+qi+'" onclick="sqCheck('+secId+','+qi+','+q.c+')" '+(answered?'disabled':'')+'>Check Answer</button>';
+    html+='</div>';
+  });
+  html+='</div>';
+  const allAnswered=questions.every((_,qi)=>revLoad()['sq_'+secId+'_'+qi+'_correct']===true);
+  html+='<button class="section-complete-btn'+(allAnswered||secDone?' unlocked':'')+' '+(secDone?'done':'')+'" id="sec-complete-btn-'+secId+'" onclick="sectionComplete('+secId+')" '+(secDone?'disabled':(allAnswered?'':'disabled'))+'>'+(secDone?'✓ Section Reviewed':'Mark Section as Reviewed')+'</button>';
+  return html;
+}
+
+window.sqSelect=function(el){
+  const secId=el.dataset.sec,qi=el.dataset.q;
+  document.querySelectorAll('[data-sec="'+secId+'"][data-q="'+qi+'"]').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+};
+
+window.sqCheck=function(secId,qi,correctIdx){
+  const selected=document.querySelector('[data-sec="'+secId+'"][data-q="'+qi+'"].selected');
+  if(!selected){alert('Please select an answer first.');return;}
+  const chosenIdx=parseInt(selected.dataset.i);
+  const isCorrect=(chosenIdx===correctIdx);
+  const fb=document.getElementById('sq-fb-'+secId+'-'+qi);
+  const btn=document.getElementById('sq-btn-'+secId+'-'+qi);
+  const item=document.getElementById('sq-item-'+secId+'-'+qi);
+  if(isCorrect){
+    selected.classList.add('correct');
+    if(fb){fb.textContent='✓ Correct!';fb.className='sq-feedback correct';}
+    if(btn)btn.disabled=true;
+    if(item)item.classList.add('answered-correct');
+    const st=revLoad();st['sq_'+secId+'_'+qi+'_correct']=true;revSave(st);
+    const secQs=SQ[secId]||[];
+    const allCorrect=secQs.every((_,i)=>revLoad()['sq_'+secId+'_'+i+'_correct']===true);
+    const secBtn=document.getElementById('sec-complete-btn-'+secId);
+    if(allCorrect&&secBtn){secBtn.classList.add('unlocked');secBtn.removeAttribute('disabled');}
+  } else {
+    selected.classList.add('wrong');
+    if(fb){fb.textContent='✗ Incorrect — please try again.';fb.className='sq-feedback wrong';}
+    setTimeout(()=>{
+      selected.classList.remove('wrong','selected');
+      if(fb){fb.textContent='';fb.className='sq-feedback';}
+    },1500);
+  }
+};
+
+window.sectionComplete=function(secId){
+  const btn=document.getElementById('sec-complete-btn-'+secId);
+  if(!btn||!btn.classList.contains('unlocked'))return;
+  btn.classList.add('done');btn.disabled=true;btn.textContent='✓ Section Reviewed';
+  const st=revLoad();st['section_complete_'+secId]=true;st['section_completed_at_'+secId]=new Date().toISOString();revSave(st);
+  updateModuleCompleteBtn();
+};
+
 window.toggleSection=(id)=>{const body=document.getElementById('body-'+id);const toggle=document.getElementById('toggle-'+id);const isOpen=body.classList.contains('open');document.querySelectorAll('.section-body').forEach(b=>b.classList.remove('open'));document.querySelectorAll('.section-toggle').forEach(t=>t.classList.remove('open'));if(!isOpen){body.classList.add('open');toggle.classList.add('open');}};
 window.copyCode=(btn)=>{const text=btn.parentElement.innerText.replace('Copy','').trim();navigator.clipboard.writeText(text).then(()=>{btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy',1500);});};
+
 function renderAll(){
   const sec=document.getElementById('sections-container');if(!sec)return;sec.innerHTML='';
   const s0=revLoad();
   SECTIONS.forEach(s=>{
-    const reviewed=s0['cb_'+s.id]||false;
+    const secDone=s0['section_complete_'+s.id]===true;
     const sd=document.createElement('div');sd.className='section-block';
-    const badgeCls=BADGE_CLASSES[s.badge]||'';const badgeTxt=BADGES[s.badge]||s.badge||'';
-    sd.innerHTML='<div class="section-header" onclick="toggleSection('+s.id+')">'+'<span class="section-num">'+s.id+'.</span>'+'<span class="section-title">'+s.title+'</span>'+(badgeTxt?'<span style="font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;background:#e8f1fb;color:#1a6eb5;font-family:Source Code Pro,monospace;">'+badgeTxt+'</span>':'')+(reviewed?'<span style="font-size:12px;margin-left:4px;">✅</span>':'')+'<span class="section-toggle" id="toggle-'+s.id+'">▼</span>'+'</div>'+'<div class="section-body" id="body-'+s.id+'">'+s.content+'<div class="reviewer-bar '+(reviewed?'checked':'')+'" id="rev-bar-'+s.id+'"><input type="checkbox" class="rev-checkbox" id="rev-cb-'+s.id+'" data-step="'+s.id+'" '+(reviewed?'checked':'')+'><label for="rev-cb-'+s.id+'">'+(reviewed?'✓ Section reviewed':'Mark section as reviewed')+'</label></div></div>';
+    const badgeTxt=BADGES[s.badge]||s.badge||'';
+    const questions=SQ[s.id]||[];
+    const qBlock=buildQuestionBlock(s.id,questions);
+    sd.innerHTML='<div class="section-header" onclick="toggleSection('+s.id+')"><span class="section-num">'+s.id+'.</span><span class="section-title">'+s.title+'</span>'+(badgeTxt?'<span style="font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;background:#e8f1fb;color:#1a6eb5;font-family:Source Code Pro,monospace;">'+badgeTxt+'</span>':'')+(secDone?'<span style="font-size:12px;margin-left:4px;">✅</span>':'')+'<span class="section-toggle" id="toggle-'+s.id+'">▼</span></div><div class="section-body" id="body-'+s.id+'">'+s.content+qBlock+'</div>';
     sec.appendChild(sd);
   });
-  document.querySelectorAll('.rev-checkbox').forEach(cb=>{
-    cb.addEventListener('change',()=>{const st=revLoad();st['cb_'+cb.dataset.step]=cb.checked;revSave(st);const bar=cb.closest('.reviewer-bar');if(bar){bar.classList.toggle('checked',cb.checked);bar.querySelector('label').textContent=cb.checked?'✓ Section reviewed':'Mark section as reviewed';}renderProgress(SECTIONS.length);updateCompleteBar();});
-  });
-  renderProgress(SECTIONS.length);updateCompleteBar();
+  updateModuleCompleteBtn();
 }
 
-let revAnswer=null;let revSubmitted=false;
-(function restoreQ(){const s=revLoad();if(s.revAnswer!=null){revAnswer=s.revAnswer;revSubmitted=s.revSubmitted||false;if(revAnswer)applyRevAnswer(revAnswer,revSubmitted);}})();
-document.querySelectorAll('.reviewer-option').forEach(opt=>{opt.addEventListener('click',()=>{if(revSubmitted)return;revAnswer=opt.dataset.key;document.querySelectorAll('.reviewer-option').forEach(o=>o.classList.toggle('selected',o.dataset.key===revAnswer));const s=revLoad();s.revAnswer=revAnswer;revSave(s);});});
-const revBtn=document.getElementById('rev-reveal-btn');if(revBtn)revBtn.addEventListener('click',()=>{if(revAnswer===null){alert('Please select an answer first.');return;}const s0=revLoad();s0.attemptCount=(s0.attemptCount||0)+1;if(!s0.startedAt)s0.startedAt=new Date().toISOString();revSave(s0);revSubmitted=true;const s=revLoad();s.revSubmitted=true;revSave(s);applyRevAnswer(revAnswer,true);});
-function applyRevAnswer(ans,showResult){const correctKey='C';const isCorrect=(ans===correctKey);document.querySelectorAll('.reviewer-option').forEach(o=>{o.classList.remove('selected','correct','wrong');if(showResult){if(o.dataset.key===correctKey)o.classList.add('correct');else if(o.dataset.key===ans&&o.dataset.key!==correctKey)o.classList.add('wrong');}else{if(o.dataset.key===ans)o.classList.add('selected');}});if(showResult){const expEl=document.getElementById('rev-explanation');const lbl=document.getElementById('rev-exp-label');const txt=document.getElementById('rev-exp-text');const btn=document.getElementById('rev-reveal-btn');if(expEl)expEl.classList.add('visible');if(lbl){lbl.textContent=isCorrect?'✓ Correct':'✗ Incorrect';lbl.className='reviewer-exp-label '+(isCorrect?'correct':'wrong');}if(txt)txt.textContent=window.REV_EXPLANATION||'';if(btn)btn.style.display='none';if(isCorrect){const s=revLoad();s.questionCorrect=true;revSave(s);}updateCompleteBar();}}
-const commentEl=document.getElementById('rev-comment');if(commentEl){const s=revLoad();if(s.comment)commentEl.value=s.comment;commentEl.addEventListener('input',()=>{const s=revLoad();s.comment=commentEl.value;revSave(s);});}
-const completeCb=document.getElementById('rev-complete-cb');if(completeCb)completeCb.addEventListener('change',()=>{if(!completeCb.checked)return;const s=revLoad();s.reviewComplete=true;s.completedAt=new Date().toISOString();revSave(s);updateCompleteBar();});
+const moduleCommentEl=document.getElementById('module-comment');
+if(moduleCommentEl){
+  const s=revLoad();if(s.moduleComment)moduleCommentEl.value=s.moduleComment;
+  moduleCommentEl.addEventListener('input',()=>{const s=revLoad();s.moduleComment=moduleCommentEl.value;revSave(s);});
+}
 renderAll();
 </script>
 <script>
@@ -380,6 +466,24 @@ function initRevFirebase(){
   window.sfFetchAndMerge=async function(){const ref=sfDocRef();if(!ref)return;try{const snap=await ref.get();if(!snap.exists)return;const remote=snap.data();const local=revLoad();const merged=Object.assign({},local,remote);delete merged.email;delete merged.lastUpdated;localStorage.setItem(REV_KEY,JSON.stringify(merged));if(typeof renderAll==='function'){renderAll();}if(typeof updateCompleteBar==='function')updateCompleteBar();}catch(e){console.warn('SF fetch:',e.message);}};
   function sfHideOverlayFB(user){window.sfReviewerEmail=user.email;window.sfReviewerUid=user.uid;const ov=document.getElementById('sfSigninOverlay');if(ov)ov.classList.add('hidden');const bar=document.getElementById('sfSignedInBar');const lbl=document.getElementById('sfSignedInEmail');if(bar)bar.classList.remove('hidden');if(lbl)lbl.textContent='Signed in as '+user.email;sfInitSession();window.sfFetchAndMerge();}
   window.sfAuth.onAuthStateChanged(user=>{if(user){sfHideOverlayFB(user);}else{document.getElementById('sfSigninOverlay').classList.remove('hidden');}});
+}
+</script>
+<script>
+const HUB_URL = 'https://sflearningdevelopment.github.io/sf-knowledge-hub/index.html';
+const SECTION_COUNT = 12985;
+const SECTION_QUESTIONS = {"undefined":[]};
+
+function submitModuleComplete() {
+  const btn = document.getElementById('module-complete-btn');
+  if (!btn.classList.contains('unlocked')) return;
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  const comment = document.getElementById('module-comment')?.value || '';
+  const completedAt = new Date().toISOString();
+  if (typeof sfWrite === 'function') {
+    sfWrite({ completed: true, comment, completedAt, sectionCount: SECTION_COUNT });
+  }
+  setTimeout(() => { window.location.href = HUB_URL; }, 1200);
 }
 </script>
 </body>
