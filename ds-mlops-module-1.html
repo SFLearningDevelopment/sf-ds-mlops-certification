@@ -458,7 +458,8 @@ let sectionStates = {};
 
 // Check Your Understanding interactive MCQ
 const SECTION_QUESTIONS = {"1": [{"q": "According to the section, Data Science sits at the intersection of which three domains?", "o": ["Statistics, programming, and domain expertise", "Mathematics, computer science, and business analytics", "Data engineering, ML research, and software development", "Analytics, visualisation, and artificial intelligence"], "c": 0}, {"q": "What is the key distinction made between Data Science and Machine Learning in this section?", "o": ["Data Science is a subset of Machine Learning", "Data Science produces insight while Machine Learning produces automated predictions", "Machine Learning is more accurate than Data Science", "Data Science only uses statistics while ML uses programming"], "c": 1}], "2": [{"q": "How many stages are in the ML lifecycle as described in this section?", "o": ["4 stages", "5 stages", "6 stages", "7 stages"], "c": 2}, {"q": "Which statement best describes the ML lifecycle according to this section?", "o": ["It is a linear process that ends at deployment", "It is cyclical and every concept in the course is one step in it", "It only applies to supervised learning problems", "It begins with model training and ends with monitoring"], "c": 1}], "3": [{"q": "According to this section, what is a Label in machine learning terminology?", "o": ["An individual measurable input variable used by the model", "The output value the model is trained to predict", "A structured collection of observations used for training", "A mathematical function learned from data"], "c": 1}, {"q": "How is a Dataset defined in this section?", "o": ["A mathematical function that maps inputs to predictions", "A single row of observations with multiple features", "A structured collection of observations where each row is one observation", "A collection of labels used to evaluate model quality"], "c": 2}], "4": [{"q": "Which ingestion pattern captures row-level changes in a database as they happen?", "o": ["Batch ingestion", "Streaming ingestion", "Change Data Capture (CDC)", "Bulk loading"], "c": 2}, {"q": "What is the defining characteristic of streaming ingestion according to this section?", "o": ["Data is collected and loaded in scheduled bulk operations", "Data flows continuously in real time using tools like Kafka", "Data is captured from row-level database changes", "Data is ingested manually by data engineers"], "c": 1}], "5": [{"q": "Which tool is mentioned in this section for large-scale batch processing?", "o": ["Apache Kafka", "Apache Flink", "Apache Spark", "Apache Airflow"], "c": 2}, {"q": "Which of the following is listed as a Core Processing Step in this section?", "o": ["Model training", "Deduplication", "Feature selection", "Hyperparameter tuning"], "c": 1}], "6": [{"q": "What does MLOps stand for according to this section?", "o": ["Machine Learning Optimisation", "Machine Learning Operations", "Model Lifecycle Operations", "Modular Learning Operations"], "c": 1}, {"q": "What core problem does MLOps solve according to this section?", "o": ["It makes model training faster", "A model that works in a Jupyter notebook is not automatically a production system", "It replaces the need for data engineers", "It eliminates the need for monitoring"], "c": 1}], "7": [{"q": "In the Complete ML System described in this section, what comes immediately after the Feature Store?", "o": ["Data Sources", "Ingestion Layer", "Model Training", "Serving"], "c": 2}, {"q": "What role does the Monitoring component play in the Complete ML System?", "o": ["It stores versioned models", "It handles drift detection and alerting", "It manages feature vectors", "It coordinates data ingestion"], "c": 1}], "8": [{"q": "How many parts does the Architecture Description framework in this section contain?", "o": ["3 parts", "4 parts", "5 parts", "6 parts"], "c": 2}, {"q": "According to this section, what does the Monitoring component of the architecture description address?", "o": ["What the system predicts", "Where the data comes from", "How the system detects when something goes wrong", "How raw data becomes features"], "c": 2}]};
-const cyuAnswered = {}; // {secId: {qi: true/false answered}}
+const cyuAnswered = {}; // {secId: {qi: true}} — tracks answered
+const cyuCorrect = {};  // {secId: {qi: true/false}} — tracks correctness
 
 function buildCYU(secId) {
   const qs = SECTION_QUESTIONS[String(secId)] || [];
@@ -505,6 +506,8 @@ window.cyuCheck = function(secId, qi, correctIdx) {
   // Mark this question as answered
   if (!cyuAnswered[secId]) cyuAnswered[secId] = {};
   cyuAnswered[secId][qi] = true;
+  if (!cyuCorrect[secId]) cyuCorrect[secId] = {};
+  cyuCorrect[secId][qi] = isCorrect;
   // Save response to Firestore
   if (currentUser) {
     const pRef = doc(db,'progress',currentUser.uid);
@@ -536,6 +539,8 @@ function restoreCYUState(secId, modData) {
     const saved = modData['cyu_'+secId+'_'+qi];
     if (saved && saved.answered) {
       cyuAnswered[secId][qi] = true;
+        if (!cyuCorrect[secId]) cyuCorrect[secId] = {};
+        cyuCorrect[secId][qi] = saved.correct;
       // Restore visual state
       setTimeout(() => {
         const opts = document.querySelectorAll('[data-sec="'+secId+'"][data-q="'+qi+'"]');
@@ -606,6 +611,7 @@ function buildSections(states){
 window.retakeSection = function(secId) {
   // Clear cyuAnswered for this section
   cyuAnswered[secId] = {};
+  cyuCorrect[secId] = {};
   // Clear Firestore entries for this section
   if (currentUser) {
     const pRef = doc(db,'progress',currentUser.uid);
@@ -657,7 +663,10 @@ window.markSection = async (sectionId, btn) => {
   btn.classList.add('done');
   btn.textContent = '\u2713 Completed';
   const retakeBtn = document.getElementById('retake-'+sectionId);
-  if (retakeBtn) retakeBtn.classList.add('visible');
+  // Only show retake if at least one question was answered incorrectly
+  const secCorrectness = cyuCorrect[sectionId] || {};
+  const hasWrongAnswer = Object.values(secCorrectness).some(v => v === false);
+  if (retakeBtn && hasWrongAnswer) retakeBtn.classList.add('visible');
 
   if(!currentUser) return;
   const key = `section-${sectionId}`;
@@ -666,6 +675,18 @@ window.markSection = async (sectionId, btn) => {
   btn.classList.add('marked');
   const card = btn.closest('.section-card');
   card.classList.add('completed-section');
+  // Collapse current section and scroll to top of next section
+  card.classList.remove('active');
+  const allCards = Array.from(document.querySelectorAll('.section-card'));
+  const currentIdx = allCards.indexOf(card);
+  const nextCard = allCards[currentIdx + 1];
+  if (nextCard) {
+    nextCard.classList.add('active');
+    setTimeout(() => {
+      const headerTop = nextCard.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: headerTop, behavior: 'smooth' });
+    }, 150);
+  }
   card.querySelector('.section-check').classList.add('done');
   card.querySelector('.section-check').textContent = '✓';
   updateProgress(sectionStates);
