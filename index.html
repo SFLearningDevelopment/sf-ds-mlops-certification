@@ -369,6 +369,14 @@ onAuthStateChanged(auth, async user => {
       card.style.pointerEvents='auto';
       status.textContent='✓ Completed';
       status.className='card-status status-completed';
+    } else if(mod?.status === 'in_progress'){
+      card.classList.remove('locked');
+      card.style.pointerEvents='auto';
+      // Show section progress if available
+      const sections = mod.sections || {};
+      const doneSections = Object.values(sections).filter(v => v === 'done').length;
+      status.textContent = doneSections > 0 ? `▶ In Progress (${doneSections} section${doneSections>1?'s':''} done)` : '▶ In Progress';
+      status.className='card-status status-inprogress';
     } else if(i===1 || progress[`module-${i-1}`]?.status==='completed'){
       card.classList.remove('locked');
       card.style.pointerEvents='auto';
