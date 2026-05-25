@@ -350,7 +350,8 @@ const SECTIONS=[
 
 // Check Your Understanding interactive MCQ
 const SECTION_QUESTIONS = {"1": [{"q": "According to this section, why does model performance degrade after deployment?", "o": ["The model code becomes outdated over time", "The gap widens between training data distribution and production data distribution", "The hardware running the model slows down", "The model overfits to production data"], "c": 1}, {"q": "How does this section describe the nature of model decay?", "o": ["It happens immediately after deployment", "It always produces visible errors in the application", "The failure is often silent \u2014 the model still produces predictions but they become less accurate", "It only affects classification models not regression models"], "c": 2}], "2": [{"q": "According to this section, what is the recommended fix for Data Drift?", "o": ["Redesign the input features", "Retrain or redesign features", "Retrain with recent data", "Deploy a champion-challenger model"], "c": 2}, {"q": "How does this section distinguish Concept Drift from Data Drift?", "o": ["Concept drift affects only categorical features", "Concept drift is when the relationship between input features and the target label changes", "Concept drift is when input feature distributions change", "Concept drift only occurs in real-time serving systems"], "c": 1}], "3": [{"q": "According to this section, what does a PSI value above 0.2 indicate?", "o": ["The distribution is stable", "Moderate change in distribution", "Significant drift in distribution", "No change in distribution"], "c": 2}, {"q": "Which statistical test does this section recommend for detecting drift in categorical features?", "o": ["Population Stability Index (PSI)", "Kolmogorov-Smirnov Test", "Chi-Square Test", "Jensen-Shannon Divergence"], "c": 2}], "4": [{"q": "What is the defining characteristic of Champion-Challenger retraining according to this section?", "o": ["Retraining on a fixed cadence regardless of drift", "Retraining when a drift metric exceeds a threshold", "Deploying new model alongside old and comparing performance before switching", "Updating the model on new data without forgetting old patterns"], "c": 2}, {"q": "According to this section, what triggers Performance-Triggered retraining?", "o": ["A fixed schedule regardless of model performance", "When a drift metric exceeds a threshold", "When model metrics fall below a threshold", "When new training data becomes available"], "c": 2}], "5": [{"q": "According to this section, why is Accuracy misleading on imbalanced datasets?", "o": ["It cannot be computed for multi-class problems", "A model that always predicts the majority class can achieve high accuracy without learning anything useful", "It penalises large errors more than small errors", "It measures discrimination ability across thresholds"], "c": 1}, {"q": "Which metric does this section describe as the harmonic mean of Precision and Recall?", "o": ["AUC-ROC", "Accuracy", "F1 Score", "R-squared"], "c": 2}], "6": [{"q": "According to this section, which tool is used for open-source drift detection and reporting?", "o": ["Grafana", "Prometheus", "Evidently AI", "Great Expectations"], "c": 2}, {"q": "Which of the following is listed as something to monitor according to this section?", "o": ["Model architecture and hyperparameters", "Training dataset statistics", "Input features including statistical distributions and missing rates", "Source code version and deployment history"], "c": 2}], "7": [{"q": "According to the Drift Response Playbook, what should you check first when you suspect model degradation?", "o": ["Run PSI and KS tests on all input features", "Immediately schedule a full retraining", "Check upstream data first for pipeline issues", "Deploy a champion-challenger model"], "c": 2}, {"q": "According to this section, why should you never switch models without comparison?", "o": ["Because new models are always worse than old models", "Because the champion-challenger approach ensures you compare performance before switching", "Because model registries do not support switching", "Because retraining always introduces concept drift"], "c": 1}]};
-const cyuAnswered = {}; // {secId: {qi: true/false answered}}
+const cyuAnswered = {}; // {secId: {qi: true}} — tracks answered
+const cyuCorrect = {};  // {secId: {qi: true/false}} — tracks correctness
 
 function buildCYU(secId) {
   const qs = SECTION_QUESTIONS[String(secId)] || [];
@@ -397,6 +398,8 @@ window.cyuCheck = function(secId, qi, correctIdx) {
   // Mark this question as answered
   if (!cyuAnswered[secId]) cyuAnswered[secId] = {};
   cyuAnswered[secId][qi] = true;
+  if (!cyuCorrect[secId]) cyuCorrect[secId] = {};
+  cyuCorrect[secId][qi] = isCorrect;
   // Save response to Firestore
   if (currentUser) {
     const pRef = doc(db,'progress',currentUser.uid);
@@ -428,6 +431,8 @@ function restoreCYUState(secId, modData) {
     const saved = modData['cyu_'+secId+'_'+qi];
     if (saved && saved.answered) {
       cyuAnswered[secId][qi] = true;
+        if (!cyuCorrect[secId]) cyuCorrect[secId] = {};
+        cyuCorrect[secId][qi] = saved.correct;
       // Restore visual state
       setTimeout(() => {
         const opts = document.querySelectorAll('[data-sec="'+secId+'"][data-q="'+qi+'"]');
@@ -466,6 +471,7 @@ function buildSections(states){
 window.retakeSection = function(secId) {
   // Clear cyuAnswered for this section
   cyuAnswered[secId] = {};
+  cyuCorrect[secId] = {};
   // Clear Firestore entries for this section
   if (currentUser) {
     const pRef = doc(db,'progress',currentUser.uid);
@@ -505,11 +511,20 @@ window.markSection=async(sectionId,btn)=>{
   btn.classList.add('done');
   btn.textContent = '\u2713 Completed';
   const retakeBtn = document.getElementById('retake-'+sectionId);
-  if (retakeBtn) retakeBtn.classList.add('visible');
+  // Only show retake if at least one question was answered incorrectly
+  const secCorrectness = cyuCorrect[sectionId] || {};
+  const hasWrongAnswer = Object.values(secCorrectness).some(v => v === false);
+  if (retakeBtn && hasWrongAnswer) retakeBtn.classList.add('visible');
 
   if(!currentUser)return;const key=`section-${sectionId}`;sectionStates[key]='done';
   btn.textContent='✓ Completed';btn.classList.add('marked');
   const card=btn.closest('.section-card');card.classList.add('completed-section');card.querySelector('.section-check').classList.add('done');card.querySelector('.section-check').textContent='✓';
+  // Collapse current section and scroll to top of next section
+  card.classList.remove('active');
+  const allCards=Array.from(document.querySelectorAll('.section-card'));
+  const currentIdx=allCards.indexOf(card);
+  const nextCard=allCards[currentIdx+1];
+  if(nextCard){nextCard.classList.add('active');setTimeout(()=>{const top=nextCard.getBoundingClientRect().top+window.scrollY-80;window.scrollTo({top,behavior:'smooth'});},150);}
   updateProgress(sectionStates);
   const pRef=doc(db,'progress',currentUser.uid);const pSnap=await getDoc(pRef);const existing=pSnap.exists()?pSnap.data():{};
   const sections=(existing[COURSE_ID]?.[MODULE_ID]?.sections)||{};sections[key]='done';
