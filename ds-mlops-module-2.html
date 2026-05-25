@@ -140,6 +140,11 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   .auth-user-bar { background:#e8f1fb; border-bottom:1px solid #b8d0ed; padding:8px 32px; font-size:13px; font-family:'Source Code Pro',monospace; color:#0f4a7a; display:flex; align-items:center; justify-content:space-between; }
   .auth-user-bar.hidden { display:none; }
   .auth-signout { background:#1a6eb5; color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:13px; font-weight:700; font-family:'Merriweather Sans',sans-serif; padding:6px 16px; }
+
+.mark-complete-btn.done{opacity:0.45;cursor:not-allowed;pointer-events:none;background:rgba(16,185,129,0.1);border-color:var(--green);color:var(--green);}
+.retake-btn{display:none;align-items:center;gap:8px;background:transparent;border:1px solid var(--accent);color:var(--accent);border-radius:8px;padding:9px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:var(--font);margin-top:8px;transition:all 0.2s;}
+.retake-btn.visible{display:flex;}
+.retake-btn:hover{background:rgba(37,99,235,0.08);}
 </style>
 </head>
 <body>
@@ -447,13 +452,51 @@ function buildSections(states){
   updateProgress(states);
 }
 
+
+window.retakeSection = function(secId) {
+  // Clear cyuAnswered for this section
+  cyuAnswered[secId] = {};
+  // Clear Firestore entries for this section
+  if (currentUser) {
+    const pRef = doc(db,'progress',currentUser.uid);
+    const update = {};
+    const qs = SECTION_QUESTIONS[String(secId)] || [];
+    qs.forEach((_,qi) => { update[COURSE_ID+'.'+MODULE_ID+'.cyu_'+secId+'_'+qi] = null; });
+    setDoc(pRef, update, {merge:true}).catch(e => console.warn('Retake clear failed:', e.message));
+  }
+  // Rebuild just this section's CYU block
+  const secCard = document.getElementById('mcb-'+secId)?.closest('.section-body') || 
+                  document.getElementById('retake-'+secId)?.closest('.section-body');
+  if (secCard) {
+    const oldCyu = secCard.querySelector('.cyu-wrap');
+    if (oldCyu) {
+      const newCyu = document.createElement('div');
+      newCyu.innerHTML = buildCYU(secId);
+      oldCyu.replaceWith(newCyu.firstChild);
+    }
+  }
+  // Reset mark-complete button
+  const btn = document.getElementById('mcb-'+secId);
+  if (btn) { btn.classList.remove('done','marked'); btn.textContent = 'Mark as complete'; }
+  // Hide retake button
+  const retakeBtn = document.getElementById('retake-'+secId);
+  if (retakeBtn) retakeBtn.classList.remove('visible');
+  // Re-lock mark-complete if questions exist
+  const qs = SECTION_QUESTIONS[String(secId)] || [];
+  if (qs.length && btn) btn.classList.add('locked');
+};
 window.toggleSection=(header)=>{const card=header.closest('.section-card');const wasActive=card.classList.contains('active');document.querySelectorAll('.section-card').forEach(c=>{c.classList.remove('active');c.querySelector('.section-chevron').textContent='▼';});if(!wasActive){card.classList.add('active');header.querySelector('.section-chevron').textContent='▲';}};
 
 window.markSection=async(sectionId,btn)=>{
   // Guard: check CYU questions are all answered
-  const cyaQs = SECTION_QUESTIONS[String(arguments[0]||sectionId)] || [];
-  const cyaAnswered = cyuAnswered[arguments[0]||sectionId] || {};
-  if (cyaQs.length && !cyaQs.every((_,qi) => cyaAnswered[qi]===true)) return;
+  const cyaQs = SECTION_QUESTIONS[String(sectionId)] || [];
+  const cyaState = cyuAnswered[sectionId] || {};
+  if (cyaQs.length && !cyaQs.every((_,qi) => cyaState[qi]===true)) return;
+  // Mark button as done and show retake button
+  btn.classList.add('done');
+  btn.textContent = '\u2713 Completed';
+  const retakeBtn = document.getElementById('retake-'+sectionId);
+  if (retakeBtn) retakeBtn.classList.add('visible');
 
   if(!currentUser)return;
   const key=`section-${sectionId}`;sectionStates[key]='done';
