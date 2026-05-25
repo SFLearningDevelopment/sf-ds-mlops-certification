@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
-<title>SF Certified DS & MLOps Practitioner — Exam</title>
+<title>Module 2: Feature Engineering — SF DS & MLOps Certification</title>
 <style>
 :root{
   --bg:#f8fafc;--surface:#ffffff;--surface2:#f1f5f9;--border:#e2e8f0;
@@ -14,744 +14,475 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;}
 a{color:var(--accent);}
-
-/* Auth */
-
-
+.auth-overlay{position:fixed;inset:0;background:rgba(248,250,252,0.97);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:44px 40px;text-align:center;max-width:400px;width:90%;}
 .auth-card h2{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
 .auth-card p{color:var(--text2);font-size:0.875rem;margin-bottom:28px;line-height:1.6;}
-
-
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:none;border-radius:10px;padding:12px 20px;font-size:0.9rem;font-weight:600;cursor:pointer;width:100%;font-family:var(--font);transition:all 0.2s;}
+.google-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,0.3);}
 .google-btn svg{width:18px;height:18px;flex-shrink:0;}
-
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--text2);font-size:0.8rem;}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
 .email-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:0.875rem;font-family:var(--font);margin-bottom:10px;outline:none;transition:border 0.2s;}
 .email-input:focus{border-color:var(--accent);}
 .email-btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:11px;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:var(--font);}
 .auth-error{color:var(--red);font-size:0.8rem;margin-top:10px;}
-
-/* Header */
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.header-left{display:flex;align-items:center;gap:14px;}
-.header-brand{font-weight:800;font-size:0.9rem;}
-.exam-timer{font-family:var(--mono);font-size:1rem;font-weight:700;color:var(--accent);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 14px;}
-.exam-timer.warning{color:var(--yellow);}
-.exam-timer.danger{color:var(--red);animation:pulse 1s infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+.header-left{display:flex;align-items:center;gap:16px;}
+.back-link{color:var(--text2);text-decoration:none;font-size:0.85rem;display:flex;align-items:center;gap:6px;transition:color 0.2s;}
+.back-link:hover{color:var(--accent);}
+.module-label{font-size:0.85rem;font-weight:700;color:var(--accent);}
 .header-right{display:flex;align-items:center;gap:10px;}
 .user-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.8rem;color:var(--text2);}
+.signout-btn{background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:6px 12px;font-size:0.8rem;cursor:pointer;font-family:var(--font);}
+.module-hero{padding:52px 28px 40px;max-width:900px;margin:0 auto;}
+.hero-module-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:20px;padding:5px 14px;font-size:0.75rem;font-weight:700;color:var(--yellow);margin-bottom:20px;text-transform:uppercase;letter-spacing:0.06em;}
+.module-hero h1{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-0.03em;line-height:1.2;margin-bottom:14px;}
+.module-hero p{color:var(--text2);font-size:0.95rem;line-height:1.7;max-width:680px;}
+.module-progress-bar{height:4px;background:var(--surface2);border-radius:2px;margin-top:28px;overflow:hidden;}
+.module-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;width:0%;transition:width 0.6s ease;}
+.content-wrap{max-width:900px;margin:0 auto;padding:0 28px 80px;}
+.section-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:20px;overflow:hidden;transition:border-color 0.2s;}
+.section-card.active{border-color:rgba(37,99,235,0.5);}
+.section-card.completed-section{border-color:rgba(16,185,129,0.35);}
+.section-header{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;}
+.section-header:hover{background:rgba(255,255,255,0.02);}
+.section-num{font-family:var(--mono);font-size:0.72rem;color:var(--text2);min-width:28px;font-weight:500;}
+.section-title-text{flex:1;font-weight:700;font-size:0.95rem;}
+.section-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.7rem;transition:all 0.2s;flex-shrink:0;}
+.section-check.done{background:var(--green);border-color:var(--green);color:#fff;}
+.section-chevron{color:var(--text2);font-size:0.8rem;transition:transform 0.2s;flex-shrink:0;}
+.section-card.active .section-chevron{transform:rotate(180deg);}
+.section-body{padding:0 22px 22px;display:none;}
+.section-card.active .section-body{display:block;}
+.section-body h3{font-size:1.05rem;font-weight:800;margin:20px 0 10px;letter-spacing:-0.01em;}
+.section-body h4{font-size:0.9rem;font-weight:700;margin:16px 0 8px;color:var(--accent2);}
+.section-body p{color:var(--text2);font-size:0.9rem;line-height:1.75;margin-bottom:12px;}
+.section-body ul,.section-body ol{padding-left:22px;margin-bottom:12px;}
+.section-body li{color:var(--text2);font-size:0.88rem;line-height:1.7;margin-bottom:4px;}
+.section-body li strong{color:var(--text);}
+.section-body code{font-family:var(--mono);background:var(--surface2);border:1px solid var(--border);padding:2px 7px;border-radius:5px;font-size:0.82rem;color:var(--accent2);}
+.callout{border-radius:10px;padding:16px 18px;margin:16px 0;border-left:3px solid;}
+.callout-blue{background:rgba(37,99,235,0.08);border-color:var(--accent);}
+.callout-green{background:rgba(16,185,129,0.08);border-color:var(--green);}
+.callout-yellow{background:rgba(245,158,11,0.08);border-color:var(--yellow);}
+.callout h4{font-size:0.85rem;font-weight:700;margin-bottom:6px;}
+.callout p{font-size:0.85rem;margin-bottom:0;}
+.callout-blue h4{color:var(--accent2);}
+.callout-green h4{color:var(--green);}
+.callout-yellow h4{color:var(--yellow);}
+.diagram{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:center;}
+.diagram-title{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text2);margin-bottom:16px;}
+.diagram-row{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0;}
+.diagram-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:0.82rem;font-weight:600;}
+.diagram-box.blue{border-color:rgba(37,99,235,0.4);color:var(--accent2);}
+.diagram-box.green{border-color:rgba(16,185,129,0.4);color:var(--green);}
+.diagram-box.yellow{border-color:rgba(245,158,11,0.4);color:var(--yellow);}
+.diagram-box.purple{border-color:rgba(139,92,246,0.4);color:var(--purple);}
+.diagram-arrow{color:var(--text2);font-size:1.2rem;}
+.table-wrap{overflow-x:auto;margin:16px 0;}
+table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+th{background:var(--surface2);color:var(--text);font-weight:700;padding:10px 14px;text-align:left;border:1px solid var(--border);}
+td{padding:9px 14px;border:1px solid var(--border);color:var(--text2);}
+td strong{color:var(--text);}
+tr:hover td{background:rgba(255,255,255,0.02);}
+.test-questions{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:16px 18px;margin-top:18px;}
+.test-questions h4{font-size:0.82rem;font-weight:700;color:var(--accent2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;}
+.test-questions ul{padding-left:18px;}
+.test-questions li{font-size:0.83rem;color:var(--text2);line-height:1.65;margin-bottom:3px;}
+.mark-complete-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:9px 16px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:var(--font);margin-top:18px;transition:all 0.2s;}
+.mark-complete-btn:hover{border-color:var(--green);color:var(--green);}
+.mark-complete-btn.marked{background:rgba(16,185,129,0.1);border-color:var(--green);color:var(--green);}
+.bottom-nav{max-width:900px;margin:0 auto;padding:0 28px 48px;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.nav-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;font-size:0.88rem;font-weight:700;cursor:pointer;text-decoration:none;border:1px solid var(--border);color:var(--text2);background:var(--surface);transition:all 0.2s;font-family:var(--font);}
+.nav-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.nav-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,0.3);}
+.nav-btn.primary:hover{box-shadow:0 6px 16px rgba(37,99,235,0.4);}
+.nav-btn.disabled{opacity:0.4;pointer-events:none;}
+@media(max-width:600px){.module-hero,.content-wrap{padding-left:16px;padding-right:16px;}.bottom-nav{padding:0 16px 40px;}}
 
-/* Intro screen */
-.intro-screen{max-width:700px;margin:0 auto;padding:60px 28px;}
-.intro-screen h1{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:16px;}
-.intro-screen p{color:var(--text2);font-size:0.95rem;line-height:1.7;margin-bottom:24px;}
-.intro-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
-.intro-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
-.intro-stat-num{font-size:1.5rem;font-weight:800;color:var(--accent);}
-.intro-stat-label{font-size:0.78rem;color:var(--text2);margin-top:2px;}
-.attempt-info{background:rgba(37,99,235,0.06);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:14px 18px;margin-bottom:24px;font-size:0.85rem;color:var(--text2);}
-.attempt-info strong{color:var(--text);}
-.start-btn{background:var(--accent);color:#fff;border:none;border-radius:12px;padding:14px 32px;font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
-.start-btn:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 20px rgba(37,99,235,0.4);}
-.start-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
+/* Check your understanding MCQ */
+.cyu-wrap{background:rgba(37,99,235,0.05);border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:18px 20px;margin-top:20px;}
+.cyu-label{font-size:0.75rem;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
+.cyu-question{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(37,99,235,0.12);}
+.cyu-question:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.cyu-q-text{font-size:0.85rem;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.5;}
+.cyu-options{display:flex;flex-direction:column;gap:6px;}
+.cyu-option{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border:1px solid var(--border);border-radius:7px;cursor:pointer;font-size:0.82rem;color:var(--text2);background:var(--surface);transition:all 0.15s;line-height:1.45;}
+.cyu-option:hover{border-color:var(--accent);color:var(--text);background:rgba(37,99,235,0.04);}
+.cyu-option.selected{border-color:var(--accent);color:var(--text);background:rgba(37,99,235,0.08);}
+.cyu-option.correct{border-color:var(--green);background:rgba(16,185,129,0.08);color:var(--green);}
+.cyu-option.wrong{border-color:#f87171;background:rgba(248,113,113,0.08);color:#dc2626;}
+.cyu-option-key{font-family:var(--mono);font-size:0.7rem;font-weight:700;color:var(--text2);min-width:16px;margin-top:1px;}
+.cyu-feedback{font-size:0.78rem;font-weight:600;margin-top:6px;min-height:16px;}
+.cyu-feedback.correct{color:var(--green);}
+.cyu-feedback.wrong{color:#dc2626;}
+.mark-complete-btn.locked{opacity:0.45;cursor:not-allowed;pointer-events:none;}
 
-/* Exam screen */
-.exam-screen{max-width:760px;margin:0 auto;padding:32px 28px 80px;}
-.exam-progress{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:28px;display:flex;align-items:center;gap:16px;}
-.exam-progress-bar{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
-.exam-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width 0.4s ease;}
-.exam-progress-text{font-size:0.82rem;color:var(--text2);font-family:var(--mono);white-space:nowrap;}
-.question-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:20px;}
-.question-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.question-num{font-family:var(--mono);font-size:0.75rem;color:var(--text2);}
-.question-module{font-size:0.72rem;font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(37,99,235,0.1);color:var(--accent2);}
-.question-text{font-size:0.97rem;font-weight:600;line-height:1.6;margin-bottom:20px;}
-.options{display:flex;flex-direction:column;gap:10px;}
-.option{display:flex;align-items:flex-start;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:13px 16px;cursor:pointer;transition:all 0.15s;}
-.option:hover{border-color:var(--accent);background:rgba(37,99,235,0.06);}
-.option.selected{border-color:var(--accent);background:rgba(37,99,235,0.1);}
-.option.correct{border-color:var(--green);background:rgba(16,185,129,0.1);}
-.option.incorrect{border-color:var(--red);background:rgba(239,68,68,0.08);}
-.option-letter{font-family:var(--mono);font-size:0.8rem;font-weight:700;color:var(--text2);min-width:20px;margin-top:1px;}
-.option-text{font-size:0.88rem;line-height:1.55;color:var(--text);}
-.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:24px;}
-.q-nav-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:10px;padding:10px 20px;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
-.q-nav-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);}
-.q-nav-btn:disabled{opacity:0.35;cursor:not-allowed;}
-.q-nav-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
-.q-nav-btn.primary:hover{background:var(--accent2);}
-.submit-btn{background:var(--green);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:0.88rem;font-weight:700;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
-.submit-btn:hover{opacity:0.9;}
 
-/* Results screen */
-.results-screen{max-width:700px;margin:0 auto;padding:60px 28px 80px;text-align:center;}
-.result-icon{font-size:4rem;margin-bottom:20px;}
-.results-screen h1{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:12px;}
-.results-screen p{color:var(--text2);font-size:0.95rem;line-height:1.7;margin-bottom:28px;}
-.score-display{font-size:4rem;font-weight:800;color:var(--accent);letter-spacing:-0.04em;margin:20px 0 8px;}
-.score-display.pass{color:var(--green);}
-.score-display.fail{color:var(--red);}
-.score-sub{font-size:0.9rem;color:var(--text2);margin-bottom:28px;}
-.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px;}
-.result-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;}
-.result-stat-num{font-size:1.5rem;font-weight:800;}
-.result-stat-label{font-size:0.75rem;color:var(--text2);margin-top:3px;}
-.result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-.result-btn{padding:12px 24px;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:var(--font);text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;}
-.result-btn.primary{background:var(--accent);color:#fff;border:none;}
-.result-btn.primary:hover{background:var(--accent2);}
-.result-btn.secondary{background:var(--surface);color:var(--text2);border:1px solid var(--border);}
-.result-btn.secondary:hover{border-color:var(--accent);color:var(--accent);}
-
-@media(max-width:600px){
-  .intro-screen,.exam-screen,.results-screen{padding:32px 16px 60px;}
-  .intro-grid{grid-template-columns:1fr;}
-  .results-grid{grid-template-columns:1fr 1fr;}
-}
-.auth-overlay{position:fixed;inset:0;background:rgba(15,30,60,.7);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
-.auth-overlay.hidden{display:none;}
-.auth-box{background:#fff;border-radius:16px;padding:48px 40px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2);}
-.auth-logo{font-size:32px;margin-bottom:16px;}
-.auth-title{font-size:22px;font-weight:700;color:#1a2332;margin-bottom:8px;}
-.auth-sub{font-size:15px;color:#4a5568;line-height:1.6;margin-bottom:28px;}
-.auth-google-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px 20px;border-radius:8px;background:#1a6eb5;color:#fff;border:none;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;}
-.auth-google-btn:hover{background:#0f4a7a;}
-.auth-google-btn svg{width:20px;height:20px;flex-shrink:0;}
-.auth-divider{margin:14px 0;color:#999;font-size:12px;letter-spacing:0.05em;}
-.auth-input{width:100%;box-sizing:border-box;border:1px solid #ddd;border-radius:6px;padding:10px 12px;font-size:13px;margin-bottom:8px;outline:none;font-family:inherit;}
-.auth-input:focus{border-color:#1a6eb5;}
-.auth-email-btn{width:100%;background:#2563eb;color:#fff;border:none;border-radius:6px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s;}
-.auth-email-btn:hover{background:#1a4fb5;}
-.auth-error{font-size:13px;color:#c0392b;margin-top:10px;min-height:16px;}
-.auth-error.hidden{display:none;}
+  /* Auth overlay - Claude for PM style */
+  .auth-overlay { position:fixed; inset:0; background:rgba(15,30,60,.7); display:flex; align-items:center; justify-content:center; z-index:9999; backdrop-filter:blur(4px); }
+  .auth-overlay.hidden { display:none; }
+  .auth-box { background:#fff; border-radius:16px; padding:48px 40px; max-width:420px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.2); }
+  .auth-logo { font-size:32px; margin-bottom:16px; }
+  .auth-title { font-size:22px; font-weight:700; color:#1a2332; margin-bottom:8px; }
+  .auth-sub { font-size:15px; color:#4a5568; line-height:1.6; margin-bottom:28px; }
+  .auth-google-btn { display:flex; align-items:center; justify-content:center; gap:12px; width:100%; padding:14px 20px; border-radius:8px; background:#1a6eb5; color:#fff; border:none; font-size:16px; font-weight:600; cursor:pointer; font-family:'Merriweather Sans',sans-serif; transition:background .15s; }
+  .auth-google-btn:hover { background:#0f4a7a; }
+  .auth-google-btn svg { width:20px; height:20px; flex-shrink:0; }
+  .auth-divider { margin:14px 0; color:#999; font-size:12px; letter-spacing:0.05em; }
+  .auth-input { width:100%; box-sizing:border-box; border:1px solid #ddd; border-radius:6px; padding:10px 12px; font-size:13px; margin-bottom:8px; outline:none; font-family:'Merriweather Sans',sans-serif; }
+  .auth-input:focus { border-color:#1a6eb5; }
+  .auth-email-btn { width:100%; background:#2563eb; color:#fff; border:none; border-radius:6px; padding:10px; font-size:13px; font-weight:600; cursor:pointer; font-family:'Merriweather Sans',sans-serif; transition:background .15s; }
+  .auth-email-btn:hover { background:#1a4fb5; }
+  .auth-error { font-size:13px; color:#c0392b; margin-top:10px; font-family:'Source Code Pro',monospace; min-height:16px; }
+  .auth-error.hidden { display:none; }
+  .auth-user-bar { background:#e8f1fb; border-bottom:1px solid #b8d0ed; padding:8px 32px; font-size:13px; font-family:'Source Code Pro',monospace; color:#0f4a7a; display:flex; align-items:center; justify-content:space-between; }
+  .auth-user-bar.hidden { display:none; }
+  .auth-signout { background:#1a6eb5; color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:13px; font-weight:700; font-family:'Merriweather Sans',sans-serif; padding:6px 16px; }
 </style>
 </head>
 <body>
-
-<!-- Auth -->
+<!-- Auth overlay - Claude for PM style -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-box">
     <div class="auth-logo">🎓</div>
     <div class="auth-title">SF Certified DS &amp; MLOps Practitioner</div>
-    <div class="auth-sub">Sign in with your SourceFuse account to access the certification exam.</div>
-    <button class="auth-google-btn" onclick="signInWithGoogle()">
+    <div class="auth-sub">Sign in with your SourceFuse Google account to access the course and save your progress.</div>
+    <button class="auth-google-btn" id="googleSignInBtn">
       <svg viewBox="0 0 48 48"><path fill="#fff" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></svg>
       Sign in with Google
     </button>
     <div class="auth-divider">OR</div>
     <input id="ep-email" type="email" placeholder="you@sourcefuse.com" autocomplete="email" class="auth-input">
     <input id="ep-password" type="password" placeholder="Password" autocomplete="current-password" class="auth-input">
-    <button class="auth-email-btn" onclick="evalEmailSignIn()">Sign in with Email</button>
+    <button class="auth-email-btn" onclick="dsEmailSignIn()">Sign in with Email</button>
     <div class="auth-error hidden" id="authError"></div>
   </div>
 </div>
+<div class="auth-user-bar hidden" id="authUserBar">
+  <span id="authUserEmail"></span>
+  <button class="auth-signout" id="authSignOutBtn">Sign out</button>
+</div>
 
-<!-- Header -->
+
+
 <div class="header" id="mainHeader" style="display:none">
   <div class="header-left">
-    <span class="header-brand">🎓 DS & MLOps Exam</span>
-    <div class="exam-timer" id="timerDisplay" style="display:none">45:00</div>
+    <a class="back-link" href="index.html">← Course Hub</a>
+    <span class="module-label">Module 2 of 5</span>
   </div>
   <div class="header-right">
     <span class="user-pill" id="userEmail">—</span>
+    <button class="signout-btn" onclick="doSignOut()">Sign out</button>
   </div>
 </div>
 
-<!-- Intro Screen -->
-<div class="intro-screen" id="introScreen" style="display:none">
-  <h1>SF Certified DS & MLOps Practitioner</h1>
-  <p>You've completed all 5 modules. This exam tests your understanding across the full course — foundations, feature engineering, model drift, MLOps architecture, and system articulation.</p>
-  <div class="intro-grid">
-    <div class="intro-stat"><div class="intro-stat-num">30</div><div class="intro-stat-label">Questions</div></div>
-    <div class="intro-stat"><div class="intro-stat-num">45 min</div><div class="intro-stat-label">Time Limit</div></div>
-    <div class="intro-stat"><div class="intro-stat-num">70%</div><div class="intro-stat-label">Pass Score (21/30)</div></div>
-    <div class="intro-stat"><div class="intro-stat-num">3</div><div class="intro-stat-label">Max Attempts</div></div>
+<div id="mainContent" style="display:none">
+  <div class="module-hero">
+    <div class="hero-module-badge">⚙️ Module 2 · Core</div>
+    <h1>Feature Engineering in Depth</h1>
+    <p>Features are the language a model uses to understand the world. This module teaches you how to translate raw, messy data into the precise numeric signals that drive model performance — the strategy, the techniques, and the reasoning behind them.</p>
+    <div class="module-progress-bar"><div class="module-progress-fill" id="modProgressFill"></div></div>
   </div>
-  <div class="attempt-info" id="attemptInfo">Loading attempt info…</div>
-  <button class="start-btn" id="startBtn" onclick="startExam()">Begin Exam →</button>
-</div>
-
-<!-- Exam Screen -->
-<div class="exam-screen" id="examScreen" style="display:none">
-  <div class="exam-progress">
-    <div class="exam-progress-bar"><div class="exam-progress-fill" id="examProgressFill" style="width:0%"></div></div>
-    <span class="exam-progress-text" id="examProgressText">0 / 30</span>
-  </div>
-  <div id="questionContainer"></div>
-</div>
-
-<!-- Results Screen -->
-<div class="results-screen" id="resultsScreen" style="display:none">
-  <div class="result-icon" id="resultIcon">🎓</div>
-  <h1 id="resultTitle">Results</h1>
-  <div class="score-display" id="resultScore">—</div>
-  <div class="score-sub" id="resultSub">—</div>
-  <div class="results-grid">
-    <div class="result-stat"><div class="result-stat-num" id="statCorrect">—</div><div class="result-stat-label">Correct</div></div>
-    <div class="result-stat"><div class="result-stat-num" id="statWrong">—</div><div class="result-stat-label">Incorrect</div></div>
-    <div class="result-stat"><div class="result-stat-num" id="statAttempts">—</div><div class="result-stat-label">Attempts Used</div></div>
-  </div>
-  <p id="resultMessage" style="margin-bottom:24px;"></p>
-  <div class="result-actions">
-    <a href="index.html" class="result-btn secondary">← Course Hub</a>
-    <button class="result-btn primary" id="retryBtn" onclick="retryExam()" style="display:none">Retry Exam</button>
+  <div class="content-wrap" id="sectionsContainer"></div>
+  <div class="bottom-nav">
+    <a href="ds-mlops-module-1.html" class="nav-btn">← Module 1</a>
+    <a href="ds-mlops-module-3.html" class="nav-btn primary disabled" id="nextBtn">Module 3 →</a>
   </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail,
-  isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC-I-IOCq2fCwa471fsD5xOn6SYQSBDp7Q",
-  authDomain: "sfcertification-grafana.firebaseapp.com",
-  projectId: "sfcertification-grafana",
-  storageBucket: "sfcertification-grafana.firebasestorage.app",
-  messagingSenderId: "227322696511",
-  appId: "1:227322696511:web:12e7ced7dd3d45fa06798a"
-};
+const firebaseConfig = {apiKey:"AIzaSyC-I-IOCq2fCwa471fsD5xOn6SYQSBDp7Q",authDomain:"sfcertification-grafana.firebaseapp.com",projectId:"sfcertification-grafana",storageBucket:"sfcertification-grafana.firebasestorage.app",messagingSenderId:"227322696511",appId:"1:227322696511:web:12e7ced7dd3d45fa06798a"};
+const COURSE_ID="dsMlops2026SFCert", MODULE_ID="module-2";
 
-const COURSE_ID = "dsMlops2026SFCert";
-const EXAM_DURATION = 45 * 60;
-const MAX_ATTEMPTS = 3;
-const PASS_SCORE = 70;
+const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
+let currentUser=null, sectionStates={};
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-let currentUser = null;
-let timerInterval = null;
-let timeRemaining = EXAM_DURATION;
-let currentQuestion = 0;
-let answers = {};
-let examStartTime = null;
-let attemptCount = 0;
-let examActive = false;
-
-/* ══ QUESTIONS ══ */
-const QUESTIONS = [
-  // Module 1 — Foundations (6 questions)
-  {
-    id: 1, module: "M1 · Foundations",
-    q: "Data Science is described as sitting at the intersection of three domains. Which of the following correctly identifies all three?",
-    opts: ["Statistics, programming, and domain expertise", "Mathematics, computer science, and business", "Data engineering, ML research, and software development", "Analytics, visualisation, and AI"],
-    ans: 0
-  },
-  {
-    id: 2, module: "M1 · Foundations",
-    q: "Which of the following correctly lists the 6 stages of the ML lifecycle in order?",
-    opts: [
-      "Define problem → Collect data → Feature engineering → Train & evaluate → Deploy → Monitor & retrain",
-      "Collect data → Clean data → Define problem → Train → Deploy → Monitor",
-      "Define problem → Train model → Collect data → Deploy → Evaluate → Monitor",
-      "Feature engineering → Collect data → Define problem → Train → Monitor → Deploy"
-    ],
-    ans: 0
-  },
-  {
-    id: 3, module: "M1 · Foundations",
-    q: "In supervised machine learning, what is a 'label'?",
-    opts: [
-      "A column in the dataset that describes a feature of the observation",
-      "The outcome variable that the model is trained to predict",
-      "A tag applied to data during the ingestion process",
-      "A category assigned by the model after prediction"
-    ],
-    ans: 1
-  },
-  {
-    id: 4, module: "M1 · Foundations",
-    q: "A team needs to keep a PostgreSQL database in sync with their data warehouse without running full table scans. Which ingestion pattern is most appropriate?",
-    opts: ["Batch ingestion via Airflow on a daily schedule", "Change Data Capture (CDC) using a tool like Debezium", "Streaming ingestion via Apache Kafka", "Manual export to CSV and upload"],
-    ans: 1
-  },
-  {
-    id: 5, module: "M1 · Foundations",
-    q: "Which of the following best defines MLOps?",
-    opts: [
-      "The practice of writing machine learning models in production-grade languages",
-      "A cloud service for deploying neural networks",
-      "The application of DevOps principles — automation, monitoring, and CI/CD — to the machine learning lifecycle",
-      "A methodology for conducting A/B tests on ML models"
-    ],
-    ans: 2
-  },
-  {
-    id: 6, module: "M1 · Foundations",
-    q: "What is the primary purpose of a Model Registry in an MLOps system?",
-    opts: [
-      "To store raw training data for reuse",
-      "To provide a versioned catalog of trained models with lifecycle stages (staging, production, archived)",
-      "To monitor model predictions in real time",
-      "To schedule automated retraining jobs"
-    ],
-    ans: 1
-  },
-
-  // Module 2 — Feature Engineering (6 questions)
-  {
-    id: 7, module: "M2 · Feature Engineering",
-    q: "A numerical feature representing user income has a highly skewed distribution with a long right tail. Which transformation is most appropriate before training a linear model?",
-    opts: ["Min-Max Scaling", "One-Hot Encoding", "Log transformation", "Binning into 5 equal-width buckets"],
-    ans: 2
-  },
-  {
-    id: 8, module: "M2 · Feature Engineering",
-    q: "A dataset has a categorical feature 'city' with 8,000 unique values. Which encoding strategy is most appropriate?",
-    opts: [
-      "One-Hot Encoding — creates a binary column per city",
-      "Label Encoding — assigns an integer to each city",
-      "Target Encoding — replaces each city with the mean of the target variable for that city",
-      "Drop the feature — too many categories to encode"
-    ],
-    ans: 2
-  },
-  {
-    id: 9, module: "M2 · Feature Engineering",
-    q: "What does the 'Indicator + Imputation' strategy for missing values do?",
-    opts: [
-      "It drops all rows with missing values and imputes the mean for the rest",
-      "It adds a binary column recording that the value was missing, then fills the original column with a statistic",
-      "It replaces missing values with a constant -999",
-      "It uses a KNN model to predict missing values from neighbouring rows"
-    ],
-    ans: 1
-  },
-  {
-    id: 10, module: "M2 · Feature Engineering",
-    q: "Which feature selection method has feature importance built directly into the model training process?",
-    opts: ["Filter method using Pearson correlation", "Wrapper method using Recursive Feature Elimination", "Embedded method using Lasso regression or tree-based importance", "Variance threshold filtering"],
-    ans: 2
-  },
-  {
-    id: 11, module: "M2 · Feature Engineering",
-    q: "When constructing a training dataset with time-based features, you compute a '30-day login count' for a user using data from the future relative to the label event. This is an example of:",
-    opts: ["Feature selection bias", "Temporal data leakage", "Target encoding leakage", "Concept drift"],
-    ans: 1
-  },
-  {
-    id: 12, module: "M2 · Feature Engineering",
-    q: "A data scientist builds a model, then adds 200 new features, and sees training accuracy improve but test accuracy worsen. What is the most likely cause?",
-    opts: ["Underfitting due to insufficient data", "Overfitting — many of the added features introduce noise rather than signal", "Data drift in the test set", "Incorrect label encoding"],
-    ans: 1
-  },
-
-  // Module 3 — Model Drift (6 questions)
-  {
-    id: 13, module: "M3 · Model Drift",
-    q: "A fraud detection model was trained in 2022. In 2024, the types of fraud transactions have changed significantly, but the input feature distributions remain similar. Which type of drift is this?",
-    opts: ["Data drift", "Concept drift", "Label drift", "Upstream data drift"],
-    ans: 1
-  },
-  {
-    id: 14, module: "M3 · Model Drift",
-    q: "A PSI score of 0.25 is computed on a key input feature. What does this indicate?",
-    opts: [
-      "No significant distribution shift — no action needed",
-      "Moderate shift — worth monitoring but no immediate action",
-      "Significant drift — investigate and consider retraining",
-      "The feature should be dropped from the model"
-    ],
-    ans: 2
-  },
-  {
-    id: 15, module: "M3 · Model Drift",
-    q: "What does the Kolmogorov-Smirnov (KS) test measure in the context of drift detection?",
-    opts: [
-      "The proportion of correctly predicted labels since deployment",
-      "Whether the cumulative distribution of a feature at serving time differs significantly from training time",
-      "The number of null values introduced by upstream pipeline changes",
-      "The distance between two model versions' prediction distributions"
-    ],
-    ans: 1
-  },
-  {
-    id: 16, module: "M3 · Model Drift",
-    q: "In the Champion/Challenger retraining strategy, what is the 'challenger' model?",
-    opts: [
-      "The model currently serving all production traffic",
-      "A retrained model running in parallel in shadow mode to evaluate if it outperforms the current model",
-      "A simpler baseline model used as a performance floor",
-      "A model trained on a different algorithm to test diversity"
-    ],
-    ans: 1
-  },
-  {
-    id: 17, module: "M3 · Model Drift",
-    q: "A churn prediction model has precision of 0.90 and recall of 0.40. What does this mean in practical terms?",
-    opts: [
-      "The model catches 90% of churners but raises many false alarms",
-      "When the model predicts churn, it is correct 90% of the time, but it misses 60% of actual churners",
-      "The model is highly accurate on the test set but underperforms in production",
-      "The AUC-ROC score is 0.65"
-    ],
-    ans: 1
-  },
-  {
-    id: 18, module: "M3 · Model Drift",
-    q: "According to the drift response playbook, what should be the FIRST step when you suspect model degradation?",
-    opts: [
-      "Immediately trigger a full model retrain",
-      "Check upstream data quality first — pipeline issues, schema changes, or NULL floods are common and easier to fix",
-      "Run PSI tests across all input features",
-      "Alert the business team about potential performance issues"
-    ],
-    ans: 1
-  },
-
-  // Module 4 — Feature Stores & MLOps Architecture (6 questions)
-  {
-    id: 19, module: "M4 · MLOps Architecture",
-    q: "What is 'training/serving skew' in the context of feature stores?",
-    opts: [
-      "When the model performs better on training data than on test data",
-      "When features are computed differently at training time versus serving time, causing inconsistent predictions",
-      "When multiple teams train models on the same dataset with different algorithms",
-      "When the model is deployed to a different cloud region than where it was trained"
-    ],
-    ans: 1
-  },
-  {
-    id: 20, module: "M4 · MLOps Architecture",
-    q: "In a feature store, which storage layer is optimised for low-latency feature retrieval at real-time serving?",
-    opts: [
-      "Offline store — backed by S3 or BigQuery",
-      "Online store — backed by Redis or DynamoDB",
-      "Data warehouse — backed by Snowflake or Redshift",
-      "Feature pipeline cache — backed by Apache Kafka"
-    ],
-    ans: 1
-  },
-  {
-    id: 21, module: "M4 · MLOps Architecture",
-    q: "In Feast (the open-source feature store), what is a 'Feature View'?",
-    opts: [
-      "A dashboard showing feature distributions over time",
-      "A group of features derived from a single data source, defined with a schema and time-to-live",
-      "A named set of features used by a specific model for serving",
-      "A versioned snapshot of training features for reproducibility"
-    ],
-    ans: 1
-  },
-  {
-    id: 22, module: "M4 · MLOps Architecture",
-    q: "An ML team manually trains models in notebooks and deploys them by handing artifacts to an engineer. Which MLOps maturity level describes this?",
-    opts: ["Level 0 — Manual Process", "Level 1 — ML Pipeline Automation", "Level 2 — CI/CD for ML", "Level 3 — Fully Autonomous ML"],
-    ans: 0
-  },
-  {
-    id: 23, module: "M4 · MLOps Architecture",
-    q: "A sales team checks churn scores once per day in the morning. The ML team is deciding between real-time REST serving and batch prediction. Which is more appropriate and why?",
-    opts: [
-      "REST serving — always more accurate because it uses the latest data",
-      "Batch prediction — pre-computing scores nightly meets the latency requirement at lower infrastructure cost",
-      "REST serving — batch prediction is deprecated in modern MLOps",
-      "Both are equivalent for this use case"
-    ],
-    ans: 1
-  },
-  {
-    id: 24, module: "M4 · MLOps Architecture",
-    q: "What are the three lifecycle stages a model progresses through in an MLflow Model Registry?",
-    opts: [
-      "Development → Testing → Production",
-      "Staging → Production → Archived",
-      "Draft → Review → Published",
-      "Training → Serving → Retired"
-    ],
-    ans: 1
-  },
-
-  // Module 5 — System Articulation (6 questions)
-  {
-    id: 25, module: "M5 · System Articulation",
-    q: "According to the 5-part architecture description framework, which element comes THIRD?",
-    opts: [
-      "Purpose — what the system predicts",
-      "Model & Serving — algorithm and serving method",
-      "Processing & Features — how raw data is transformed into features",
-      "Monitoring & Health — what signals are tracked"
-    ],
-    ans: 2
-  },
-  {
-    id: 26, module: "M5 · System Articulation",
-    q: "An engineer says: 'Our data comes from our database.' Using the 4-component ingestion description framework, which components are missing?",
-    opts: [
-      "Only the tool is missing",
-      "Pattern, tool, and destination are all missing — only the source was stated",
-      "Only the destination is missing",
-      "The description is complete — source is sufficient"
-    ],
-    ans: 1
-  },
-  {
-    id: 27, module: "M5 · System Articulation",
-    q: "When explaining a system design decision using the trade-off framework, which of the following is the MOST important element to include?",
-    opts: [
-      "The name of the engineer who made the decision",
-      "The specific library version used",
-      "The constraint that drove the decision (latency, cost, team expertise, scale, etc.)",
-      "The exact date the decision was made"
-    ],
-    ans: 2
-  },
-  {
-    id: 28, module: "M5 · System Articulation",
-    q: "You are presenting a churn model to a VP of Sales with no technical background. Which of the following is the best opening statement?",
-    opts: [
-      "We trained an XGBoost classifier with 47 features, achieving AUC-ROC of 0.87 on holdout data",
-      "This system uses a gradient boosting model retrained weekly on rolling 90-day windows",
-      "This system identifies customers likely to cancel their subscription 30 days in advance, so your team can intervene before they disengage",
-      "The PSI on key features remains below 0.1, indicating stable model performance"
-    ],
-    ans: 2
-  },
-  {
-    id: 29, module: "M5 · System Articulation",
-    q: "Which of the following best demonstrates true 'ownership' of a system, as defined in Module 5?",
-    opts: [
-      "Being able to list all the tools used in the stack",
-      "Having written most of the code for the system",
-      "Being able to answer: what it does, how data flows, why it is designed this way, and what breaks and how you know",
-      "Having the system documented in a wiki"
-    ],
-    ans: 2
-  },
-  {
-    id: 30, module: "M5 · System Articulation",
-    q: "A customer asks you 'How does your AI system know who will churn?' without wanting technical details. The most appropriate response is to:",
-    opts: [
-      "Explain the feature engineering process and model algorithm in detail",
-      "Describe it in terms of value delivered and behavioural signals, avoiding all jargon and proprietary detail",
-      "Decline to answer since it is proprietary",
-      "Share the full architecture diagram so they understand the complexity"
-    ],
-    ans: 1
-  }
+const SECTIONS=[
+  {id:1,title:"Why Features Matter More Than Models",content:`
+    <h3>⚙️ The 80/20 of ML Performance</h3>
+    <p>A common misconception is that model selection — choosing Random Forest vs Neural Network vs XGBoost — is the most important decision in building an ML system. In practice, <strong>the quality of your features determines 70–80% of your model's performance</strong>, regardless of algorithm choice.</p>
+    <p>A great set of features with a simple model almost always outperforms a poor set of features with a sophisticated model. This is why experienced ML engineers spend most of their time on feature engineering, not algorithm selection.</p>
+    <div class="callout callout-blue">
+      <h4>💡 What Makes a Feature "Good"?</h4>
+      <p>A good feature has <strong>predictive signal</strong> — it correlates with the label you are trying to predict. It is also <strong>available at prediction time</strong> (no data leakage), <strong>consistent</strong> across training and serving, and <strong>interpretable</strong> enough to debug when something goes wrong.</p>
+    </div>
+    <h4>The Feature Engineering Mindset</h4>
+    <p>Think of feature engineering as <strong>encoding domain knowledge into a form a model can learn from</strong>. You are the domain expert. You know that "number of logins in the last 7 days" is more predictive of churn than "account creation date" alone. Feature engineering is the process of expressing that knowledge mathematically.</p>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>Why does feature quality matter more than model selection?</li><li>What are the four properties of a good feature?</li></ul></div>
+  `},
+  {id:2,title:"Numerical Feature Transformations",content:`
+    <h3>🔢 Working with Numbers</h3>
+    <p>Numerical features (integers, floats) are the most common feature type, but raw numbers are rarely in the right form for a model. Here are the core transformations:</p>
+    <h4>Scaling</h4>
+    <p>Most ML algorithms are sensitive to the scale of numeric inputs. A feature with values in the range 0–100,000 (income) will dominate a feature in the range 0–1 (a probability score) unless you scale them.</p>
+    <ul>
+      <li><strong>Min-Max Scaling:</strong> Rescale to [0, 1]. <code>x_scaled = (x - min) / (max - min)</code>. Good when you know the bounds.</li>
+      <li><strong>Standard Scaling (Z-score):</strong> Rescale to mean=0, std=1. <code>x_scaled = (x - mean) / std</code>. Good for normally distributed data.</li>
+      <li><strong>Robust Scaling:</strong> Uses median and IQR instead of mean/std. Better when data has outliers.</li>
+    </ul>
+    <h4>Log Transformation</h4>
+    <p>When a numerical feature has a skewed distribution (e.g. income, page views, revenue), apply <code>log(x+1)</code> to compress the scale and make the distribution more normal. Most tree-based models don't need this, but linear models and neural networks benefit significantly.</p>
+    <h4>Binning / Discretisation</h4>
+    <p>Convert a continuous number into a category: age → [18-25, 26-35, 36-50, 50+]. Useful when the relationship with the label is non-linear and step-function-like.</p>
+    <div class="callout callout-yellow">
+      <h4>⚠️ Training vs Serving Consistency</h4>
+      <p>Whatever scaling you apply during training must be applied identically at serving time. The scaler's parameters (min, max, mean, std) must be saved and reused — not recomputed on new data.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>When would you use Robust Scaling over Standard Scaling?</li><li>Why is log transformation useful for skewed features?</li><li>What is binning and when is it appropriate?</li></ul></div>
+  `},
+  {id:3,title:"Categorical Feature Encoding",content:`
+    <h3>🏷️ Turning Categories into Numbers</h3>
+    <p>ML models work with numbers. Categorical features — city names, product categories, user types — must be encoded as numbers. The encoding strategy matters enormously.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Technique</th><th>When to Use</th><th>Example</th></tr>
+      <tr><td><strong>One-Hot Encoding</strong></td><td>Low-cardinality categories (< ~20 values)</td><td>colour = [red,blue,green] → 3 binary columns</td></tr>
+      <tr><td><strong>Label Encoding</strong></td><td>Ordinal categories (inherent order exists)</td><td>size = [S,M,L,XL] → [0,1,2,3]</td></tr>
+      <tr><td><strong>Target Encoding</strong></td><td>High-cardinality categories</td><td>city → mean(churn_rate) per city</td></tr>
+      <tr><td><strong>Binary Encoding</strong></td><td>Medium-high cardinality</td><td>100 categories → 7 binary columns</td></tr>
+      <tr><td><strong>Frequency Encoding</strong></td><td>When popularity itself is informative</td><td>city → count of occurrences in dataset</td></tr>
+    </table></div>
+    <h4>High Cardinality Problem</h4>
+    <p>One-hot encoding a feature with 10,000 unique values (like postal codes) creates 10,000 columns — sparse, computationally expensive, and often noisy. <strong>Target encoding</strong> solves this by replacing each category with a statistic derived from the label (e.g. mean churn rate for that postal code).</p>
+    <div class="callout callout-yellow">
+      <h4>⚠️ Data Leakage Risk in Target Encoding</h4>
+      <p>When computing target statistics, use only the training fold — never the row's own label. Use cross-fold or leave-one-out encoding to avoid leaking the label into the feature.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the high cardinality problem with one-hot encoding?</li><li>When would you use target encoding over one-hot encoding?</li><li>What is data leakage and how does it relate to target encoding?</li></ul></div>
+  `},
+  {id:4,title:"Handling Missing Values",content:`
+    <h3>❓ When Data Isn't There</h3>
+    <p>Real-world datasets almost always have missing values. How you handle them has a significant impact on model quality. There is no universally correct approach — each strategy has tradeoffs.</p>
+    <h4>Imputation Strategies</h4>
+    <ul>
+      <li><strong>Mean/Median Imputation:</strong> Replace missing values with the column mean (for symmetric distributions) or median (for skewed data or outliers). Simple and fast, but destroys information about the fact that the value was missing.</li>
+      <li><strong>Mode Imputation:</strong> For categorical features, replace with the most frequent value.</li>
+      <li><strong>Constant Imputation:</strong> Fill with a sentinel value like -1 or "UNKNOWN". Tells the model "this was missing" — the model can potentially learn from this signal.</li>
+      <li><strong>Indicator + Imputation:</strong> Add a binary column <code>feature_was_missing</code> (1/0), then impute the original. Preserves the missingness signal.</li>
+      <li><strong>Model-Based Imputation (KNN, MICE):</strong> Use other features to predict the missing value. Accurate but expensive.</li>
+    </ul>
+    <div class="callout callout-green">
+      <h4>✅ Best Practice</h4>
+      <p>For high-stakes features where missingness is informative (e.g. "last_login_date is null" might mean the user never logged in), always use <strong>Indicator + Imputation</strong>. For low-stakes columns with < 5% missing, simple median imputation is usually sufficient.</p>
+    </div>
+    <h4>When to Drop</h4>
+    <p>Drop a row only if it is missing the label (target variable). Drop a column only if it has > 50-60% missing values AND you cannot derive the missing information from other columns.</p>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the difference between mean and median imputation and when do you choose each?</li><li>What is Indicator + Imputation and why is it useful?</li><li>When should you drop a column vs impute it?</li></ul></div>
+  `},
+  {id:5,title:"Feature Selection",content:`
+    <h3>✂️ Keeping What Matters</h3>
+    <p>More features is not always better. Irrelevant or redundant features add noise, slow training, increase memory use, and can hurt model performance. Feature selection is the discipline of choosing the right subset of features.</p>
+    <h4>Three Approaches</h4>
+    <ul>
+      <li><strong>Filter Methods:</strong> Rank features by statistical correlation with the label, independent of any model. Examples: Pearson correlation for numerical features, Chi-squared test for categorical. Fast but ignores feature interactions.</li>
+      <li><strong>Wrapper Methods:</strong> Iteratively add or remove features and measure model performance. Examples: Recursive Feature Elimination (RFE), forward selection. Accurate but computationally expensive.</li>
+      <li><strong>Embedded Methods:</strong> Feature selection is built into the model training process. Examples: Lasso regression (L1 penalty drives unimportant feature weights to zero), tree-based feature importance from Random Forest or XGBoost.</li>
+    </ul>
+    <h4>Feature Importance from Tree Models</h4>
+    <p>Tree-based models (Random Forest, XGBoost, LightGBM) automatically compute a <strong>feature importance score</strong> for each feature — how much each feature contributed to reducing prediction error across all trees. This is a powerful, free signal for feature selection.</p>
+    <div class="callout callout-blue">
+      <h4>💡 Variance Threshold</h4>
+      <p>The simplest filter: remove features with near-zero variance. A feature that is the same value in 99% of rows contains almost no information and can safely be dropped before any modelling.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the difference between filter, wrapper, and embedded feature selection?</li><li>How does Lasso regression perform feature selection?</li><li>What does feature importance from a Random Forest represent?</li></ul></div>
+  `},
+  {id:6,title:"Time-Based & Aggregate Features",content:`
+    <h3>⏱️ Features Derived from Time</h3>
+    <p>Many real-world ML problems involve time: predicting churn, forecasting demand, detecting fraud. Time-based features are among the most powerful and most commonly underutilised.</p>
+    <h4>Temporal Feature Derivation</h4>
+    <ul>
+      <li><strong>Recency:</strong> How long ago was the last event? <code>days_since_last_login = today - last_login_date</code></li>
+      <li><strong>Frequency:</strong> How many times did an event occur in a window? <code>logins_last_30_days</code></li>
+      <li><strong>Trend:</strong> Is behaviour increasing or decreasing? <code>login_count_this_week - login_count_last_week</code></li>
+      <li><strong>Cyclicality:</strong> Day of week, hour of day, month of year — encoded as <code>sin/cos</code> to preserve circular relationships</li>
+    </ul>
+    <h4>Rolling Window Aggregations</h4>
+    <p>For a user at time T, compute statistics over the last N days: <code>avg_session_duration_7d</code>, <code>max_purchase_amount_30d</code>, <code>stddev_response_time_14d</code>. These capture behavioural patterns that a single snapshot cannot.</p>
+    <div class="callout callout-yellow">
+      <h4>⚠️ Temporal Data Leakage</h4>
+      <p>When creating time-based features for training, always ensure your feature window is computed from data strictly <em>before</em> the prediction date. Using future data in a training feature causes data leakage — your model will appear to work but will fail in production.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What are the four temporal feature types (recency, frequency, trend, cyclicality)?</li><li>What is temporal data leakage and how do you prevent it?</li><li>Why encode cyclic features as sin/cos?</li></ul></div>
+  `},
+  {id:7,title:"Feature Engineering Strategy & Workflow",content:`
+    <h3>🔬 Putting It All Together</h3>
+    <p>Feature engineering is not a random collection of techniques — it follows a disciplined workflow grounded in domain understanding and iterative experimentation.</p>
+    <h4>The Feature Engineering Workflow</h4>
+    <ol>
+      <li><strong>Understand the domain:</strong> What raw data sources exist? What events, entities, and relationships matter for this prediction problem?</li>
+      <li><strong>Exploratory Data Analysis (EDA):</strong> Distribution plots, correlation matrices, missing value maps. Build intuition before writing transformation code.</li>
+      <li><strong>Baseline features:</strong> Start simple — raw values, basic aggregations, obvious encodings.</li>
+      <li><strong>Train a baseline model:</strong> Establish a performance floor before investing in complex features.</li>
+      <li><strong>Feature iteration:</strong> Add new features, measure impact, discard what doesn't help.</li>
+      <li><strong>Feature selection:</strong> Remove noise; keep only what the model actually uses.</li>
+      <li><strong>Document and register:</strong> Store feature definitions in a feature store or shared repository so they can be reused (Module 4).</li>
+    </ol>
+    <div class="callout callout-green">
+      <h4>✅ Module 2 Summary</h4>
+      <p>You can now articulate: why features matter more than models, how to transform numerical and categorical data, how to handle missing values, how to select relevant features, and how time-based features work. This is precisely the depth that was missing in the candidate feedback that motivated this course.</p>
+    </div>
+    <div class="test-questions"><h4>🎯 Likely Exam Questions</h4><ul><li>What is the correct sequence of the feature engineering workflow?</li><li>Why do you establish a baseline model before investing in complex features?</li><li>What does EDA stand for and what is its purpose?</li></ul></div>
+  `}
 ];
 
-window.signInWithGoogle = async () => {
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
-  catch(e){ document.getElementById('authError').textContent = e.message; }
-};
-window.signInWithEmail = async () => {
-  const email = document.getElementById('emailInput').value.trim();
-  if(!email.endsWith('@sourcefuse.com')){ document.getElementById('authError').textContent='Use your @sourcefuse.com email.'; return; }
-  try {
-    await sendSignInLinkToEmail(auth, email, { url: window.location.href, handleCodeInApp: true });
-    localStorage.setItem('emailForSignIn', email);
-    document.getElementById('authError').style.color='var(--green)';
-    document.getElementById('authError').textContent='✓ Check your inbox.';
-  } catch(e){ document.getElementById('authError').textContent = e.message; }
-};
 
-if(isSignInWithEmailLink(auth, window.location.href)){
-  let em = localStorage.getItem('emailForSignIn') || prompt('Confirm your email:');
-  try{ await signInWithEmailLink(auth, em, window.location.href); window.history.replaceState(null,'',window.location.pathname); }catch(e){}
+// Check Your Understanding interactive MCQ
+const SECTION_QUESTIONS = {"1": [{"q": "According to this section, what percentage of model performance is determined by feature quality?", "o": ["40-50%", "50-60%", "70-80%", "90-100%"], "c": 2}, {"q": "What conclusion does this section draw about model selection vs feature engineering?", "o": ["Model selection is more important than feature engineering", "A great set of features with a simple model almost always outperforms a poor set with a sophisticated model", "Both are equally important and must be optimised together", "Model selection determines 70-80% of performance"], "c": 1}], "2": [{"q": "What does Standard Scaling (Z-score) do to the data according to this section?", "o": ["Normalises values to a 0-1 range", "Converts continuous values into discrete intervals", "Centres data around the mean with unit variance", "Creates interaction terms between features"], "c": 2}, {"q": "According to this section, when should Log Transformation be applied?", "o": ["When features have a normal distribution", "When features are categorical", "To right-skewed distributions to reduce the effect of outliers", "When features need to be normalised to a 0-1 range"], "c": 2}], "3": [{"q": "According to this section, when is Label Encoding appropriate for categorical features?", "o": ["For all categorical features regardless of type", "Only for low-cardinality categories", "Only for ordinal categories", "For high-cardinality categories"], "c": 2}, {"q": "What risk is associated with Target Encoding according to this section?", "o": ["It creates too many binary columns", "It only works for low-cardinality categories", "It carries a risk of data leakage", "It cannot handle missing values"], "c": 2}], "4": [{"q": "According to this section, when is deletion of rows with missing values appropriate?", "o": ["Whenever missing values are present", "Only when missingness is rare and random", "When the dataset has more than 1000 rows", "When using tree-based models"], "c": 1}, {"q": "What is the purpose of adding Indicator Variables when handling missing values?", "o": ["To impute missing values with the column mean", "To add a binary flag column indicating whether a value was missing", "To remove rows with missing values", "To apply forward fill for time series data"], "c": 1}], "5": [{"q": "Which feature selection approach uses model performance to evaluate subsets of features?", "o": ["Filter Methods", "Wrapper Methods", "Embedded Methods", "Dimensionality Reduction"], "c": 1}, {"q": "According to this section, which method uses LASSO regularisation as an example of feature selection?", "o": ["Filter Methods", "Wrapper Methods", "Embedded Methods", "Principal Component Analysis"], "c": 2}], "6": [{"q": "What is a Lag Feature according to this section?", "o": ["How long ago the last event occurred", "The value of a feature N periods ago", "A rolling aggregate over a sliding window", "How often an event occurs in a window"], "c": 1}, {"q": "According to this section, what type of features does Recency represent?", "o": ["A rolling aggregate over a sliding window", "The value of a feature N periods ago", "How long ago the last event occurred", "Seasonality patterns like hour of day"], "c": 2}], "7": [{"q": "According to this section, what is the first step in the Feature Engineering Workflow?", "o": ["Generate feature candidates", "Explore and profile the data", "Understand the domain", "Document and version transformations"], "c": 2}, {"q": "How does this section characterise the nature of feature engineering?", "o": ["It is a one-time process completed before model training", "It is iterative not one-shot", "It only applies to numerical features", "It must be completed before data ingestion"], "c": 1}]};
+const cyuAnswered = {}; // {secId: {qi: true/false answered}}
+
+function buildCYU(secId) {
+  const qs = SECTION_QUESTIONS[String(secId)] || [];
+  if (!qs.length) return '';
+  const keys = ['A','B','C','D'];
+  let html = '<div class="cyu-wrap"><div class="cyu-label">\u2753 Check Your Understanding</div>';
+  qs.forEach((q, qi) => {
+    html += '<div class="cyu-question" id="cyu-q-' + secId + '-' + qi + '">';
+    html += '<div class="cyu-q-text">' + (qi+1) + '. ' + q.q.replace(/</g,'&lt;') + '</div>';
+    html += '<div class="cyu-options">';
+    q.o.forEach((opt, oi) => {
+      html += '<div class="cyu-option" data-sec="' + secId + '" data-q="' + qi + '" data-i="' + oi + '" onclick="cyuSelect(this)">';
+      html += '<span class="cyu-option-key">' + keys[oi] + '</span><span>' + opt.replace(/</g,'&lt;') + '</span></div>';
+    });
+    html += '</div><div class="cyu-feedback" id="cyu-fb-' + secId + '-' + qi + '"></div>';
+    html += '<button class="submit-btn" style="margin-top:8px;font-size:0.78rem;padding:6px 14px;" onclick="cyuCheck(' + secId + ',' + qi + ',' + q.c + ')">Submit</button>';
+    html += '</div>';
+  });
+  html += '</div>';
+  return html;
 }
 
-async function loadAttemptInfo(uid){
-  const rRef = doc(db,'results',uid);
-  const rSnap = await getDoc(rRef);
-  const data = rSnap.exists() ? (rSnap.data()[COURSE_ID] || {}) : {};
-  attemptCount = data.attempts || 0;
-  const lastScore = data.lastScore;
-  const passed = data.passed;
-  const infoEl = document.getElementById('attemptInfo');
-  const startBtn = document.getElementById('startBtn');
+window.cyuSelect = function(el) {
+  const sec = el.dataset.sec, qi = el.dataset.q;
+  document.querySelectorAll('[data-sec="'+sec+'"][data-q="'+qi+'"]').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+};
 
-  if(passed){
-    infoEl.innerHTML = `<strong>✓ Certified!</strong> You have already passed this exam with a score of ${lastScore}%. You may retake for practice.`;
-    startBtn.textContent = 'Retake Exam (Practice)';
-  } else if(attemptCount >= MAX_ATTEMPTS){
-    infoEl.innerHTML = `<strong>No attempts remaining.</strong> You have used all ${MAX_ATTEMPTS} attempts. Please contact your administrator.`;
-    startBtn.disabled = true;
-    startBtn.textContent = 'No Attempts Remaining';
-  } else {
-    infoEl.innerHTML = `Attempt <strong>${attemptCount + 1} of ${MAX_ATTEMPTS}</strong>.${lastScore ? ` Your last score was <strong>${lastScore}%</strong>.` : ' This will be your first attempt.'} You need <strong>21/30 (70%)</strong> to pass.`;
+window.cyuCheck = function(secId, qi, correctIdx) {
+  const selected = document.querySelector('[data-sec="'+secId+'"][data-q="'+qi+'"].selected');
+  if (!selected) { alert('Please select an answer first.'); return; }
+  const chosenIdx = parseInt(selected.dataset.i);
+  const isCorrect = chosenIdx === correctIdx;
+  const fb = document.getElementById('cyu-fb-'+secId+'-'+qi);
+  const btn = selected.closest('.cyu-question').querySelector('button');
+  // Mark options
+  document.querySelectorAll('[data-sec="'+secId+'"][data-q="'+qi+'"]').forEach(o => {
+    o.style.pointerEvents = 'none';
+    if (parseInt(o.dataset.i) === correctIdx) o.classList.add('correct');
+    else if (parseInt(o.dataset.i) === chosenIdx && !isCorrect) o.classList.add('wrong');
+  });
+  if (fb) { fb.textContent = isCorrect ? '\u2713 Correct!' : '\u2717 Incorrect \u2014 the correct answer is highlighted above.'; fb.className = 'cyu-feedback ' + (isCorrect ? 'correct' : 'wrong'); }
+  if (btn) btn.disabled = true;
+  // Mark this question as answered
+  if (!cyuAnswered[secId]) cyuAnswered[secId] = {};
+  cyuAnswered[secId][qi] = true;
+  // Save response to Firestore
+  if (currentUser) {
+    const pRef = doc(db,'progress',currentUser.uid);
+    const update = {};
+    update[COURSE_ID+'.'+MODULE_ID+'.cyu_'+secId+'_'+qi] = {answered: true, correct: isCorrect, chosen: chosenIdx};
+    setDoc(pRef, update, {merge:true}).catch(e => console.warn('CYU save failed:', e.message));
+  }
+  // Check if all questions for this section are answered — unlock mark complete
+  checkCYUComplete(secId);
+};
+
+function checkCYUComplete(secId) {
+  const qs = SECTION_QUESTIONS[String(secId)] || [];
+  if (!qs.length) return; // no questions — button stays unlocked
+  const answered = cyuAnswered[secId] || {};
+  const allAnswered = qs.every((_, qi) => answered[qi] === true);
+  const btn = document.getElementById('mcb-'+secId);
+  if (btn && allAnswered) {
+    btn.classList.remove('locked');
   }
 }
 
-window.startExam = async () => {
-  const rRef = doc(db,'results',currentUser.uid);
-  const rSnap = await getDoc(rRef);
-  const data = rSnap.exists() ? (rSnap.data()[COURSE_ID] || {}) : {};
-  if((data.attempts || 0) >= MAX_ATTEMPTS && !data.passed){ alert('No attempts remaining.'); return; }
-
-  document.getElementById('introScreen').style.display = 'none';
-  document.getElementById('examScreen').style.display = 'block';
-  document.getElementById('timerDisplay').style.display = 'flex';
-  examActive = true;
-  examStartTime = Date.now();
-  answers = {};
-  currentQuestion = 0;
-  timeRemaining = EXAM_DURATION;
-  renderQuestion(0);
-  startTimer();
-};
-
-function startTimer(){
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    timeRemaining--;
-    updateTimerDisplay();
-    if(timeRemaining <= 0){ clearInterval(timerInterval); submitExam(true); }
-  }, 1000);
-}
-
-function updateTimerDisplay(){
-  const m = Math.floor(timeRemaining / 60);
-  const s = timeRemaining % 60;
-  const display = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  const el = document.getElementById('timerDisplay');
-  el.textContent = display;
-  el.className = 'exam-timer' + (timeRemaining <= 120 ? ' danger' : timeRemaining <= 300 ? ' warning' : '');
-}
-
-function renderQuestion(idx){
-  const q = QUESTIONS[idx];
-  const answered = Object.keys(answers).length;
-  document.getElementById('examProgressFill').style.width = (answered/QUESTIONS.length*100) + '%';
-  document.getElementById('examProgressText').textContent = `${answered} / ${QUESTIONS.length} answered`;
-
-  const letters = ['A','B','C','D'];
-  const container = document.getElementById('questionContainer');
-  container.innerHTML = `
-    <div class="question-card">
-      <div class="question-meta">
-        <span class="question-num">Question ${idx+1} of ${QUESTIONS.length}</span>
-        <span class="question-module">${q.module}</span>
-      </div>
-      <div class="question-text">${q.q}</div>
-      <div class="options">
-        ${q.opts.map((opt, i) => `
-          <div class="option ${answers[q.id] === i ? 'selected' : ''}" onclick="selectOption(${q.id}, ${i})">
-            <span class="option-letter">${letters[i]}</span>
-            <span class="option-text">${opt}</span>
-          </div>
-        `).join('')}
-      </div>
-      <div class="nav-row">
-        <button class="q-nav-btn" onclick="goQuestion(${idx-1})" ${idx===0?'disabled':''}>← Previous</button>
-        <span style="font-size:0.8rem;color:var(--text2)">${idx+1} / ${QUESTIONS.length}</span>
-        ${idx < QUESTIONS.length - 1
-          ? `<button class="q-nav-btn primary" onclick="goQuestion(${idx+1})">Next →</button>`
-          : `<button class="submit-btn" onclick="confirmSubmit()">Submit Exam</button>`
-        }
-      </div>
-    </div>`;
-}
-
-window.selectOption = (qId, optIdx) => {
-  answers[qId] = optIdx;
-  renderQuestion(currentQuestion);
-};
-
-window.goQuestion = (idx) => {
-  if(idx < 0 || idx >= QUESTIONS.length) return;
-  currentQuestion = idx;
-  renderQuestion(idx);
-};
-
-window.confirmSubmit = () => {
-  const unanswered = QUESTIONS.length - Object.keys(answers).length;
-  if(unanswered > 0){
-    if(!confirm(`You have ${unanswered} unanswered question${unanswered>1?'s':''}. Submit anyway?`)) return;
-  }
-  submitExam(false);
-};
-
-async function submitExam(timedOut){
-  clearInterval(timerInterval);
-  examActive = false;
-  document.getElementById('timerDisplay').style.display = 'none';
-
-  let correct = 0;
-  QUESTIONS.forEach(q => { if(answers[q.id] === q.ans) correct++; });
-  const score = Math.round((correct / QUESTIONS.length) * 100);
-  const passed = score >= PASS_SCORE;
-  const timeTaken = Math.round((Date.now() - examStartTime) / 1000);
-
-  // Save to Firestore
-  const rRef = doc(db,'results',currentUser.uid);
-  const rSnap = await getDoc(rRef);
-  const existing = rSnap.exists() ? (rSnap.data()[COURSE_ID] || {}) : {};
-  const newAttemptCount = (existing.attempts || 0) + 1;
-
-  await setDoc(rRef, {
-    [COURSE_ID]: {
-      attempts: newAttemptCount,
-      lastScore: score,
-      passed: passed || existing.passed || false,
-      lastAttemptAt: serverTimestamp(),
-      timedOut: timedOut
+function restoreCYUState(secId, modData) {
+  const qs = SECTION_QUESTIONS[String(secId)] || [];
+  if (!qs.length) return;
+  const keys = ['A','B','C','D'];
+  if (!cyuAnswered[secId]) cyuAnswered[secId] = {};
+  qs.forEach((q, qi) => {
+    const saved = modData['cyu_'+secId+'_'+qi];
+    if (saved && saved.answered) {
+      cyuAnswered[secId][qi] = true;
+      // Restore visual state
+      setTimeout(() => {
+        const opts = document.querySelectorAll('[data-sec="'+secId+'"][data-q="'+qi+'"]');
+        opts.forEach(o => {
+          o.style.pointerEvents = 'none';
+          if (parseInt(o.dataset.i) === q.c) o.classList.add('correct');
+          else if (parseInt(o.dataset.i) === saved.chosen && !saved.correct) o.classList.add('wrong');
+        });
+        const fb = document.getElementById('cyu-fb-'+secId+'-'+qi);
+        if (fb) { fb.textContent = saved.correct ? '\u2713 Correct!' : '\u2717 Incorrect \u2014 the correct answer is highlighted above.'; fb.className = 'cyu-feedback ' + (saved.correct ? 'correct' : 'wrong'); }
+        const btn = document.querySelector('#cyu-q-'+secId+'-'+qi+' button');
+        if (btn) btn.disabled = true;
+      }, 100);
     }
-  }, { merge: true });
-
-  // Also write to examResults
-  const erRef = doc(db,'examResults',currentUser.uid);
-  await setDoc(erRef, {
-    [COURSE_ID]: {
-      score, passed, attempts: newAttemptCount,
-      correct, total: QUESTIONS.length,
-      timeTaken, timedOut, submittedAt: serverTimestamp()
-    }
-  }, { merge: true });
-
-  // Signal hub lock
-  localStorage.setItem('sf_exam_done', JSON.stringify({
-    courseId: COURSE_ID, score, passed, timestamp: Date.now()
-  }));
-
-  showResults(score, passed, correct, newAttemptCount);
+  });
+  checkCYUComplete(secId);
 }
 
-function showResults(score, passed, correct, attempts){
-  document.getElementById('examScreen').style.display = 'none';
-  const rs = document.getElementById('resultsScreen');
-  rs.style.display = 'block';
+window.signInWithGoogle=async()=>{try{await signInWithPopup(auth,new GoogleAuthProvider());}catch(e){document.getElementById('authError').textContent=e.message;}};
+window.signInWithEmail=async()=>{const email=document.getElementById('emailInput').value.trim();if(!email.endsWith('@sourcefuse.com')){document.getElementById('authError').textContent='Use your @sourcefuse.com email.';return;}try{await sendSignInLinkToEmail(auth,email,{url:window.location.href,handleCodeInApp:true});localStorage.setItem('emailForSignIn',email);document.getElementById('authError').style.color='var(--green)';document.getElementById('authError').textContent='✓ Check your inbox.';}catch(e){document.getElementById('authError').textContent=e.message;}};
+window.doSignOut=async()=>{await signOut(auth);location.reload();};
 
-  document.getElementById('resultIcon').textContent = passed ? '🎉' : '📚';
-  document.getElementById('resultTitle').textContent = passed ? 'Congratulations!' : 'Keep Studying';
-  document.getElementById('resultScore').textContent = score + '%';
-  document.getElementById('resultScore').className = 'score-display ' + (passed ? 'pass' : 'fail');
-  document.getElementById('resultSub').textContent = `${correct} / ${QUESTIONS.length} correct`;
-  document.getElementById('statCorrect').textContent = correct;
-  document.getElementById('statWrong').textContent = QUESTIONS.length - correct;
-  document.getElementById('statAttempts').textContent = `${attempts} / ${MAX_ATTEMPTS}`;
+if(isSignInWithEmailLink(auth,window.location.href)){let em=localStorage.getItem('emailForSignIn')||prompt('Confirm your email:');try{await signInWithEmailLink(auth,em,window.location.href);window.history.replaceState(null,'',window.location.pathname);}catch(e){}}
 
-  if(passed){
-    document.getElementById('resultMessage').textContent = 'You have earned the SF Certified Data Science & MLOps Practitioner credential. Your result has been recorded.';
-  } else if(attempts < MAX_ATTEMPTS){
-    document.getElementById('resultMessage').textContent = `You need 70% to pass. You scored ${score}%. You have ${MAX_ATTEMPTS - attempts} attempt${MAX_ATTEMPTS - attempts !== 1 ? 's' : ''} remaining.`;
-    document.getElementById('retryBtn').style.display = 'inline-flex';
-  } else {
-    document.getElementById('resultMessage').textContent = 'You have used all 3 attempts. Please contact your L&D administrator to discuss next steps.';
-  }
+function buildSections(states){
+  const container=document.getElementById('sectionsContainer');container.innerHTML='';
+  SECTIONS.forEach((sec,idx)=>{
+    const done=states[`section-${sec.id}`]==='done';
+    const card=document.createElement('div');
+    card.className='section-card'+(idx===0?' active':'')+(done?' completed-section':'');
+    card.innerHTML=`<div class="section-header" onclick="toggleSection(this)"><span class="section-num">${String(sec.id).padStart(2,'0')}</span><span class="section-title-text">${sec.title}</span><span class="section-check ${done?'done':''}">` + (done?'✓':'') + `</span><span class="section-chevron">${idx===0?'▲':'▼'}</span></div><div class="section-body">${sec.content}${SECTION_QUESTIONS[String(sec.id)]&&SECTION_QUESTIONS[String(sec.id)].length?buildCYU(sec.id):''}<button class="mark-complete-btn ${done?'marked':''} ${!done&&(SECTION_QUESTIONS[String(sec.id)]||[]).length?'locked':''}" onclick="markSection(${sec.id},this)" id="mcb-${sec.id}">${done?'✓ Completed':'Mark as complete'}</button></div>`;
+    container.appendChild(card);
+  });
+  updateProgress(states);
 }
 
-window.retryExam = () => {
-  document.getElementById('resultsScreen').style.display = 'none';
-  document.getElementById('introScreen').style.display = 'block';
-  loadAttemptInfo(currentUser.uid);
+window.toggleSection=(header)=>{const card=header.closest('.section-card');const wasActive=card.classList.contains('active');document.querySelectorAll('.section-card').forEach(c=>{c.classList.remove('active');c.querySelector('.section-chevron').textContent='▼';});if(!wasActive){card.classList.add('active');header.querySelector('.section-chevron').textContent='▲';}};
+
+window.markSection=async(sectionId,btn)=>{
+  // Guard: check CYU questions are all answered
+  const cyaQs = SECTION_QUESTIONS[String(arguments[0]||sectionId)] || [];
+  const cyaAnswered = cyuAnswered[arguments[0]||sectionId] || {};
+  if (cyaQs.length && !cyaQs.every((_,qi) => cyaAnswered[qi]===true)) return;
+
+  if(!currentUser)return;
+  const key=`section-${sectionId}`;sectionStates[key]='done';
+  btn.textContent='✓ Completed';btn.classList.add('marked');
+  const card=btn.closest('.section-card');card.classList.add('completed-section');
+  card.querySelector('.section-check').classList.add('done');card.querySelector('.section-check').textContent='✓';
+  updateProgress(sectionStates);
+  const pRef=doc(db,'progress',currentUser.uid);const pSnap=await getDoc(pRef);const existing=pSnap.exists()?pSnap.data():{};
+  const courseData=existing[COURSE_ID]||{};const modData=courseData[MODULE_ID]||{};const sections=modData.sections||{};
+  sections[key]='done';const allDone=SECTIONS.every(s=>sections[`section-${s.id}`]==='done');
+  await setDoc(pRef,{[`${COURSE_ID}.${MODULE_ID}.sections`]:sections,[`${COURSE_ID}.${MODULE_ID}.status`]:allDone?'completed':'in_progress',[`${COURSE_ID}.${MODULE_ID}.lastUpdated`]:serverTimestamp()},{merge:true});
+  if(allDone)document.getElementById('nextBtn').classList.remove('disabled');
 };
 
-onAuthStateChanged(auth, async user => {
-  if(!user){ document.getElementById('authOverlay').style.display='flex'; return; }
-  const email = user.email || '';
-  if(!email.endsWith('@sourcefuse.com')){ await signOut(auth); document.getElementById('authOverlay').style.display='flex'; return; }
-  currentUser = user;
-  document.getElementById('authOverlay').style.display='none';
-  document.getElementById('mainHeader').style.display='flex';
-  document.getElementById('introScreen').style.display='block';
-  document.getElementById('userEmail').textContent = email;
-  await loadAttemptInfo(user.uid);
+function updateProgress(states){const done=SECTIONS.filter(s=>states[`section-${s.id}`]==='done').length;const pct=Math.round((done/SECTIONS.length)*100);document.getElementById('modProgressFill').style.width=pct+'%';if(pct===100)document.getElementById('nextBtn').classList.remove('disabled');}
+
+onAuthStateChanged(auth,async user=>{
+  if(!user){document.getElementById('authOverlay').style.display='flex';
+    document.getElementById('authOverlay')?.classList.remove('hidden');
+    document.getElementById('authUserBar')?.classList.add('hidden');return;}
+  const email=user.email||'';if(!email.endsWith('@sourcefuse.com')){await signOut(auth);document.getElementById('authOverlay').style.display='flex';return;}
+  currentUser=user;document.getElementById('authOverlay').style.display='none';
+    document.getElementById('authOverlay')?.classList.add('hidden');
+    const authBar = document.getElementById('authUserBar');
+    const authEmail = document.getElementById('authUserEmail');
+    if(authBar) authBar.classList.remove('hidden');
+    if(authEmail) authEmail.textContent = 'Signed in as ' + (user.email||'');document.getElementById('mainHeader').style.display='flex';document.getElementById('mainContent').style.display='block';document.getElementById('userEmail').textContent=email;
+  const pRef=doc(db,'progress',user.uid);const pSnap=await getDoc(pRef);const progress=pSnap.exists()?(pSnap.data()[COURSE_ID]||{}):{};const modData=progress[MODULE_ID]||{};sectionStates=modData.sections||{};buildSections(sectionStates);
+  if(modData.status==='completed')document.getElementById('nextBtn').classList.remove('disabled');
 });
 </script>
 </body>
