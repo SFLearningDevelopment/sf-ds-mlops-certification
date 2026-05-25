@@ -342,15 +342,20 @@ onAuthStateChanged(auth, async user => {
   document.getElementById('mainContent').style.display='block';
   document.getElementById('userEmail').textContent = email;
 
-  // Ensure user doc
-  const uRef = doc(db,'users',user.uid);
-  const uSnap = await getDoc(uRef);
-  if(!uSnap.exists()) await setDoc(uRef,{ email, displayName: user.displayName||'', createdAt: serverTimestamp(), domain:'sourcefuse.com' });
+  // Ensure user doc (may fail for non-admins — catch silently)
+  try {
+    const uRef = doc(db,'users',user.uid);
+    const uSnap = await getDoc(uRef);
+    if(!uSnap.exists()) await setDoc(uRef,{ email, displayName: user.displayName||'', createdAt: serverTimestamp(), domain:'sourcefuse.com' });
+  } catch(e) { console.warn('User doc write skipped:', e.message); }
 
   // Load progress
-  const pRef = doc(db,'progress',user.uid);
-  const pSnap = await getDoc(pRef);
-  const progress = pSnap.exists() ? (pSnap.data()[COURSE_ID]||{}) : {};
+  let progress = {};
+  try {
+    const pRef = doc(db,'progress',user.uid);
+    const pSnap = await getDoc(pRef);
+    progress = pSnap.exists() ? (pSnap.data()[COURSE_ID]||{}) : {};
+  } catch(e) { console.warn('Progress load failed:', e.message); }
 
   let completedModules = 0;
   for(let i=1;i<=MODULE_COUNT;i++){
